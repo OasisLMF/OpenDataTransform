@@ -1,6 +1,6 @@
-from .base import BaseConnector
+from .base import Controller
 
 
 __all__ = [
-    "BaseConnector",
+    "Controller",
 ]

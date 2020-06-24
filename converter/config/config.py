@@ -1,3 +1,4 @@
+import os
 from functools import reduce
 from itertools import chain
 from typing import Any, Dict, Iterable, Tuple, TypeVar
@@ -10,7 +11,8 @@ ConfigSource = Dict[str, Any]
 
 
 class NotFoundType:
-    pass
+    def get(self, *args, **kwargs):
+        return self
 
 
 NotFound = NotFoundType()
@@ -21,6 +23,7 @@ class Config:
     Configuration class that loads the config file, environment (TODO),
     command line (TODO) and overrides and merges them into a single map.
     """
+
     def __init__(
         self, config_path: str = None, overrides: Dict[str, Any] = None
     ):
@@ -45,7 +48,7 @@ class Config:
 
         :return: An iterable of normalised configs from the various sources
         """
-        if config_path:
+        if config_path and os.path.exists(config_path):
             with open(config_path) as f:
                 yield self.normalise_property_names(yaml.load(f))
 

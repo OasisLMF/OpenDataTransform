@@ -42,3 +42,16 @@ def test_config_is_missing_property_with_fallback___fallback_is_used():
     config = Config(overrides={"foo": {"BAR": "BAz"}},)
 
     assert config.get("foo.boo", "fallback value") == "fallback value"
+
+
+def test_missing_of_missing_parent_without_fallback___key_error_is_raised():
+    config = Config(overrides={"foo": {"BAR": "BAz"}},)
+
+    with pytest.raises(KeyError):
+        config.get("foo.boo.bash")
+
+
+def test_missing_of_missing_parent_with_fallback___fallback_is_used():
+    config = Config(overrides={"foo": {"BAR": "BAz"}},)
+
+    assert config.get("foo.boo.bash", "fallback value") == "fallback value"
