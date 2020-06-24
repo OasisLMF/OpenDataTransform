@@ -1,0 +1,10 @@
+-r requirements-package.in
+pip-tools
+ipdb
+coverage
+pytest
+pytest-cov
+pytest-flake8
+pytest-black
+pytest-isort
+pytest-mypy
