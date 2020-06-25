@@ -2,3 +2,4 @@ pip-tools
 ipdb
 pandas
 modin[dask]
+lark-parser

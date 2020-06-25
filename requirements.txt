@@ -5,7 +5,7 @@
 #    pip-compile
 #
 appdirs==1.4.4            # via black
-attrs==19.3.0             # via black, pytest
+attrs==19.3.0             # via black, hypothesis, pytest
 backcall==0.2.0           # via ipython
 black==19.10b0            # via pytest-black
 click==7.1.2              # via black, distributed, pip-tools
@@ -17,11 +17,13 @@ distributed==2.19.0       # via modin
 filelock==3.0.12          # via pytest-mypy
 flake8==3.8.3             # via pytest-flake8
 heapdict==1.0.1           # via zict
+hypothesis==5.18.0        # via -r requirements.in
 ipdb==0.13.2              # via -r requirements-package.in, -r requirements.in
 ipython-genutils==0.2.0   # via traitlets
 ipython==7.15.0           # via ipdb
 isort==4.3.21             # via pytest-isort
 jedi==0.17.0              # via ipython
+lark-parser==0.8.9        # via -r requirements-package.in
 mccabe==0.6.1             # via flake8
 modin[dask]==0.7.3        # via -r requirements-package.in
 more-itertools==8.4.0     # via pytest
@@ -56,7 +58,7 @@ pytz==2020.1              # via pandas
 pyyaml==5.3.1             # via dask, distributed
 regex==2020.6.8           # via black
 six==1.15.0               # via packaging, pip-tools, python-dateutil, traitlets
-sortedcontainers==2.2.2   # via distributed
+sortedcontainers==2.2.2   # via distributed, hypothesis
 tblib==1.6.0              # via distributed
 toml==0.10.1              # via black, pytest-black
 toolz==0.10.0             # via distributed
