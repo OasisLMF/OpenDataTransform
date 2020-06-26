@@ -16,6 +16,7 @@ _grammar = r"""
      | FLOAT -> float
      | INTEGER -> integer
      | string
+     | BOOL -> boolean
      | "-" number -> negative
      | "(" expression ")"
 
@@ -32,6 +33,7 @@ IDENT: /[a-zA-Z][a-zA-Z0-9_]*/
 STRING: /((`['`])|([^']))+/
 FLOAT: /[0-9]+\.[0-9]*(e[-+]?[0-9]+)?|[0-9]+e[-+]?[0-9]+/
 INTEGER: /[0-9]+/
+BOOL: /True|False/
 
 %import common.WS
 %ignore WS

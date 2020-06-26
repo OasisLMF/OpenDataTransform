@@ -44,6 +44,9 @@ class TreeTransformer(_LarkTransformer):
         # process any escape characters
         return self.string_escape_re.sub(r"\1", value)
 
+    def boolean(self, value):
+        return value == "True"
+
     def lookup(self, name):
         return self.transformer_mapping["lookup"](self.row, name)
 

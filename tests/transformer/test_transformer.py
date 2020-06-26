@@ -108,6 +108,13 @@ def test_lookup_function_with_escaped_quote_returns_row_column_value(
     )
 
 
+def test_true_is_parsed_correctly():
+    assert run({}, "True") is True
+
+
+def test_false_is_parsed_correctly():
+    assert run({}, "False") is False
+
 #
 # expression parsing
 #

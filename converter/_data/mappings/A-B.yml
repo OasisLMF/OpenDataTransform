@@ -1,0 +1,20 @@
+inputFormat: A
+outputFormat: B
+forwardTransforms:
+  B1:
+    - tranformer: A1
+  B2:
+    - tranformer: A2
+  B3:
+    - tranformer: A3
+  B4:
+    - tranformer: A4
+reverseTransforms:
+  A1:
+    - tranformer: B1
+  A2:
+    - tranformer: B2
+  A3:
+    - tranformer: B3
+  A4:
+    - tranformer: B4

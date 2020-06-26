@@ -6,15 +6,15 @@ take the following form::
 
     bases:
       - ...
-    inputFormat: ...
-    outputFormat: ...
-    forwardTransform:
+    input_format: ...
+    output_format: ...
+    forward_transform:
       <target>:
         - transformer: ...
           when: ...
         - ...
       ...
-    reverseTransform: ...
+    reverse_transform: ...
       <target>:
         - transformer: ...
           when: ...
@@ -22,8 +22,8 @@ take the following form::
 
 Each file is designed to allow moving from the input format to the output format
 and back again. In the mapping files the concept of 'forward' is moving from the
-`inputFormat` to the `outputFormat` and 'reverse' is transforming from the
-`outputFormat` to the `inputFormat`.
+`input_format` to the `output_format` and 'reverse' is transforming from the
+`output_format` to the `input_format`.
 
 Each of the fields in the mapping file is described below.
 
@@ -42,14 +42,14 @@ mapping directories. If there is any ambiguity in which mapping file to use the
 file provided in the last provided mapping directory will be used with custom
 mapping paths being used over the standard library.
 
-`inputFormat`/`outputFormat`
+`input_format`/`output_format`
 ----------------------------
 
 These fields are required if no `bases` are set or if no bases provide a value.
 The input and output format are strings that tell the system which formats are
 handled by the conversion.
 
-`forwardTransform`/`reverseTransform`
+`forward_transform`/`reverse_transform`
 -------------------------------------
 
 .. note:: The `when` property is currently not implemented and the docs are
@@ -60,7 +60,7 @@ the converter to have any effect. When `bases` are provided the entries for each
 target field will be used and will be overwritten by a matching field in later
 bases or the mapping file.
 
-The `forwardTransform` and `reverseTransform` entries are both mappings that map
+The `forward_transform` and `reverseTransform` entries are both mappings that map
 the output field name to a list of possible transformations.
 
 For each field each transformation has a required `transformer` property and an
