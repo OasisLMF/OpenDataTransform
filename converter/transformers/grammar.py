@@ -1,14 +1,13 @@
 from lark import lark
 
 
-grammar = r"""
+_grammar = r"""
 ?start: expression
 
 ?expression: product
            | expression "+" product -> add
            | expression "-" product -> subtract
 
-// product has priority 2 to fire before sum
 ?product: atom
         | product "*" atom -> multiply
         | product "/" atom -> divide
@@ -29,7 +28,7 @@ grammar = r"""
 ?string: "'" STRING "'" -> string
        | "''"  -> string
 
-IDENT: /[a-zA-Z][a-zA-Z0-9]*/
+IDENT: /[a-zA-Z][a-zA-Z0-9_]*/
 STRING: /((`['`])|([^']))+/
 FLOAT: /[0-9]+\.[0-9]*(e[-+]?[0-9]+)?|[0-9]+e[-+]?[0-9]+/
 INTEGER: /[0-9]+/
@@ -38,4 +37,5 @@ INTEGER: /[0-9]+/
 %ignore WS
 """
 
-parser = lark.Lark(grammar)
+#: Object for parsing the transformer strings and producing a tree
+parser = lark.Lark(_grammar)

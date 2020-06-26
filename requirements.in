@@ -9,3 +9,5 @@ pytest-black
 pytest-isort
 pytest-mypy
 hypothesis
+sphinx
+sphinx-autoapi

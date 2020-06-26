@@ -4,26 +4,37 @@
 #
 #    pip-compile
 #
+alabaster==0.7.12         # via sphinx
 appdirs==1.4.4            # via black
+astroid==2.4.2            # via sphinx-autoapi
 attrs==19.3.0             # via black, hypothesis, pytest
+babel==2.8.0              # via sphinx
 backcall==0.2.0           # via ipython
 black==19.10b0            # via pytest-black
+certifi==2020.6.20        # via requests
+chardet==3.0.4            # via requests
 click==7.1.2              # via black, distributed, pip-tools
 cloudpickle==1.4.1        # via distributed
 coverage==5.1             # via -r requirements.in, pytest-cov
 dask==2.19.0              # via distributed, modin
 decorator==4.4.2          # via ipython, traitlets
 distributed==2.19.0       # via modin
+docutils==0.16            # via sphinx
 filelock==3.0.12          # via pytest-mypy
 flake8==3.8.3             # via pytest-flake8
 heapdict==1.0.1           # via zict
 hypothesis==5.18.0        # via -r requirements.in
+idna==2.9                 # via requests
+imagesize==1.2.0          # via sphinx
 ipdb==0.13.2              # via -r requirements-package.in, -r requirements.in
 ipython-genutils==0.2.0   # via traitlets
 ipython==7.15.0           # via ipdb
 isort==4.3.21             # via pytest-isort
 jedi==0.17.0              # via ipython
+jinja2==2.11.2            # via sphinx, sphinx-autoapi
 lark-parser==0.8.9        # via -r requirements-package.in
+lazy-object-proxy==1.4.3  # via astroid
+markupsafe==1.1.1         # via jinja2
 mccabe==0.6.1             # via flake8
 modin[dask]==0.7.3        # via -r requirements-package.in
 more-itertools==8.4.0     # via pytest
@@ -31,7 +42,7 @@ msgpack==1.0.0            # via distributed
 mypy-extensions==0.4.3    # via mypy
 mypy==0.782               # via pytest-mypy
 numpy==1.18.5             # via pandas
-packaging==19.2           # via modin, pytest
+packaging==19.2           # via modin, pytest, sphinx
 pandas==1.0.3             # via -r requirements-package.in, modin
 parso==0.7.0              # via jedi
 pathspec==0.8.0           # via black
@@ -45,7 +56,7 @@ ptyprocess==0.6.0         # via pexpect
 py==1.8.2                 # via pytest
 pycodestyle==2.6.0        # via flake8
 pyflakes==2.2.0           # via flake8
-pygments==2.6.1           # via ipython
+pygments==2.6.1           # via ipython, sphinx
 pyparsing==2.4.7          # via packaging
 pytest-black==0.3.9       # via -r requirements.in
 pytest-cov==2.10.0        # via -r requirements.in
@@ -54,11 +65,21 @@ pytest-isort==1.0.0       # via -r requirements.in
 pytest-mypy==0.6.2        # via -r requirements.in
 pytest==5.4.3             # via -r requirements.in, pytest-black, pytest-cov, pytest-flake8, pytest-isort, pytest-mypy
 python-dateutil==2.8.1    # via pandas
-pytz==2020.1              # via pandas
-pyyaml==5.3.1             # via dask, distributed
+pytz==2020.1              # via babel, pandas
+pyyaml==5.3.1             # via dask, distributed, sphinx-autoapi
 regex==2020.6.8           # via black
-six==1.15.0               # via packaging, pip-tools, python-dateutil, traitlets
+requests==2.24.0          # via sphinx
+six==1.15.0               # via astroid, packaging, pip-tools, python-dateutil, traitlets
+snowballstemmer==2.0.0    # via sphinx
 sortedcontainers==2.2.2   # via distributed, hypothesis
+sphinx-autoapi==1.4.0     # via -r requirements.in
+sphinx==3.1.1             # via -r requirements.in, sphinx-autoapi
+sphinxcontrib-applehelp==1.0.2  # via sphinx
+sphinxcontrib-devhelp==1.0.2  # via sphinx
+sphinxcontrib-htmlhelp==1.0.3  # via sphinx
+sphinxcontrib-jsmath==1.0.1  # via sphinx
+sphinxcontrib-qthelp==1.0.3  # via sphinx
+sphinxcontrib-serializinghtml==1.1.4  # via sphinx
 tblib==1.6.0              # via distributed
 toml==0.10.1              # via black, pytest-black
 toolz==0.10.0             # via distributed
@@ -66,7 +87,10 @@ tornado==6.0.4            # via distributed
 traitlets==4.3.3          # via ipython
 typed-ast==1.4.1          # via black, mypy
 typing-extensions==3.7.4.2  # via mypy
+unidecode==1.1.1          # via sphinx-autoapi
+urllib3==1.25.9           # via requests
 wcwidth==0.2.4            # via prompt-toolkit, pytest
+wrapt==1.12.1             # via astroid
 zict==2.0.0               # via distributed
 
 # The following packages are considered to be unsafe in a requirements file:
