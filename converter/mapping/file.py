@@ -13,66 +13,6 @@ from .base import BaseMapping
 logger = logging.getLogger(__name__)
 
 
-def _load_yaml(path):
-    with open(path) as f:
-        return yaml.load(f)
-
-
-def _get_candidate_paths_from_search_path(search_path):
-    yield from glob.glob(os.path.abspath(os.path.join(search_path, "*.yml")))
-    yield from glob.glob(os.path.abspath(os.path.join(search_path, "*.yaml")))
-
-
-def _validate_raw_config(raw_config: Dict) -> bool:
-    """
-    Performs a small validation to make sure the candidate config is a
-    dictionary and deosn't have any unexpected keys.
-
-    :param raw_config: The config to check
-    :return:
-    """
-    return (
-        # make sure we haven't loaded a yaml list
-        isinstance(raw_config, dict)
-        and
-        # make sure the config doesnt have any unexpected keys
-        len(
-            raw_config.keys()
-            ^ {
-                "bases",
-                "input_format",
-                "output_format",
-                "forward_transform",
-                "reverse_transform",
-            }
-        )
-        == 0
-    )
-
-
-def _load_raw_configs(search_paths):
-    candidate_paths = chain(
-        *(_get_candidate_paths_from_search_path(p) for p in search_paths)
-    )
-
-    path_wth_config = ((p, _load_yaml(p)) for p in candidate_paths)
-
-    # exclude any configs that dont pass the basic validation
-    return {
-        p: config
-        for p, config in path_wth_config
-        if _validate_raw_config(config)
-    }
-
-
-def _hydreate_configs(raw_configs, search_paths):
-    for k, v in raw_configs:
-        try:
-            yield k, MappingFile(k, v, raw_configs, search_paths)
-        except InvalidMappingFile as e:
-            logger.warning(e)
-
-
 class InvalidMappingFile(Exception):
     def __init__(self, reason, path):
         self.path = path
@@ -188,18 +128,111 @@ class MappingFile:
 
 
 class FileMapping(BaseMapping):
-    def __init__(self, **options):
-        super().__init__(**options)
+    def __init__(
+        self,
+        search_paths=None,
+        standard_search_path=os.path.join(
+            os.path.dirname(__file__), "..", "_data", "mappings"
+        ),
+        **options,
+    ):
+        super().__init__(
+            search_paths=search_paths,
+            standard_search_path=standard_search_path,
+            **options,
+        )
 
+        self._raw_configs = None
+        self._hydrated_configs = None
         self.search_paths = [
-            *options.get("search_paths", []),
-            os.path.join(os.path.dirname(__file__), "..", "_data", "mappings"),
+            os.path.abspath("."),
+            *(os.path.abspath(p) for p in (search_paths or [])),
+            os.path.abspath(standard_search_path),
         ]
 
-        self._raw_configs = _load_raw_configs(self.search_paths)
-        self._mapping_configs = dict(
-            _hydreate_configs(self._raw_configs, self.search_paths)
+    def _load_raw_configs(self):
+        candidate_paths = chain(
+            *(
+                self._get_candidate_paths_from_search_path(p)
+                for p in self.search_paths
+            )
         )
+
+        path_wth_config = ((p, self._load_yaml(p)) for p in candidate_paths)
+
+        # exclude any configs that dont pass the basic validation
+        return {
+            p: config
+            for p, config in path_wth_config
+            if self._validate_raw_config(config)
+        }
+
+    @property
+    def raw_configs(self):
+        if self._raw_configs is None:
+            self._raw_configs = self._load_raw_configs()
+
+        return self._raw_configs
+
+    @classmethod
+    def _load_yaml(cls, path):
+        with open(path) as f:
+            return yaml.load(f)
+
+    @classmethod
+    def _get_candidate_paths_from_search_path(cls, search_path):
+        yield from glob.glob(
+            os.path.abspath(os.path.join(search_path, "*.yml"))
+        )
+        yield from glob.glob(
+            os.path.abspath(os.path.join(search_path, "*.yaml"))
+        )
+
+    @classmethod
+    def _conf_has_unexpected_fields(cls, conf):
+        return (
+            len(
+                conf.keys()
+                & (
+                    conf.keys()
+                    ^ {
+                        "bases",
+                        "input_format",
+                        "output_format",
+                        "forward_transform",
+                        "reverse_transform",
+                    }
+                )
+            )
+            != 0
+        )
+
+    @classmethod
+    def _validate_raw_config(cls, raw_config: Dict) -> bool:
+        """
+        Performs a small validation to make sure the candidate config is a
+        dictionary and deosn't have any unexpected keys.
+
+        :param raw_config: The config to check
+        :return:
+        """
+        return isinstance(
+            raw_config, dict
+        ) and not cls._conf_has_unexpected_fields(raw_config)
+
+    def _hydrate_raw_configs(self):
+        for k, v in self.raw_configs.items():
+            try:
+                yield k, MappingFile(k, v, self.raw_configs, self.search_paths)
+            except InvalidMappingFile as e:
+                logger.warning(str(e))
+
+    @property
+    def mapping_configs(self):
+        if self._hydrated_configs is None:
+            self._hydrated_configs = dict(self._hydrate_raw_configs())
+
+        return self._hydrated_configs
 
     def get_transformations(self) -> Dict[str, List[Any]]:
         return {}
