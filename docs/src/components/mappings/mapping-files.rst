@@ -43,14 +43,14 @@ file provided in the last provided mapping directory will be used with custom
 mapping paths being used over the standard library.
 
 `input_format`/`output_format`
-----------------------------
+------------------------------
 
 These fields are required if no `bases` are set or if no bases provide a value.
 The input and output format are strings that tell the system which formats are
 handled by the conversion.
 
 `forward_transform`/`reverse_transform`
--------------------------------------
+---------------------------------------
 
 .. note:: The `when` property is currently not implemented and the docs are
           here as a placeholder for how it has been proposed it will work.
