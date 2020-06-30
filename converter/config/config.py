@@ -5,6 +5,7 @@ from typing import Any, Dict, Iterable, Tuple, TypeVar
 
 import yaml
 
+from converter.files import read_yaml
 
 T = TypeVar("T")
 ConfigSource = Dict[str, Any]
@@ -49,8 +50,7 @@ class Config:
         :return: An iterable of normalised configs from the various sources
         """
         if config_path and os.path.exists(config_path):
-            with open(config_path) as f:
-                yield self.normalise_property_names(yaml.load(f))
+            yield self.normalise_property_names(read_yaml(config_path))
 
         if overrides:
             yield self.normalise_property_names(overrides)

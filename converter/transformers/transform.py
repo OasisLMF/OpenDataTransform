@@ -14,10 +14,11 @@ RowType = Any
 
 class TransformerMapping(TypedDict):
     lookup: Callable[[RowType, str], Any]
-    add: Callable[[Any, Any], Any]
-    subtract: Callable[[Any, Any], Any]
-    multiply: Callable[[Any, Any], Any]
-    divide: Callable[[Any, Any], Any]
+    boolean: Callable[[RowType, str], Any]
+    add: Callable[[RowType, Any, Any], Any]
+    subtract: Callable[[RowType, Any, Any], Any]
+    multiply: Callable[[RowType, Any, Any], Any]
+    divide: Callable[[RowType, Any, Any], Any]
 
 
 @v_args(inline=True)
@@ -44,11 +45,11 @@ class TreeTransformer(_LarkTransformer):
         # process any escape characters
         return self.string_escape_re.sub(r"\1", value)
 
-    def boolean(self, value):
-        return value == "True"
-
     def lookup(self, name):
         return self.transformer_mapping["lookup"](self.row, name)
+
+    def boolean(self, value):
+        return self.transformer_mapping["boolean"](self.row, value)
 
     def add(self, lhs, rhs):
         return self.transformer_mapping["add"](lhs, rhs)
@@ -70,10 +71,11 @@ def run(
         row,
         {
             "lookup": lambda r, name: r[name],
-            "add": add,
-            "subtract": sub,
-            "multiply": mul,
-            "divide": div,
+            "add": lambda r, lhs, rhs: add(lhs, rhs),
+            "subtract": lambda r, lhs, rhs: sub(lhs, rhs),
+            "multiply": lambda r, lhs, rhs: mul(lhs, rhs),
+            "divide": lambda r, lhs, rhs: div(lhs, rhs),
+            "boolean": lambda r, value: value == "True",
             **(transformer_mapping or {}),
         },
     )

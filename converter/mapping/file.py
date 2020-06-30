@@ -11,7 +11,7 @@ import yaml
 
 from ..errors import ConverterError
 from .base import BaseMapping, TransformationEntry, TransformationSet
-
+from ..files import read_yaml
 
 logger = logging.getLogger(__name__)
 
@@ -341,8 +341,7 @@ class FileMapping(BaseMapping):
 
         :return: The parsed yaml content
         """
-        with open(path) as f:
-            return yaml.load(f)
+        return read_yaml(path)
 
     @classmethod
     def _get_candidate_paths_from_search_path(
@@ -477,7 +476,7 @@ class FileMapping(BaseMapping):
             path = nx.shortest_path(
                 self.mapping_graph, self.input_format, self.output_format,
             )
-        except nx.NetworkXNoPath:
+        except (nx.NetworkXNoPath, nx.NodeNotFound):
             raise NoConversionPathError(self.input_format, self.output_format)
 
         logger.info(f"Path found {' -> '.join(path)}")

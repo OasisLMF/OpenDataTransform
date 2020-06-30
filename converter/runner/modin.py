@@ -12,4 +12,6 @@ class ModinRunner(PandasRunner):
         os.environ.setdefault("MODIN_ENGINE", self.engine)
         import modin.pandas as pd  # must be imported after modin engine is set
 
+        self.dataframe_type = pd.DataFrame
+        self.series_type = pd.Series
         return pd.DataFrame(extractor.extract())

@@ -3,7 +3,6 @@ from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
 import pytest
-import yaml
 from hypothesis import given
 from hypothesis.strategies import lists, sampled_from, text
 
@@ -14,11 +13,6 @@ from converter.mapping.file import (
     MappingFile,
     NoConversionPathError,
 )
-
-
-def write_yaml(path, content):
-    with open(path, "w") as f:
-        yaml.dump(content, f)
 
 
 #
