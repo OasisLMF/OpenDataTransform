@@ -3,3 +3,4 @@ ipdb
 pandas
 modin[dask]
 lark-parser
+networkx

@@ -1,24 +1,37 @@
 import glob
 import logging
 import os
+from collections import OrderedDict
 from functools import reduce
 from itertools import chain, product
-from typing import Any, Dict, List
+from typing import Dict, List
 
+import networkx as nx
 import yaml
 
-from .base import BaseMapping
+from ..errors import ConverterError
+from .base import BaseMapping, TransformationEntry, TransformationSet
 
 
 logger = logging.getLogger(__name__)
 
 
-class InvalidMappingFile(Exception):
+class InvalidMappingFile(ConverterError):
     def __init__(self, reason, path):
         self.path = path
         self.reason = reason
 
-        super().__init__(f"{path}: {reason}")
+        super().__init__(f"{path}: {reason}.")
+
+
+class NoConversionPathError(ConverterError):
+    def __init__(self, input_format, output_format):
+        self.input_format = input_format
+        self.output_format = output_format
+
+        super().__init__(
+            f"No conversion path from {input_format} to {output_format}."
+        )
 
 
 class MappingFile:
@@ -70,9 +83,18 @@ class MappingFile:
     def _resolve_property(self, *values):
         return next(reversed([v for v in values if v]), None)
 
-    def _reduce_transforms(self, *transform_configs):
+    def _reduce_transforms(self, *transform_configs) -> TransformationSet:
         return reduce(
-            lambda transforms, current: {**transforms, **current},
+            lambda transforms, current: {
+                **transforms,
+                **{
+                    k: [
+                        TransformationEntry(**t) if isinstance(t, dict) else t
+                        for t in v
+                    ]
+                    for k, v in current.items()
+                },
+            },
             transform_configs,
             {},
         )
@@ -150,6 +172,8 @@ class FileMapping(BaseMapping):
             os.path.abspath(standard_search_path),
         ]
 
+        self._mapping_graph = None
+
     def _load_raw_configs(self):
         candidate_paths = chain(
             *(
@@ -161,11 +185,11 @@ class FileMapping(BaseMapping):
         path_wth_config = ((p, self._load_yaml(p)) for p in candidate_paths)
 
         # exclude any configs that dont pass the basic validation
-        return {
-            p: config
+        return OrderedDict(
+            (p, config)
             for p, config in path_wth_config
             if self._validate_raw_config(config)
-        }
+        )
 
     @property
     def raw_configs(self):
@@ -230,9 +254,54 @@ class FileMapping(BaseMapping):
     @property
     def mapping_configs(self):
         if self._hydrated_configs is None:
-            self._hydrated_configs = dict(self._hydrate_raw_configs())
+            self._hydrated_configs = OrderedDict(self._hydrate_raw_configs())
 
         return self._hydrated_configs
 
-    def get_transformations(self) -> Dict[str, List[Any]]:
-        return {}
+    def _build_mapping_graph(self):
+        g = nx.DiGraph()
+
+        # the mapping config is in order from first search path to last
+        # if we build it in reverse order we will store the most preferable
+        # mapping on each edge
+        for mapping in reversed(self.mapping_configs.values()):
+            if mapping.can_run_forwards:
+                g.add_edge(
+                    mapping.input_format,
+                    mapping.output_format,
+                    transform_set=mapping.forward_transform,
+                    filename=mapping.path,
+                )
+
+            if mapping.can_run_in_reverse:
+                g.add_edge(
+                    mapping.output_format,
+                    mapping.input_format,
+                    transform_set=mapping.reverse_transform,
+                    filename=mapping.path,
+                )
+
+        return g
+
+    @property
+    def mapping_graph(self):
+        if self._mapping_graph is None:
+            self._mapping_graph = self._build_mapping_graph()
+
+        return self._mapping_graph
+
+    def get_transformations(self) -> List[TransformationSet]:
+        try:
+            path = nx.shortest_path(
+                self.mapping_graph, self.input_format, self.output_format,
+            )
+        except nx.NetworkXNoPath:
+            raise NoConversionPathError(self.input_format, self.output_format)
+
+        logger.info(f"Path found {' -> '.join(path)}")
+        edges = map(
+            lambda in_out: self.mapping_graph[in_out[0]][in_out[1]],
+            zip(path[:-1], path[1:]),
+        )
+
+        return [edge["transform_set"] for edge in edges]

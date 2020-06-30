@@ -17,7 +17,7 @@ click==7.1.2              # via black, distributed, pip-tools
 cloudpickle==1.4.1        # via distributed
 coverage==5.1             # via -r requirements.in, pytest-cov
 dask==2.19.0              # via distributed, modin
-decorator==4.4.2          # via ipython, traitlets
+decorator==4.4.2          # via ipython, networkx, traitlets
 distributed==2.19.0       # via modin
 docutils==0.16            # via sphinx
 filelock==3.0.12          # via pytest-mypy
@@ -41,6 +41,7 @@ more-itertools==8.4.0     # via pytest
 msgpack==1.0.0            # via distributed
 mypy-extensions==0.4.3    # via mypy
 mypy==0.782               # via pytest-mypy
+networkx==2.4             # via -r requirements-package.in
 numpy==1.18.5             # via pandas
 packaging==19.2           # via modin, pytest, sphinx
 pandas==1.0.3             # via -r requirements-package.in, modin
