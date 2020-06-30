@@ -15,16 +15,23 @@ class BaseMapping:
     """
     Class describing the mapping from the input to the
     output formats.
+
+    :param input_format: The start of the conversion path
+    :param output_format: The end of the conversion path
     """
 
-    def __init__(self, **options):
-        self._options = options
+    def __init__(self, input_format=None, output_format=None, **options):
+        self._options = {
+            "input_format": input_format,
+            "output_format": output_format,
+            **options,
+        }
 
-        self.input_format = options.get("input_format")
+        self.input_format = input_format
         if not self.input_format:
             raise ConfigurationError("input_format not set for the mapping.")
 
-        self.output_format = options.get("output_format")
+        self.output_format = output_format
         if not self.output_format:
             raise ConfigurationError("output_format not set for the mapping.")
 
