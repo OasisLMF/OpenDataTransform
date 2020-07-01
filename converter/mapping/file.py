@@ -7,11 +7,11 @@ from itertools import chain, product
 from typing import Dict, Iterable, List, TypedDict, Union
 
 import networkx as nx
-import yaml
 
 from ..errors import ConverterError
-from .base import BaseMapping, TransformationEntry, TransformationSet
 from ..files import read_yaml
+from .base import BaseMapping, TransformationEntry, TransformationSet
+
 
 logger = logging.getLogger(__name__)
 

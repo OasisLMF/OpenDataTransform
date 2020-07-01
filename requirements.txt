@@ -16,12 +16,13 @@ chardet==3.0.4            # via requests
 click==7.1.2              # via black, distributed, pip-tools
 cloudpickle==1.4.1        # via distributed
 coverage==5.1             # via -r requirements.in, pytest-cov
-dask==2.19.0              # via distributed, modin
+dask[dataframe]==2.19.0   # via -r requirements-package.in, distributed, modin
 decorator==4.4.2          # via ipython, networkx, traitlets
 distributed==2.19.0       # via modin
 docutils==0.16            # via sphinx
 filelock==3.0.12          # via pytest-mypy
 flake8==3.8.3             # via pytest-flake8
+fsspec==0.7.4             # via dask
 heapdict==1.0.1           # via zict
 hypothesis==5.18.0        # via -r requirements.in
 idna==2.9                 # via requests
@@ -34,6 +35,7 @@ jedi==0.17.0              # via ipython
 jinja2==2.11.2            # via sphinx, sphinx-autoapi
 lark-parser==0.8.9        # via -r requirements-package.in
 lazy-object-proxy==1.4.3  # via astroid
+locket==0.2.0             # via partd
 markupsafe==1.1.1         # via jinja2
 mccabe==0.6.1             # via flake8
 modin[dask]==0.7.3        # via -r requirements-package.in
@@ -42,10 +44,11 @@ msgpack==1.0.0            # via distributed
 mypy-extensions==0.4.3    # via mypy
 mypy==0.782               # via pytest-mypy
 networkx==2.4             # via -r requirements-package.in
-numpy==1.18.5             # via pandas
+numpy==1.18.5             # via dask, pandas
 packaging==19.2           # via modin, pytest, sphinx
-pandas==1.0.3             # via -r requirements-package.in, modin
+pandas==1.0.3             # via -r requirements-package.in, dask, modin
 parso==0.7.0              # via jedi
+partd==1.1.0              # via dask
 pathspec==0.8.0           # via black
 pexpect==4.8.0            # via ipython
 pickleshare==0.7.5        # via ipython
@@ -83,7 +86,7 @@ sphinxcontrib-qthelp==1.0.3  # via sphinx
 sphinxcontrib-serializinghtml==1.1.4  # via sphinx
 tblib==1.6.0              # via distributed
 toml==0.10.1              # via black, pytest-black
-toolz==0.10.0             # via distributed
+toolz==0.10.0             # via dask, distributed, partd
 tornado==6.0.4            # via distributed
 traitlets==4.3.3          # via ipython
 typed-ast==1.4.1          # via black, mypy

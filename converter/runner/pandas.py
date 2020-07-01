@@ -1,13 +1,13 @@
 import logging
 from functools import reduce
-from typing import Any, Dict, Iterable, Generic, TypeVar, Union, List
+from typing import Any, Dict, Iterable, List, Union
 
 import pandas as pd
 
 from ..connector.base import BaseConnector
-from ..mapping.base import BaseMapping, TransformationSet, TransformationEntry
-from .base import BaseRunner
+from ..mapping.base import BaseMapping, TransformationEntry, TransformationSet
 from ..transformers import run
+from .base import BaseRunner
 
 
 logger = logging.getLogger(__name__)
@@ -25,15 +25,26 @@ class PandasRunner(BaseRunner):
     def get_dataframe(self, extractor: BaseConnector) -> pd.DataFrame:
         return pd.DataFrame(extractor.extract())
 
+    def combine_series(self, first, second):
+        """
+        Helper function for combining 2 series. This is used so that
+        other pandas implementations can override the behaviour to
+        account for special cases.
+
+        :param first: The preferred series to take data from
+        :param second: The secondary series to take data from
+
+        :return: The combined series
+        """
+        return first.combine_first(second)
+
     def apply_transformation_entry(
-        self,
-        input_df: pd.DataFrame,
-        entry: TransformationEntry,
+        self, input_df: pd.DataFrame, entry: TransformationEntry,
     ):
         # process the when clause to get a filter series
-        filter_series = input_df[run(input_df, entry.when)]
+        filter_series = run(input_df, entry.when)
 
-        if isinstance(filter_series, pd.Series):
+        if isinstance(filter_series, self.series_type):
             # if we have a series it treat it as a row mapping
             filtered_input = input_df[filter_series]
         elif filter_series:
@@ -47,33 +58,36 @@ class PandasRunner(BaseRunner):
                 f"A transformer when clause resolves to false in all cases "
                 f"({entry.when})."
             )
-            filtered_input = self.dataframe_type()
+            return self.series_type()
 
-        return run(filtered_input, entry.transformation)
+        result = run(filtered_input, entry.transformation)
+        if isinstance(result, self.series_type):
+            return result
+        else:
+            return self.series_type(result, input_df.index)
 
     def apply_column_transformation(
-        self,
-        input_df: pd.DataFrame,
-        entry_list: List[TransformationEntry],
+        self, input_df: pd.DataFrame, entry_list: List[TransformationEntry],
     ):
-        return reduce(
-            lambda series, entry: series.combine_first(
-                self.apply_transformation_entry(input_df, entry),
+        result = reduce(
+            lambda series, entry: self.combine_series(
+                series, self.apply_transformation_entry(input_df, entry),
             ),
             entry_list,
-            self.series_type()
+            self.series_type(),
         )
+        return result
 
     def apply_transformation_set(
-        self,
-        input_df: pd.DataFrame,
-        transformation_set: TransformationSet,
+        self, input_df: pd.DataFrame, transformation_set: TransformationSet,
     ) -> pd.DataFrame:
         return reduce(
             lambda target, col_transforms: target.assign(
-                **{col_transforms[0]: self.apply_column_transformation(
-                    input_df, col_transforms[1]
-                )}
+                **{
+                    col_transforms[0]: self.apply_column_transformation(
+                        input_df, col_transforms[1]
+                    )
+                }
             ),
             transformation_set.items(),
             self.dataframe_type(),
@@ -87,9 +101,7 @@ class PandasRunner(BaseRunner):
         df = self.get_dataframe(extractor)
 
         transformed = reduce(
-            self.apply_transformation_set,
-            transformations,
-            df,
+            self.apply_transformation_set, transformations, df,
         )
 
-        return transformed
+        return (r.to_dict() for idx, r in transformed.iterrows())

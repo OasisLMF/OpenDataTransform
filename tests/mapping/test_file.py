@@ -6,6 +6,7 @@ import pytest
 from hypothesis import given
 from hypothesis.strategies import lists, sampled_from, text
 
+from converter.files import write_yaml
 from converter.mapping.base import TransformationEntry
 from converter.mapping.file import (
     FileMapping,

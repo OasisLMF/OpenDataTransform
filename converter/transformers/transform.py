@@ -52,16 +52,16 @@ class TreeTransformer(_LarkTransformer):
         return self.transformer_mapping["boolean"](self.row, value)
 
     def add(self, lhs, rhs):
-        return self.transformer_mapping["add"](lhs, rhs)
+        return self.transformer_mapping["add"](self.row, lhs, rhs)
 
     def subtract(self, lhs, rhs):
-        return self.transformer_mapping["subtract"](lhs, rhs)
+        return self.transformer_mapping["subtract"](self.row, lhs, rhs)
 
     def multiply(self, lhs, rhs):
-        return self.transformer_mapping["multiply"](lhs, rhs)
+        return self.transformer_mapping["multiply"](self.row, lhs, rhs)
 
     def divide(self, lhs, rhs):
-        return self.transformer_mapping["divide"](lhs, rhs)
+        return self.transformer_mapping["divide"](self.row, lhs, rhs)
 
 
 def run(

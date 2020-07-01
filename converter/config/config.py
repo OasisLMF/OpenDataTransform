@@ -3,9 +3,8 @@ from functools import reduce
 from itertools import chain
 from typing import Any, Dict, Iterable, Tuple, TypeVar
 
-import yaml
-
 from converter.files import read_yaml
+
 
 T = TypeVar("T")
 ConfigSource = Dict[str, Any]
