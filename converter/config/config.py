@@ -3,6 +3,8 @@ from functools import reduce
 from itertools import chain
 from typing import Any, Dict, Iterable, Tuple, TypeVar
 
+import yaml
+
 from converter.files import read_yaml
 
 
@@ -20,30 +22,48 @@ NotFound = NotFoundType()
 
 class Config:
     """
-    Configuration class that loads the config file, environment (TODO),
-    command line (TODO) and overrides and merges them into a single map.
+    Configuration class that loads the config file, environment,
+    command line and overrides and merges them into a single map.
     """
 
     def __init__(
-        self, config_path: str = None, overrides: Dict[str, Any] = None
+        self,
+        argv: Dict[str, Any] = None,
+        config_path: str = None,
+        overrides: Dict[str, Any] = None,
+        env: Dict[str, str] = None,
     ):
         self.config = self.merge_config_sources(
-            *self.get_config_sources(config_path, overrides)
+            *self.get_config_sources(
+                config_path=config_path,
+                env=env,
+                argv=argv,
+                overrides=overrides,
+            )
         )
 
+    def __eq__(self, other):
+        return self.config in [other, getattr(other, "config", {})]
+
     def get_config_sources(
-        self, config_path: str = None, overrides: ConfigSource = None,
+        self,
+        config_path: str = None,
+        env: Dict[str, str] = None,
+        argv: Dict[str, Any] = None,
+        overrides: ConfigSource = None,
     ) -> Iterable[ConfigSource]:
         """
         Returns all the provided config sources in order of increasing
         precedence, the order is:
 
         1. Config file
-        2. Environment (TODO)
-        3. Command line (TODO)
+        2. Environment
+        3. Command line
         4. Hard coded overrides
 
         :param config_path: The path to the config file
+        :param env: The systems environment dict
+        :param argv: Dict of config paths to values
         :param overrides: hard coded override values for the config
 
         :return: An iterable of normalised configs from the various sources
@@ -51,8 +71,44 @@ class Config:
         if config_path and os.path.exists(config_path):
             yield self.normalise_property_names(read_yaml(config_path))
 
+        if env:
+            yield self.normalise_property_names(self.process_env_options(env))
+
+        if argv:
+            yield self.normalise_property_names(self.process_cli_options(argv))
+
         if overrides:
             yield self.normalise_property_names(overrides)
+
+    def _get_config_dict_from_path_value_pairs(
+        self, paths_and_values, separator,
+    ):
+        conf = {}
+        for path, value in paths_and_values:
+            *parts, final = path.lower().split(separator)
+            reduce(lambda c, part: c.setdefault(part, {}), parts, conf)[
+                final
+            ] = value
+
+        return conf
+
+    def process_cli_options(self, argv):
+        return self._get_config_dict_from_path_value_pairs(argv.items(), ".")
+
+    def process_env_options(self, env):
+        env_search = "CONVERTER_".lower()
+
+        return self._get_config_dict_from_path_value_pairs(
+            (
+                (
+                    k.lower().replace(env_search, ""),
+                    yaml.load(v, yaml.SafeLoader),
+                )
+                for k, v in env.items()
+                if k.lower().startswith(env_search)
+            ),
+            "_",
+        )
 
     def merge_config_sources(
         self,
@@ -181,3 +237,6 @@ class Config:
             return fallback
 
         raise KeyError(path)
+
+    def to_yaml(self):
+        return yaml.safe_dump(self.config)

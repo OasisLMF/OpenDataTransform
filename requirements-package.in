@@ -5,3 +5,4 @@ modin[dask]
 dask[dataframe]
 lark-parser
 networkx
+click

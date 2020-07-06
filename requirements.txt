@@ -13,7 +13,7 @@ backcall==0.2.0           # via ipython
 black==19.10b0            # via pytest-black
 certifi==2020.6.20        # via requests
 chardet==3.0.4            # via requests
-click==7.1.2              # via black, distributed, pip-tools
+click==7.1.2              # via -r requirements-package.in, black, distributed, pip-tools
 cloudpickle==1.4.1        # via distributed
 coverage==5.1             # via -r requirements.in, pytest-cov
 dask[dataframe]==2.19.0   # via -r requirements-package.in, distributed, modin

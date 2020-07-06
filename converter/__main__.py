@@ -1,5 +1,4 @@
-from .config import Config
-from .controller import Controller
+from .cli import cli
 
 
-Controller(Config(config_path="config.yml")).run()
+cli()

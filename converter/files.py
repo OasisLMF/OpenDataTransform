@@ -8,4 +8,4 @@ def write_yaml(path, content):
 
 def read_yaml(path):
     with open(path) as f:
-        return yaml.load(f)
+        return yaml.load(f, yaml.SafeLoader)
