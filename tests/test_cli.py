@@ -90,3 +90,17 @@ def test_run(opts):
 
         assert result.exit_code == 0
         mock_controller.assert_called_once_with(expected_conf)
+
+
+def test_run_raises___exception_is_logged():
+    expected_exception = Exception("Some Error")
+
+    with mock.patch("logging.exception") as mock_exception_logger, mock.patch(
+        "converter.cli.Controller", side_effect=expected_exception
+    ):
+        runner = CliRunner()
+
+        result = runner.invoke(cli, ["run"])
+
+        mock_exception_logger.assert_called_once_with(expected_exception)
+        assert result.exit_code == 1

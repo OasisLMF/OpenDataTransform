@@ -1,5 +1,6 @@
 import logging
 import os
+import sys
 from datetime import datetime
 from logging.config import dictConfig as loggingDictConfig
 
@@ -22,11 +23,6 @@ class ColorFormatter(logging.Formatter):
         return click.style(
             super().format(record), fg=self.colors.get(record.levelno),
         )
-
-
-class InfoFilter(logging.Filter):
-    def filter(self, record):
-        return record.levelno <= logging.INFO
 
 
 class ClickEchoHandler(logging.Handler):
@@ -109,10 +105,10 @@ def show_config(ctx):
 @click.pass_context
 def run(ctx):
     try:
-        logging.debug("Running with config:")
-        logging.debug(ctx.obj["config"].to_yaml())
+        logging.debug(f"Running with config:\n{ctx.obj['config'].to_yaml()}")
         Controller(ctx.obj["config"]).run()
     except Exception as e:
         logging.exception(e)
+        sys.exit(1)
     else:
         logging.info("Transformation Complete")

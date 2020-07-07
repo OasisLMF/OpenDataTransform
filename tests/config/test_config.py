@@ -128,16 +128,23 @@ def test_missing_of_missing_parent_with_fallback___fallback_is_used():
 #
 
 
-def test_path_is_not_set___absolute_path_is_based_off_working_dir():
+def test_config_path_is_not_set___absolute_path_is_based_off_working_dir():
     config = Config(overrides={"foo": {"BAR": "BAz"}})
 
     assert config.absolute_path("foo.bar") == os.path.abspath("foo.bar")
 
 
-def test_path_is_set___absolute_path_is_based_off_dir_of_config():
+def test_config_path_is_set___absolute_path_is_based_off_dir_of_config():
     with config_file({"foo": {"BAR": "BAz"}}) as p:
         config = Config(config_path=p)
 
         assert config.absolute_path("foo.bar") == os.path.abspath(
             os.path.join(os.path.dirname(p), "foo.bar")
         )
+
+
+def test_argument_path_is_none___absolute_path_is_none():
+    with config_file({"foo": {"BAR": "BAz"}}) as p:
+        config = Config(config_path=p)
+
+        assert config.absolute_path(None) is None
