@@ -1,11 +1,12 @@
 import os
 
+from ..files.csv import BufferedCsvReader
 from .pandas import PandasRunner
 
 
 class ModinRunner(PandasRunner):
-    def __init__(self, **options):
-        super().__init__(**options)
+    def __init__(self, config, **options):
+        super().__init__(config, **options)
         self.engine = options.get("engine", "dask")
 
     def combine_series(self, first, second):
@@ -30,4 +31,4 @@ class ModinRunner(PandasRunner):
 
         self.dataframe_type = pd.DataFrame
         self.series_type = pd.Series
-        return pd.DataFrame(extractor.extract())
+        return pd.read_csv(BufferedCsvReader(extractor.extract()))

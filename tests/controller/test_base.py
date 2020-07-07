@@ -64,11 +64,17 @@ def test_component_class_paths_are_set___specific_component_classes_are_used():
         controller.run()
 
         extractor_ctor_mock.assert_called_once_with(
-            first="Some Extractor Param",
+            config, first="Some Extractor Param",
         )
-        loader_ctor_mock.assert_called_once_with(first="Some Loader Param")
-        mapping_ctor_mock.assert_called_once_with(first="Some Mapping Param")
-        runner_ctor_mock.assert_called_once_with(first="Some Runner Param")
+        loader_ctor_mock.assert_called_once_with(
+            config, first="Some Loader Param"
+        )
+        mapping_ctor_mock.assert_called_once_with(
+            config, first="Some Mapping Param"
+        )
+        runner_ctor_mock.assert_called_once_with(
+            config, first="Some Runner Param"
+        )
         runner.run.assert_called_once_with(extractor, mapping, loader)
 
 
@@ -98,8 +104,14 @@ def test_component_class_paths_default___default_component_classes_are_used():
 
         controller.run()
 
-        connector_ctor_mock.assert_any_call(first="Some Extractor Param")
-        connector_ctor_mock.assert_any_call(first="Some Loader Param")
-        mapping_ctor_mock.assert_called_once_with(first="Some Mapping Param")
-        runner_ctor_mock.assert_called_once_with(first="Some Runner Param")
+        connector_ctor_mock.assert_any_call(
+            config, first="Some Extractor Param"
+        )
+        connector_ctor_mock.assert_any_call(config, first="Some Loader Param")
+        mapping_ctor_mock.assert_called_once_with(
+            config, first="Some Mapping Param"
+        )
+        runner_ctor_mock.assert_called_once_with(
+            config, first="Some Runner Param"
+        )
         runner.run.assert_called_once_with(extractor, mapping, loader)

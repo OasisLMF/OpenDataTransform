@@ -1,13 +1,18 @@
 from typing import Any, Dict, Iterable
 
+from converter.config import Config
+
 
 class BaseConnector:
     """
     Connects to the the data source
+
+    :param config: The global config for the system
     """
 
-    def __init__(self, **options):
+    def __init__(self, config: Config, **options):
         self._options = options
+        self.config = config
 
     def extract(self) -> Iterable[Dict[str, Any]]:
         """

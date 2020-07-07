@@ -21,10 +21,10 @@ class CsvConnector(BaseConnector):
       (default: `nonnumeric`).
     """
 
-    def __init__(self, **options):
-        super().__init__(**options)
+    def __init__(self, config, **options):
+        super().__init__(config, **options)
 
-        self.file_path = options["path"]
+        self.file_path = config.absolute_path(options["path"])
         self.write_header = options.get("write_header", True)
         self.quoting = {
             "all": csv.QUOTE_ALL,

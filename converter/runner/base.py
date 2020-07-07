@@ -1,5 +1,6 @@
 from typing import Any, Dict, Iterable
 
+from converter.config import Config
 from converter.connector.base import BaseConnector
 from converter.mapping.base import BaseMapping
 
@@ -8,9 +9,12 @@ class BaseRunner:
     """
     Runs the transformations on the extracted data and writes
     it to the data loader
+
+    :param config: The global config for the system
     """
 
-    def __init__(self, **options):
+    def __init__(self, config: Config, **options):
+        self.config = config
         self._options = options
 
     def run(

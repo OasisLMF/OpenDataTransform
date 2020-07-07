@@ -1,5 +1,6 @@
 from typing import Dict, List, NamedTuple
 
+from converter.config import Config
 from converter.config.errors import ConfigurationError
 
 
@@ -16,11 +17,19 @@ class BaseMapping:
     Class describing the mapping from the input to the
     output formats.
 
+    :param config: The global config for the system
     :param input_format: The start of the conversion path
     :param output_format: The end of the conversion path
     """
 
-    def __init__(self, input_format=None, output_format=None, **options):
+    def __init__(
+        self,
+        config: Config,
+        input_format: str = None,
+        output_format: str = None,
+        **options
+    ):
+        self.config = config
         self._options = {
             "input_format": input_format,
             "output_format": output_format,

@@ -5,7 +5,7 @@ from typing import Any, Dict, Iterable, Tuple, TypeVar
 
 import yaml
 
-from converter.files import read_yaml
+from converter.files.yaml import read_yaml
 
 
 T = TypeVar("T")
@@ -33,6 +33,7 @@ class Config:
         overrides: Dict[str, Any] = None,
         env: Dict[str, str] = None,
     ):
+        self.path = os.path.abspath(config_path) if config_path else None
         self.config = self.merge_config_sources(
             *self.get_config_sources(
                 config_path=config_path,
@@ -239,4 +240,26 @@ class Config:
         raise KeyError(path)
 
     def to_yaml(self):
+        """
+        Generates a yaml string  representation of the normalised config
+
+        :return: The yaml representation
+        """
         return yaml.safe_dump(self.config)
+
+    def absolute_path(self, p):
+        """
+        Gets the absolute path relative to the config files directory.
+
+        :param p: The path relative to the config file
+
+        :return: The absolute path if both the config path and `p` are set,
+            if `p` is `None`, `None` is returned. If the config path is `None`,
+            `p` is returned without modification
+        """
+        if p is not None:
+            return os.path.abspath(
+                os.path.join(os.path.dirname(self.path or "."), p)
+            )
+
+        return p

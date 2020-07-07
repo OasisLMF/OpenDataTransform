@@ -10,33 +10,53 @@ from ..transformers import run
 from .base import BaseRunner
 
 
-logger = logging.getLogger(__name__)
+def get_logger():
+    return logging.getLogger(__name__)
 
 
 class PandasRunner(BaseRunner):
     dataframe_type = pd.DataFrame
     series_type = pd.Series
 
-    def __init__(self, **options):
-        super().__init__(**options)
-
-        self._dataframe: Union[None, pd.DataFrame] = None
-
     def get_dataframe(self, extractor: BaseConnector) -> pd.DataFrame:
         return pd.DataFrame(extractor.extract())
 
-    def combine_series(self, first, second):
+    def combine_series(self, first: Union[pd.Series, None], second):
         """
         Helper function for combining 2 series. This is used so that
         other pandas implementations can override the behaviour to
         account for special cases.
+
+        Some pandas implementations dont like combining on empty series.
+        If first is None we just return the second series which will be in
+        the implementations specific series.
 
         :param first: The preferred series to take data from
         :param second: The secondary series to take data from
 
         :return: The combined series
         """
-        return first.combine_first(second)
+        return second if first is None else first.combine_first(second)
+
+    def assign(self, dataframe: Union[pd.DataFrame, None], **assignments):
+        """
+        Helper function for assigning a series to a dataframe. Some
+        implementations of pandas are less efficient if we start with an empty
+        dataframe so here we allow for `None` to be passed and create the
+        initial dataframe from the first assigned series.
+
+        :param dataframe: The data frame to assign to or None
+        :param assignments: The assignments to apply to the dataframe
+
+        :return: The updated dataframe
+        """
+        for name, series in assignments.items():
+            if dataframe is None:
+                dataframe = series.to_frame(name=name)
+            else:
+                dataframe = dataframe.assign(**{name: series})
+
+        return dataframe
 
     def apply_transformation_entry(
         self, input_df: pd.DataFrame, entry: TransformationEntry,
@@ -54,7 +74,7 @@ class PandasRunner(BaseRunner):
         else:
             # if the filter series is normal value that resolves to false
             # return no rows, this should never happen so raise a warning.
-            logger.warning(
+            get_logger().warning(
                 f"A transformer when clause resolves to false in all cases "
                 f"({entry.when})."
             )
@@ -74,7 +94,7 @@ class PandasRunner(BaseRunner):
                 series, self.apply_transformation_entry(input_df, entry),
             ),
             entry_list,
-            self.series_type(),
+            None,
         )
         return result
 
@@ -82,15 +102,16 @@ class PandasRunner(BaseRunner):
         self, input_df: pd.DataFrame, transformation_set: TransformationSet,
     ) -> pd.DataFrame:
         return reduce(
-            lambda target, col_transforms: target.assign(
+            lambda target, col_transforms: self.assign(
+                target,
                 **{
                     col_transforms[0]: self.apply_column_transformation(
                         input_df, col_transforms[1]
                     )
-                }
+                },
             ),
             transformation_set.items(),
-            self.dataframe_type(),
+            None,
         )
 
     def transform(

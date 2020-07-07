@@ -23,7 +23,7 @@ class Controller:
             )
         )
         mapping: BaseMapping = mapping_class(
-            **self.config.get("mapping.options", fallback={})
+            self.config, **self.config.get("mapping.options", fallback={})
         )
 
         extractor_class: Type[BaseConnector] = self._load_from_module(
@@ -32,7 +32,7 @@ class Controller:
             )
         )
         extractor: BaseConnector = extractor_class(
-            **self.config.get("extractor.options", fallback={})
+            self.config, **self.config.get("extractor.options", fallback={})
         )
 
         loader_class: Type[BaseConnector] = self._load_from_module(
@@ -41,7 +41,7 @@ class Controller:
             )
         )
         loader: BaseConnector = loader_class(
-            **self.config.get("loader.options", fallback={})
+            self.config, **self.config.get("loader.options", fallback={})
         )
 
         runner_class: Type[BaseRunner] = self._load_from_module(
@@ -50,7 +50,7 @@ class Controller:
             )
         )
         runner: BaseRunner = runner_class(
-            **self.config.get("runner.options", fallback={})
+            self.config, **self.config.get("runner.options", fallback={})
         )
 
         runner.run(extractor, mapping, loader)

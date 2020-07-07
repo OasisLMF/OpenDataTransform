@@ -1,12 +1,13 @@
 import os
 from tempfile import TemporaryDirectory
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 import pytest
 from hypothesis import given
 from hypothesis.strategies import lists, sampled_from, text
 
-from converter.files import write_yaml
+from converter.config import Config
+from converter.files.yaml import write_yaml
 from converter.mapping.base import TransformationEntry
 from converter.mapping.file import (
     FileMapping,
@@ -535,7 +536,7 @@ def test_standard_and_current_path_is_added_to_the_abs_search_paths(paths):
     )
 
     mapping = FileMapping(
-        input_format="A", output_format="B", search_paths=paths,
+        Config(), input_format="A", output_format="B", search_paths=paths,
     )
 
     assert mapping.search_paths == [
@@ -565,6 +566,7 @@ def test_multiple_search_paths_contain_files___all_are_loaded():
         )
 
         mapping = FileMapping(
+            Config(),
             input_format="A",
             output_format="B",
             search_paths=[first],
@@ -599,7 +601,10 @@ def test_yaml_files_with_non_mapping_fields_in_search_paths_are_excluded():
         write_yaml(os.path.join(first, "other.yaml"), {"other_field": "foo"})
 
         mapping = FileMapping(
-            input_format="A", output_format="B", standard_search_path=first,
+            Config(),
+            input_format="A",
+            output_format="B",
+            standard_search_path=first,
         )
 
         loaded = mapping.mapping_configs
@@ -621,8 +626,10 @@ def test_invalid_mapping_exists___its_excluded_and_warning_is_written():
         )
         write_yaml(os.path.join(first, "invalid.yaml"), {"output_format": "D"})
 
-        with patch("converter.mapping.file.logger") as logger_mock:
+        log_mock = Mock()
+        with patch("converter.mapping.file.get_logger", return_value=log_mock):
             mapping = FileMapping(
+                Config(),
                 input_format="A",
                 output_format="B",
                 standard_search_path=first,
@@ -635,7 +642,7 @@ def test_invalid_mapping_exists___its_excluded_and_warning_is_written():
                 os.path.join(first, "invalid.yaml"),
             )
 
-            logger_mock.warning.assert_called_once_with(str(expected_error))
+            log_mock.warning.assert_called_once_with(str(expected_error))
             assert os.path.join(first, "A-B.yml") in loaded
             assert os.path.join(first, "B-C.yaml") in loaded
             assert os.path.join(first, "invalid.yaml") not in loaded
@@ -654,7 +661,11 @@ def test_mapping_file_has_forward_and_reverse_trans___both_paths_are_valid():
         )
 
         ab_mapping = FileMapping(
-            input_format="A", output_format="B", standard_search_path=first,
+            Config(),
+            input_format="A",
+            output_format="B",
+            standard_search_path=first,
+            search_working_dir=False,
         )
 
         assert ab_mapping.get_transformations() == [
@@ -662,7 +673,11 @@ def test_mapping_file_has_forward_and_reverse_trans___both_paths_are_valid():
         ]
 
         ba_mapping = FileMapping(
-            input_format="B", output_format="A", standard_search_path=first,
+            Config(),
+            input_format="B",
+            output_format="A",
+            standard_search_path=first,
+            search_working_dir=False,
         )
 
         assert ba_mapping.get_transformations() == [
@@ -682,7 +697,11 @@ def test_mapping_file_has_no_reverse___reverse_path_is_not_possible():
         )
 
         ab_mapping = FileMapping(
-            input_format="A", output_format="B", standard_search_path=first,
+            Config(),
+            input_format="A",
+            output_format="B",
+            standard_search_path=first,
+            search_working_dir=False,
         )
 
         assert ab_mapping.get_transformations() == [
@@ -693,9 +712,11 @@ def test_mapping_file_has_no_reverse___reverse_path_is_not_possible():
             NoConversionPathError, match="No conversion path from B to A."
         ):
             ba_mapping = FileMapping(
+                Config(),
                 input_format="B",
                 output_format="A",
                 standard_search_path=first,
+                search_working_dir=False,
             )
 
             ba_mapping.get_transformations()
@@ -716,9 +737,11 @@ def test_mapping_file_has_no_forward___forward_path_is_not_possible():
             NoConversionPathError, match="No conversion path from A to B."
         ):
             ab_mapping = FileMapping(
+                Config(),
                 input_format="A",
                 output_format="B",
                 standard_search_path=first,
+                search_working_dir=False,
             )
 
             assert ab_mapping.get_transformations() == [
@@ -726,7 +749,11 @@ def test_mapping_file_has_no_forward___forward_path_is_not_possible():
             ]
 
         ba_mapping = FileMapping(
-            input_format="B", output_format="A", standard_search_path=first,
+            Config(),
+            input_format="B",
+            output_format="A",
+            standard_search_path=first,
+            search_working_dir=False,
         )
 
         assert ba_mapping.get_transformations() == [
@@ -755,10 +782,12 @@ def test_forward_is_provided_in_preferred_directory___forward_from_preferred():
         )
 
         ab_mapping = FileMapping(
+            Config(),
             input_format="A",
             output_format="B",
             search_paths=[second],
             standard_search_path=first,
+            search_working_dir=False,
         )
 
         assert ab_mapping.get_transformations() == [
@@ -766,10 +795,12 @@ def test_forward_is_provided_in_preferred_directory___forward_from_preferred():
         ]
 
         ba_mapping = FileMapping(
+            Config(),
             input_format="B",
             output_format="A",
             search_paths=[second],
             standard_search_path=first,
+            search_working_dir=False,
         )
 
         assert ba_mapping.get_transformations() == [
@@ -798,10 +829,12 @@ def test_reverse_is_provided_in_prefered_directory___reverse_from_preferred():
         )
 
         ab_mapping = FileMapping(
+            Config(),
             input_format="A",
             output_format="B",
             search_paths=[second],
             standard_search_path=first,
+            search_working_dir=False,
         )
 
         assert ab_mapping.get_transformations() == [
@@ -809,10 +842,12 @@ def test_reverse_is_provided_in_prefered_directory___reverse_from_preferred():
         ]
 
         ba_mapping = FileMapping(
+            Config(),
             input_format="B",
             output_format="A",
             search_paths=[second],
             standard_search_path=first,
+            search_working_dir=False,
         )
 
         assert ba_mapping.get_transformations() == [
@@ -842,7 +877,11 @@ def test_multiple_steps_are_in_the_conversion___all_steps_are_returned():
         )
 
         ab_mapping = FileMapping(
-            input_format="A", output_format="C", standard_search_path=first,
+            Config(),
+            input_format="A",
+            output_format="C",
+            standard_search_path=first,
+            search_working_dir=False,
         )
 
         assert ab_mapping.get_transformations() == [
@@ -851,7 +890,11 @@ def test_multiple_steps_are_in_the_conversion___all_steps_are_returned():
         ]
 
         ba_mapping = FileMapping(
-            input_format="C", output_format="A", standard_search_path=first,
+            Config(),
+            input_format="C",
+            output_format="A",
+            standard_search_path=first,
+            search_working_dir=False,
         )
 
         assert ba_mapping.get_transformations() == [

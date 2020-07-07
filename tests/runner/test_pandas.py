@@ -2,7 +2,8 @@ import os
 from math import isnan
 from tempfile import TemporaryDirectory
 
-from converter.files import write_yaml
+from converter.config import Config
+from converter.files.yaml import write_yaml
 from converter.mapping import FileMapping
 from converter.runner import PandasRunner
 from tests.runner.test_base import FakeConnector
@@ -31,12 +32,18 @@ def test_when_is_false___other_transforms_are_performed_warning_is_written():
 
         # run forward
         forward_mapping = FileMapping(
-            input_format="A", output_format="B", standard_search_path=search,
+            Config(),
+            input_format="A",
+            output_format="B",
+            standard_search_path=search,
+            search_working_dir=False,
         )
         forward_extractor = FakeConnector(data=input_data)
         forward_loader = FakeConnector()
 
-        PandasRunner().run(forward_extractor, forward_mapping, forward_loader)
+        PandasRunner(Config()).run(
+            forward_extractor, forward_mapping, forward_loader
+        )
 
         class NaNChecker:
             def __eq__(self, other):

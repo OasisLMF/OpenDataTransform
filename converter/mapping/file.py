@@ -9,11 +9,12 @@ from typing import Dict, Iterable, List, TypedDict, Union
 import networkx as nx
 
 from ..errors import ConverterError
-from ..files import read_yaml
+from ..files.yaml import read_yaml
 from .base import BaseMapping, TransformationEntry, TransformationSet
 
 
-logger = logging.getLogger(__name__)
+def get_logger():
+    return logging.getLogger(__name__)
 
 
 RawTransformConfig = TypedDict(
@@ -266,15 +267,18 @@ class FileMapping(BaseMapping):
     """
     A mapping of all file mapping on the system in the search directories.
 
+    :param config: The global config for the system
     :param search_paths: All the paths in the system to check for configs
     """
 
     def __init__(
         self,
+        config,
         search_paths: List[str] = None,
         standard_search_path: str = os.path.join(
             os.path.dirname(__file__), "..", "_data", "mappings"
         ),
+        search_working_dir=True,
         **options,
     ):
         """
@@ -284,18 +288,22 @@ class FileMapping(BaseMapping):
         :param options: Ignored options
         """
         super().__init__(
+            config,
             search_paths=search_paths,
             standard_search_path=standard_search_path,
+            search_working_dir=search_working_dir,
             **options,
         )
 
         self._raw_configs: Union[None, Dict[str, RawMappingConfig]] = None
         self._hydrated_configs: Union[None, Dict[str, MappingFile]] = None
         self.search_paths = [
-            os.path.abspath("."),
             *(os.path.abspath(p) for p in (search_paths or [])),
             os.path.abspath(standard_search_path),
         ]
+
+        if search_working_dir:
+            self.search_paths.insert(0, os.path.abspath("."))
 
         self._mapping_graph = None
 
@@ -411,7 +419,7 @@ class FileMapping(BaseMapping):
             try:
                 yield k, MappingFile(k, v, self.raw_configs, self.search_paths)
             except InvalidMappingFile as e:
-                logger.warning(str(e))
+                get_logger().warning(str(e))
 
     @property
     def mapping_configs(self):
@@ -479,7 +487,7 @@ class FileMapping(BaseMapping):
         except (nx.NetworkXNoPath, nx.NodeNotFound):
             raise NoConversionPathError(self.input_format, self.output_format)
 
-        logger.info(f"Path found {' -> '.join(path)}")
+        get_logger().info(f"Path found {' -> '.join(path)}")
         edges = map(
             lambda in_out: self.mapping_graph[in_out[0]][in_out[1]],
             zip(path[:-1], path[1:]),

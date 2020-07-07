@@ -5,8 +5,9 @@ import pytest
 from hypothesis import given, settings
 from hypothesis.strategies import sampled_from
 
+from converter.config import Config
 from converter.connector import BaseConnector
-from converter.files import write_yaml
+from converter.files.yaml import write_yaml
 from converter.mapping import BaseMapping, FileMapping
 from converter.runner import BaseRunner, ModinRunner, PandasRunner
 
@@ -17,7 +18,7 @@ def runners():
 
 class FakeConnector(BaseConnector):
     def __init__(self, data=None, **options):
-        super().__init__(**options)
+        super().__init__(Config(), **options)
         self.data = data
 
     def extract(self):
@@ -58,12 +59,18 @@ def test_mapping_applies_to_all_cols___forward_and_reverse_gets_to_the_input(
 
         # run forward
         forward_mapping = FileMapping(
-            input_format="A", output_format="B", standard_search_path=search,
+            Config(),
+            input_format="A",
+            output_format="B",
+            standard_search_path=search,
+            search_working_dir=False,
         )
         forward_extractor = FakeConnector(data=input_data)
         forward_loader = FakeConnector()
 
-        runner_class().run(forward_extractor, forward_mapping, forward_loader)
+        runner_class(Config()).run(
+            forward_extractor, forward_mapping, forward_loader
+        )
 
         assert list(forward_loader.data) == [
             {"c": 2, "d": 5},
@@ -74,12 +81,18 @@ def test_mapping_applies_to_all_cols___forward_and_reverse_gets_to_the_input(
 
         # reverse runner
         reverse_mapping = FileMapping(
-            input_format="B", output_format="A", standard_search_path=search,
+            Config(),
+            input_format="B",
+            output_format="A",
+            standard_search_path=search,
+            search_working_dir=False,
         )
         reverse_extractor = forward_loader
         reverse_loader = FakeConnector()
 
-        runner_class().run(reverse_extractor, reverse_mapping, reverse_loader)
+        runner_class(Config()).run(
+            reverse_extractor, reverse_mapping, reverse_loader
+        )
 
         assert list(reverse_loader.data) == input_data
 
@@ -130,12 +143,18 @@ def test_multiple_mapping_steps___forward_and_reverse_gets_to_the_input(
 
         # run forward
         forward_mapping = FileMapping(
-            input_format="A", output_format="C", standard_search_path=search,
+            Config(),
+            input_format="A",
+            output_format="C",
+            standard_search_path=search,
+            search_working_dir=False,
         )
         forward_extractor = FakeConnector(data=input_data)
         forward_loader = FakeConnector()
 
-        runner_class().run(forward_extractor, forward_mapping, forward_loader)
+        runner_class(Config()).run(
+            forward_extractor, forward_mapping, forward_loader
+        )
 
         assert list(forward_loader.data) == [
             {"e": 6, "f": 9},
@@ -146,12 +165,18 @@ def test_multiple_mapping_steps___forward_and_reverse_gets_to_the_input(
 
         # reverse runner
         reverse_mapping = FileMapping(
-            input_format="C", output_format="A", standard_search_path=search,
+            Config(),
+            input_format="C",
+            output_format="A",
+            standard_search_path=search,
+            search_working_dir=False,
         )
         reverse_extractor = forward_loader
         reverse_loader = FakeConnector()
 
-        runner_class().run(reverse_extractor, reverse_mapping, reverse_loader)
+        runner_class(Config()).run(
+            reverse_extractor, reverse_mapping, reverse_loader
+        )
 
         assert list(reverse_loader.data) == input_data
 
@@ -188,12 +213,18 @@ def test_multiple_transforms_could_apply___first_is_applied(runner_class,):
 
         # run forward
         forward_mapping = FileMapping(
-            input_format="A", output_format="B", standard_search_path=search,
+            Config(),
+            input_format="A",
+            output_format="B",
+            standard_search_path=search,
+            search_working_dir=False,
         )
         forward_extractor = FakeConnector(data=input_data)
         forward_loader = FakeConnector()
 
-        runner_class().run(forward_extractor, forward_mapping, forward_loader)
+        runner_class(Config()).run(
+            forward_extractor, forward_mapping, forward_loader
+        )
 
         assert list(forward_loader.data) == [
             {"c": 2, "d": 5},
@@ -204,12 +235,18 @@ def test_multiple_transforms_could_apply___first_is_applied(runner_class,):
 
         # reverse runner
         reverse_mapping = FileMapping(
-            input_format="B", output_format="A", standard_search_path=search,
+            Config(),
+            input_format="B",
+            output_format="A",
+            standard_search_path=search,
+            search_working_dir=False,
         )
         reverse_extractor = forward_loader
         reverse_loader = FakeConnector()
 
-        runner_class().run(reverse_extractor, reverse_mapping, reverse_loader)
+        runner_class(Config()).run(
+            reverse_extractor, reverse_mapping, reverse_loader
+        )
 
         assert list(reverse_loader.data) == input_data
 
@@ -244,12 +281,18 @@ def test_row_is_value___value_is_set_on_all_columns(runner_class,):
 
         # run forward
         forward_mapping = FileMapping(
-            input_format="A", output_format="B", standard_search_path=search,
+            Config(),
+            input_format="A",
+            output_format="B",
+            standard_search_path=search,
+            search_working_dir=False,
         )
         forward_extractor = FakeConnector(data=input_data)
         forward_loader = FakeConnector()
 
-        runner_class().run(forward_extractor, forward_mapping, forward_loader)
+        runner_class(Config()).run(
+            forward_extractor, forward_mapping, forward_loader
+        )
 
         assert list(forward_loader.data) == [
             {"c": 2, "d": 5, "e": "foo"},
@@ -260,18 +303,25 @@ def test_row_is_value___value_is_set_on_all_columns(runner_class,):
 
         # reverse runner
         reverse_mapping = FileMapping(
-            input_format="B", output_format="A", standard_search_path=search,
+            Config(),
+            input_format="B",
+            output_format="A",
+            standard_search_path=search,
+            search_working_dir=False,
         )
         reverse_extractor = forward_loader
         reverse_loader = FakeConnector()
 
-        runner_class().run(reverse_extractor, reverse_mapping, reverse_loader)
+        runner_class(Config()).run(
+            reverse_extractor, reverse_mapping, reverse_loader
+        )
 
         assert list(reverse_loader.data) == input_data
 
 
 def test_base_transform_raises():
     with pytest.raises(NotImplementedError):
-        BaseRunner().transform(
-            BaseConnector(), BaseMapping(input_format="A", output_format="B"),
+        BaseRunner(Config()).transform(
+            BaseConnector(Config()),
+            BaseMapping(Config(), input_format="A", output_format="B"),
         )

@@ -1,4 +1,4 @@
-from .cli import cli
+from converter.cli import cli
 
 
 cli()
