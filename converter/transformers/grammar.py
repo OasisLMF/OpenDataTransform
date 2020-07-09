@@ -16,15 +16,21 @@ _grammar = r"""
         | product "*" atom -> multiply
         | product "/" atom -> divide
 
-?comparison: atom
-           | atom "is" atom -> eq
-           | atom "is not" atom -> not_eq
-           | atom "is in" array -> is_in
-           | atom "is not in" array -> not_in
-           | atom "gt" atom -> gt
-           | atom "gte" atom -> gte
-           | atom "lt" atom -> lt
-           | atom "lte" atom -> lte
+?comparison: comparison_lhs
+           | comparison_lhs "is" atom -> eq
+           | comparison_lhs "is not" atom -> not_eq
+           | comparison_lhs "is in" array -> is_in
+           | comparison_lhs "is not in" array -> not_in
+           | comparison_lhs "gt" atom -> gt
+           | comparison_lhs "gte" atom -> gte
+           | comparison_lhs "lt" atom -> lt
+           | comparison_lhs "lte" atom -> lte
+
+?comparison_lhs: group
+               | atom
+
+?group: "any" array -> any
+      | "all" array -> all
 
 ?atom: lookup
      | string

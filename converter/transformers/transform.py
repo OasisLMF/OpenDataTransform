@@ -1,8 +1,8 @@
 import re
-from functools import partial
-from operator import add, mul, sub
+from functools import partial, reduce
+from operator import add, and_, eq, ge, gt, le, lt, mul, or_, sub
 from operator import truediv as div
-from typing import Any, Callable, TypedDict, Union
+from typing import Any, Callable, Iterable, List, TypedDict, Union
 
 from lark import Transformer as _LarkTransformer
 from lark import Tree, v_args
@@ -35,9 +35,78 @@ class TransformerMapping(TypedDict, total=False):
     logical_or: Callable[[RowType, Any, Any], Any]
     logical_not: Callable[[RowType, Any], Any]
 
+    # groupings
+    all: Callable[[RowType, List[Any]], Any]
+    any: Callable[[RowType, List[Any]], Any]
+
+
+class GroupWrapper:
+    eq_operator: Callable[[Any, Any], Any] = eq
+    gt_operator: Callable[[Any, Any], Any] = gt
+    gte_operator: Callable[[Any, Any], Any] = ge
+    lt_operator: Callable[[Any, Any], Any] = lt
+    lte_operator: Callable[[Any, Any], Any] = le
+    in_operator: Callable[[Any, Any], Any] = lambda self, x, y: x in y
+    not_in_operator: Callable[[Any, Any], Any] = lambda self, x, y: x not in y
+
+    check_fn: Callable[[Iterable[Any]], Any]
+
+    def __init__(self, values):
+        self.values = values
+
+    def __eq__(self, other):
+        return self.check_fn(self.eq_operator(v, other) for v in self.values)
+
+    def __ne__(self, other):
+        return self.check_fn(
+            not self.eq_operator(v, other) for v in self.values
+        )
+
+    def __gt__(self, other):
+        return self.check_fn(self.gt_operator(v, other) for v in self.values)
+
+    def __ge__(self, other):
+        return self.check_fn(self.gte_operator(v, other) for v in self.values)
+
+    def __lt__(self, other):
+        return self.check_fn(self.lt_operator(v, other) for v in self.values)
+
+    def __le__(self, other):
+        return self.check_fn(self.lte_operator(v, other) for v in self.values)
+
+    def is_in(self, other):
+        return self.check_fn(self.in_operator(v, other) for v in self.values)
+
+    def is_not_in(self, other):
+        return self.check_fn(
+            self.not_in_operator(v, other) for v in self.values
+        )
+
+
+class AnyWrapper(GroupWrapper):
+    check_fn = any
+
+
+class AllWrapper(GroupWrapper):
+    check_fn = all
+
 
 def parse(expression):
     return parser.parse(expression)
+
+
+def default_in_transformer(lhs, rhs):
+    if hasattr(lhs, "is_in"):
+        return lhs.is_in(rhs)
+    else:
+        return lhs in rhs
+
+
+def default_not_in_transformer(lhs, rhs):
+    if hasattr(lhs, "is_not_in"):
+        return lhs.is_not_in(rhs)
+    else:
+        return lhs not in rhs
 
 
 def create_transformer_class(row, transformer_mapping):
@@ -49,8 +118,8 @@ def create_transformer_class(row, transformer_mapping):
         "divide": lambda r, lhs, rhs: div(lhs, rhs),
         "eq": lambda r, lhs, rhs: lhs == rhs,
         "not_eq": lambda r, lhs, rhs: lhs != rhs,
-        "is_in": lambda r, lhs, rhs: lhs in rhs,
-        "not_in": lambda r, lhs, rhs: lhs not in rhs,
+        "is_in": lambda r, lhs, rhs: default_in_transformer(lhs, rhs),
+        "not_in": lambda r, lhs, rhs: default_not_in_transformer(lhs, rhs),
         "gt": lambda r, lhs, rhs: lhs > rhs,
         "gte": lambda r, lhs, rhs: lhs >= rhs,
         "lt": lambda r, lhs, rhs: lhs < rhs,
@@ -58,6 +127,8 @@ def create_transformer_class(row, transformer_mapping):
         "logical_or": lambda r, lhs, rhs: lhs or rhs,
         "logical_and": lambda r, lhs, rhs: lhs and rhs,
         "logical_not": lambda r, v: not v,
+        "any": lambda r, v: AnyWrapper(v),
+        "all": lambda r, v: AllWrapper(v),
         **(transformer_mapping or {}),
     }
 
@@ -98,6 +169,8 @@ def create_transformer_class(row, transformer_mapping):
         logical_not = partial(mapped_function, "logical_not")
         logical_or = partial(mapped_function, "logical_or")
         logical_and = partial(mapped_function, "logical_and")
+        any = partial(mapped_function, "any")
+        all = partial(mapped_function, "all")
 
     return TreeTransformer
 
