@@ -3,29 +3,14 @@ from tempfile import TemporaryDirectory
 
 import pytest
 from hypothesis import given, settings
-from hypothesis.strategies import sampled_from
 
 from converter.config import Config
 from converter.connector import BaseConnector
 from converter.files.yaml import write_yaml
 from converter.mapping import BaseMapping, FileMapping
-from converter.runner import BaseRunner, ModinRunner, PandasRunner
-
-
-def runners():
-    return sampled_from([PandasRunner, ModinRunner])
-
-
-class FakeConnector(BaseConnector):
-    def __init__(self, data=None, **options):
-        super().__init__(Config(), **options)
-        self.data = data
-
-    def extract(self):
-        return self.data
-
-    def load(self, data):
-        self.data = list(data)
+from converter.runner import BaseRunner
+from tests.connector.fakes import FakeConnector
+from tests.runner.stategies import runners
 
 
 @given(runner_class=runners())

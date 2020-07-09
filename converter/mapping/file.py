@@ -4,16 +4,19 @@ import os
 from collections import OrderedDict
 from functools import reduce
 from itertools import chain, product
-from typing import Dict, Iterable, List, TypedDict, Union
-
-import networkx as nx
+from typing import Dict, Iterable, List, Reversible, TypedDict, Union
 
 from ..errors import ConverterError
 from ..files.yaml import read_yaml
-from .base import BaseMapping, TransformationEntry, TransformationSet
+from .base import (
+    BaseMapping,
+    MappingSpec,
+    TransformationEntry,
+    TransformationSet,
+)
 
 
-def get_logger():
+def get_logger():  # pragma: no cover
     return logging.getLogger(__name__)
 
 
@@ -50,24 +53,7 @@ class InvalidMappingFile(ConverterError):
         super().__init__(f"{path}: {reason}.")
 
 
-class NoConversionPathError(ConverterError):
-    """
-    Error raised there is no valid format map between 2 formats
-
-    :param input_format: The start path in the requested path.
-    :param output_format: The end path in the requested path.
-    """
-
-    def __init__(self, input_format, output_format):
-        self.input_format = input_format
-        self.output_format = output_format
-
-        super().__init__(
-            f"No conversion path from {input_format} to {output_format}."
-        )
-
-
-class MappingFile:
+class FileMappingSpec(MappingSpec):
     """
     A file representing a conversion mapping between 2 formats.
 
@@ -93,7 +79,9 @@ class MappingFile:
         self,
         path: str,
         config: RawMappingConfig,
-        all_found_configs: Dict[str, Union["MappingFile", RawMappingConfig]],
+        all_found_configs: Dict[
+            str, Union["FileMappingSpec", RawMappingConfig]
+        ],
         search_paths: List[str],
     ):
         """
@@ -110,43 +98,50 @@ class MappingFile:
         self.raw_config = config
 
         # load all the bases
-        self.bases: List[MappingFile] = [
+        self.bases: List[FileMappingSpec] = [
             self._load_base(base_name, all_found_configs, search_paths)
             for base_name in config.get("bases", [])
         ]
 
         # get the input format from the bases if not set on the current config
-        self.input_format: Union[str, None] = self._resolve_property(
+        input_format: Union[str, None] = self._resolve_property(
             *(b.input_format for b in self.bases), config.get("input_format"),
         )
 
-        if not self.input_format:
+        if not input_format:
             raise InvalidMappingFile(
                 "input_format not found in the config file or its bases",
                 self.path,
             )
 
         # get the output format from the bases if not set on the current config
-        self.output_format: Union[str, None] = self._resolve_property(
+        output_format: Union[str, None] = self._resolve_property(
             *(b.output_format for b in self.bases),
             config.get("output_format"),
         )
 
-        if not self.output_format:
+        if not output_format:
             raise InvalidMappingFile(
                 "output_format not found in the config file or its bases",
                 self.path,
             )
 
         # merge the transforms from all the parents and the current config
-        self.forward_transform: TransformationSet = self._reduce_transforms(
+        forward_transform: TransformationSet = self._reduce_transforms(
             *(b.forward_transform for b in self.bases),
             config.get("forward_transform", {}),
         )
 
-        self.reverse_transform: TransformationSet = self._reduce_transforms(
+        reverse_transform: TransformationSet = self._reduce_transforms(
             *(b.reverse_transform for b in self.bases),
             config.get("reverse_transform", {}),
+        )
+
+        super().__init__(
+            input_format,
+            output_format,
+            forward_transform=forward_transform,
+            reverse_transform=reverse_transform,
         )
 
         all_found_configs[self.path] = self
@@ -192,7 +187,9 @@ class MappingFile:
     def _load_base(
         self,
         base_name: str,
-        all_found_configs: Dict[str, Union["MappingFile", RawMappingConfig]],
+        all_found_configs: Dict[
+            str, Union["FileMappingSpec", RawMappingConfig]
+        ],
         search_paths: List[str],
     ):
         """
@@ -235,32 +232,14 @@ class MappingFile:
                 f"Could not find base mapping file ({base_name})", self.path,
             )
 
-        if not isinstance(config, MappingFile):
+        if not isinstance(config, FileMappingSpec):
             # if the found config is not yet hydrated store a hydrated version
-            config = MappingFile(
+            config = FileMappingSpec(
                 config_path, config, all_found_configs, search_paths
             )
             all_found_configs[config_path] = config
 
         return config
-
-    @property
-    def can_run_forwards(self):
-        """
-        Flag whether the mapping file can be applied forwards.
-
-        :return: True is the mapping can be applied forwards, False otherwise
-        """
-        return len(self.forward_transform) > 0
-
-    @property
-    def can_run_in_reverse(self):
-        """
-        Flag whether the mapping file can be applied in reverse.
-
-        :return: True is the mapping can be applied in reverse, False otherwise
-        """
-        return len(self.reverse_transform) > 0
 
 
 class FileMapping(BaseMapping):
@@ -296,7 +275,7 @@ class FileMapping(BaseMapping):
         )
 
         self._raw_configs: Union[None, Dict[str, RawMappingConfig]] = None
-        self._hydrated_configs: Union[None, Dict[str, MappingFile]] = None
+        self._hydrated_configs: Union[None, Dict[str, FileMappingSpec]] = None
         self.search_paths = [
             *(os.path.abspath(p) for p in (search_paths or [])),
             os.path.abspath(standard_search_path),
@@ -304,8 +283,6 @@ class FileMapping(BaseMapping):
 
         if search_working_dir:
             self.search_paths.insert(0, os.path.abspath("."))
-
-        self._mapping_graph = None
 
     def _load_raw_configs(self) -> Dict[str, RawMappingConfig]:
         """
@@ -417,12 +394,14 @@ class FileMapping(BaseMapping):
         """
         for k, v in self.raw_configs.items():
             try:
-                yield k, MappingFile(k, v, self.raw_configs, self.search_paths)
+                yield k, FileMappingSpec(
+                    k, v, self.raw_configs, self.search_paths
+                )
             except InvalidMappingFile as e:
                 get_logger().warning(str(e))
 
     @property
-    def mapping_configs(self):
+    def mapping_specs(self) -> Reversible[FileMappingSpec]:
         """
         Gets all the hydrated mapping configs keyed by their absolute paths.
         If they have not already been loaded they are loaded here.
@@ -430,67 +409,4 @@ class FileMapping(BaseMapping):
         if self._hydrated_configs is None:
             self._hydrated_configs = OrderedDict(self._hydrate_raw_configs())
 
-        return self._hydrated_configs
-
-    def _build_mapping_graph(self) -> nx.DiGraph:
-        """
-        Creates a networkx graph to represent the relationships between
-        formats in the system.
-
-        :return: The built graph
-        """
-        g = nx.DiGraph()
-
-        # the mapping config is in order from first search path to last
-        # if we build it in reverse order we will store the most preferable
-        # mapping on each edge
-        for mapping in reversed(self.mapping_configs.values()):
-            if mapping.can_run_forwards:
-                g.add_edge(
-                    mapping.input_format,
-                    mapping.output_format,
-                    transform_set=mapping.forward_transform,
-                    filename=mapping.path,
-                )
-
-            if mapping.can_run_in_reverse:
-                g.add_edge(
-                    mapping.output_format,
-                    mapping.input_format,
-                    transform_set=mapping.reverse_transform,
-                    filename=mapping.path,
-                )
-
-        return g
-
-    @property
-    def mapping_graph(self) -> nx.DiGraph:
-        """
-        Creates the graph to represent the relationships between formats in
-        the system. It it has not already been generated it is generated here.
-        """
-        if self._mapping_graph is None:
-            self._mapping_graph = self._build_mapping_graph()
-
-        return self._mapping_graph
-
-    def get_transformations(self) -> List[TransformationSet]:
-        """
-        Gets a full transformation set for the provided input and output paths.
-
-        :return: The transformation set for the conversion path.
-        """
-        try:
-            path = nx.shortest_path(
-                self.mapping_graph, self.input_format, self.output_format,
-            )
-        except (nx.NetworkXNoPath, nx.NodeNotFound):
-            raise NoConversionPathError(self.input_format, self.output_format)
-
-        get_logger().info(f"Path found {' -> '.join(path)}")
-        edges = map(
-            lambda in_out: self.mapping_graph[in_out[0]][in_out[1]],
-            zip(path[:-1], path[1:]),
-        )
-
-        return [edge["transform_set"] for edge in edges]
+        return self._hydrated_configs.values()

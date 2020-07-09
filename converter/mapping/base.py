@@ -1,15 +1,82 @@
-from typing import Dict, List, NamedTuple
+import logging
+from typing import Dict, List, Reversible, Union
+
+import networkx as nx
+from lark import Tree
 
 from converter.config import Config
 from converter.config.errors import ConfigurationError
+from converter.mapping.errors import NoConversionPathError
+from converter.transformers.transform import parse
 
 
-class TransformationEntry(NamedTuple):
-    transformation: str
-    when: str = "True"
+def get_logger():
+    return logging.getLogger(__name__)
+
+
+class TransformationEntry:
+    def __init__(
+        self,
+        transformation: str,
+        transformation_tree: Union[Tree, None] = None,
+        when: str = "True",
+        when_tree: Union[Tree, None] = None,
+    ):
+        self.transformation = transformation
+        self.transformation_tree = transformation_tree
+        self.when = when
+        self.when_tree = when_tree
+
+    def __eq__(self, other):
+        return (
+            self.transformation == other.transformation
+            and self.when == other.when
+        )
+
+    def parse(self):
+        self.when_tree = parse(self.when)
+        self.transformation_tree = parse(self.transformation)
 
 
 TransformationSet = Dict[str, List[TransformationEntry]]
+
+
+class MappingSpec:
+    def __init__(
+        self,
+        input_format,
+        output_format,
+        forward_transform: TransformationSet = None,
+        reverse_transform: TransformationSet = None,
+    ):
+        self.input_format = input_format
+        self.output_format = output_format
+        self.forward_transform = forward_transform or {}
+        self.reverse_transform = reverse_transform or {}
+
+    @property
+    def can_run_forwards(self):
+        """
+        Flag whether the mapping file can be applied forwards.
+
+        :return: True is the mapping can be applied forwards, False otherwise
+        """
+        return (
+            self.forward_transform is not None
+            and len(self.forward_transform) > 0
+        )
+
+    @property
+    def can_run_in_reverse(self):
+        """
+        Flag whether the mapping file can be applied in reverse.
+
+        :return: True is the mapping can be applied in reverse, False otherwise
+        """
+        return (
+            self.reverse_transform is not None
+            and len(self.reverse_transform) > 0
+        )
 
 
 class BaseMapping:
@@ -27,8 +94,10 @@ class BaseMapping:
         config: Config,
         input_format: str = None,
         output_format: str = None,
-        **options
+        **options,
     ):
+        self._mapping_graph = None
+
         self.config = config
         self._options = {
             "input_format": input_format,
@@ -44,11 +113,75 @@ class BaseMapping:
         if not self.output_format:
             raise ConfigurationError("output_format not set for the mapping.")
 
+    @property
+    def mapping_specs(self) -> Reversible[MappingSpec]:
+        raise NotImplementedError()
+
+    def _build_mapping_graph(self) -> nx.DiGraph:
+        """
+        Creates a networkx graph to represent the relationships between
+        formats in the system.
+
+        :return: The built graph
+        """
+        g = nx.DiGraph()
+
+        # the mapping config is in order from first search path to last
+        # if we build it in reverse order we will store the most preferable
+        # mapping on each edge
+        for mapping in reversed(self.mapping_specs):
+            if mapping.can_run_forwards:
+                g.add_edge(
+                    mapping.input_format,
+                    mapping.output_format,
+                    transform_set=mapping.forward_transform,
+                )
+
+            if mapping.can_run_in_reverse:
+                g.add_edge(
+                    mapping.output_format,
+                    mapping.input_format,
+                    transform_set=mapping.reverse_transform,
+                )
+
+        return g
+
+    @property
+    def mapping_graph(self) -> nx.DiGraph:
+        """
+        Creates the graph to represent the relationships between formats in
+        the system. It it has not already been generated it is generated here.
+        """
+        if self._mapping_graph is None:
+            self._mapping_graph = self._build_mapping_graph()
+
+        return self._mapping_graph
+
     def get_transformations(self) -> List[TransformationSet]:
         """
-        Gets a list of transformation sets to apply to each row.
-        Each entry should be allied to each row in order
+        Gets a full transformation set for the provided input and output paths.
 
-        :return: The list of transformation sets
+        :return: The transformation set for the conversion path.
         """
-        raise NotImplementedError()
+        try:
+            path = nx.shortest_path(
+                self.mapping_graph, self.input_format, self.output_format,
+            )
+        except (nx.NetworkXNoPath, nx.NodeNotFound):
+            raise NoConversionPathError(self.input_format, self.output_format)
+
+        get_logger().info(f"Path found {' -> '.join(path)}")
+        edges = map(
+            lambda in_out: self.mapping_graph[in_out[0]][in_out[1]],
+            zip(path[:-1], path[1:]),
+        )
+
+        # parse the trees of the path so that is doesnt need
+        # to be done for every row
+        transformations = [edge["transform_set"] for edge in edges]
+        for transform_set in transformations:
+            for transform in transform_set.values():
+                for case in transform:
+                    case.parse()
+
+        return transformations

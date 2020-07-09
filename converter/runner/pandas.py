@@ -1,12 +1,15 @@
 import logging
 from functools import reduce
+from operator import and_, or_
 from typing import Any, Dict, Iterable, List, Union
 
 import pandas as pd
+from numpy import nan
 
 from ..connector.base import BaseConnector
 from ..mapping.base import BaseMapping, TransformationEntry, TransformationSet
 from ..transformers import run
+from ..transformers.transform import TransformerMapping
 from .base import BaseRunner
 
 
@@ -14,9 +17,28 @@ def get_logger():
     return logging.getLogger(__name__)
 
 
+def logical_not(value):
+    try:
+        return not bool(value)
+    except ValueError:
+        # assume we are dealing with series or
+        # dataframe is we get a value error
+        return value.apply(lambda v: not bool(v))
+
+
 class PandasRunner(BaseRunner):
     dataframe_type = pd.DataFrame
     series_type = pd.Series
+
+    transformer_mapping: TransformerMapping = {
+        "logical_and": lambda r, lhs, rhs: lhs & rhs,
+        "logical_or": lambda r, lhs, rhs: lhs | rhs,
+        "logical_not": lambda r, v: logical_not(v),
+        "is_in": lambda r, lhs, rhs: reduce(or_, map(lambda s: s == lhs, rhs)),
+        "not_in": lambda r, lhs, rhs: reduce(
+            and_, map(lambda s: s != lhs, rhs)
+        ),
+    }
 
     def get_dataframe(self, extractor: BaseConnector) -> pd.DataFrame:
         return pd.DataFrame(extractor.extract())
@@ -36,7 +58,12 @@ class PandasRunner(BaseRunner):
 
         :return: The combined series
         """
-        return second if first is None else first.combine_first(second)
+        if first is None:
+            return second
+        elif second is None:
+            return first
+        else:
+            return first.combine_first(second)
 
     def assign(self, dataframe: Union[pd.DataFrame, None], **assignments):
         """
@@ -51,9 +78,14 @@ class PandasRunner(BaseRunner):
         :return: The updated dataframe
         """
         for name, series in assignments.items():
+            if series is None:
+                series = self.series_type([nan])
+
             if dataframe is None:
                 dataframe = series.to_frame(name=name)
             else:
+                series.name = name
+                dataframe, series = dataframe.align(series, axis=0)
                 dataframe = dataframe.assign(**{name: series})
 
         return dataframe
@@ -62,7 +94,7 @@ class PandasRunner(BaseRunner):
         self, input_df: pd.DataFrame, entry: TransformationEntry,
     ):
         # process the when clause to get a filter series
-        filter_series = run(input_df, entry.when)
+        filter_series = run(input_df, entry.when, self.transformer_mapping)
 
         if isinstance(filter_series, self.series_type):
             # if we have a series it treat it as a row mapping
@@ -78,9 +110,11 @@ class PandasRunner(BaseRunner):
                 f"A transformer when clause resolves to false in all cases "
                 f"({entry.when})."
             )
-            return self.series_type()
+            return None
 
-        result = run(filtered_input, entry.transformation)
+        result = run(
+            filtered_input, entry.transformation, self.transformer_mapping,
+        )
         if isinstance(result, self.series_type):
             return result
         else:

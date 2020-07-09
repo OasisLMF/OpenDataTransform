@@ -2,10 +2,10 @@ import re
 from functools import partial
 from operator import add, mul, sub
 from operator import truediv as div
-from typing import Any, Callable, TypedDict
+from typing import Any, Callable, TypedDict, Union
 
 from lark import Transformer as _LarkTransformer
-from lark import v_args
+from lark import Tree, v_args
 
 from .grammar import parser
 
@@ -13,7 +13,7 @@ from .grammar import parser
 RowType = Any
 
 
-class TransformerMapping(TypedDict):
+class TransformerMapping(TypedDict, total=False):
     lookup: Callable[[RowType, str], Any]
 
     # math opperators
@@ -31,6 +31,9 @@ class TransformerMapping(TypedDict):
     gte: Callable[[RowType, Any, Any], Any]
     lt: Callable[[RowType, Any, Any], Any]
     lte: Callable[[RowType, Any, Any], Any]
+    logical_and: Callable[[RowType, Any, Any], Any]
+    logical_or: Callable[[RowType, Any, Any], Any]
+    logical_not: Callable[[RowType, Any], Any]
 
 
 def parse(expression):
@@ -107,6 +110,11 @@ def transform(row, tree, transformer_mapping):
 
 
 def run(
-    row, expression: str, transformer_mapping: TransformerMapping = None,
+    row,
+    expression: Union[str, Tree],
+    transformer_mapping: TransformerMapping = None,
 ):
-    return transform(row, parse(expression), transformer_mapping)
+    if isinstance(expression, str):
+        expression = parse(expression)
+
+    return transform(row, expression, transformer_mapping)

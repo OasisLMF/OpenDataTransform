@@ -7,18 +7,9 @@ from hypothesis.strategies import fixed_dictionaries, just, one_of, tuples
 
 from converter.cli import cli
 from converter.config import Config
-from converter.connector import BaseConnector
 from converter.mapping import BaseMapping
 from converter.runner import BaseRunner
 from tests.config.test_config import config_file
-
-
-class FakeConnector(BaseConnector):
-    def load(self, data):
-        pass
-
-    def extract(self):
-        return []
 
 
 class FakeRunner(BaseRunner):
@@ -45,8 +36,8 @@ def options():
                     "path": "tests.test_cli.FakeMapping",
                     "options": {"input_format": "A", "output_format": "B"},
                 },
-                "extractor": {"path": "tests.test_cli.FakeConnector"},
-                "loader": {"path": "tests.test_cli.FakeConnector"},
+                "extractor": {"path": "tests.connector.fakes.FakeConnector"},
+                "loader": {"path": "tests.connector.fakes.FakeConnector"},
             },
         ),
     )

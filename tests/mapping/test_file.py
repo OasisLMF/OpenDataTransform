@@ -9,11 +9,11 @@ from hypothesis.strategies import lists, sampled_from, text
 from converter.config import Config
 from converter.files.yaml import write_yaml
 from converter.mapping.base import TransformationEntry
+from converter.mapping.errors import NoConversionPathError
 from converter.mapping.file import (
     FileMapping,
+    FileMappingSpec,
     InvalidMappingFile,
-    MappingFile,
-    NoConversionPathError,
 )
 
 
@@ -32,7 +32,7 @@ def test_mapping_file_has_no_base___mapping_is_loaded_as_expected():
     }
     all_found_configs = {config_path: config}
 
-    mapping = MappingFile(
+    mapping = FileMappingSpec(
         config_path, config, all_found_configs, [os.path.abspath(".")]
     )
 
@@ -62,7 +62,7 @@ def test_mapping_is_missing_input_format___error_is_raised():
         match=f"{config_path}: input_format not found in the config file or "
         f"its bases",
     ):
-        MappingFile(
+        FileMappingSpec(
             config_path, config, all_found_configs, [os.path.abspath(".")]
         )
 
@@ -81,7 +81,7 @@ def test_mapping_is_missing_output_format___error_is_raised():
         match=f"{config_path}: output_format not found in the config file or "
         f"its bases",
     ):
-        MappingFile(
+        FileMappingSpec(
             config_path, config, all_found_configs, [os.path.abspath(".")]
         )
 
@@ -103,7 +103,7 @@ def test_base_cannot_be_found___error_is_raised():
             rf"{config_path}: Could not find base mapping file \(missingBase\)"
         ),
     ):
-        MappingFile(
+        FileMappingSpec(
             config_path, config, all_found_configs, [os.path.abspath(".")]
         )
 
@@ -126,7 +126,7 @@ def test_mapping_has_base_and_no_input_format___base_format_is_used():
     }
     all_found_configs = {config_path: config, base_path: base_config}
 
-    mapping = MappingFile(
+    mapping = FileMappingSpec(
         config_path, config, all_found_configs, [os.path.abspath(".")]
     )
 
@@ -160,7 +160,7 @@ def test_mapping_has_base_and_no_bar_format___base_format_is_used():
     }
     all_found_configs = {config_path: config, base_path: base_config}
 
-    mapping = MappingFile(
+    mapping = FileMappingSpec(
         config_path, config, all_found_configs, [os.path.abspath(".")]
     )
 
@@ -194,7 +194,7 @@ def test_mapping_has_base___forward_transforms_are_merged():
     }
     all_found_configs = {config_path: config, base_path: base_config}
 
-    mapping = MappingFile(
+    mapping = FileMappingSpec(
         config_path, config, all_found_configs, [os.path.abspath(".")]
     )
 
@@ -232,7 +232,7 @@ def test_mapping_has_base___reverse_transforms_are_merged():
     }
     all_found_configs = {config_path: config, base_path: base_config}
 
-    mapping = MappingFile(
+    mapping = FileMappingSpec(
         config_path, config, all_found_configs, [os.path.abspath(".")]
     )
 
@@ -268,7 +268,7 @@ def test_mapping_has_path_base___base_is_used(ext):
     }
     all_found_configs = {config_path: config, base_path: base_config}
 
-    mapping = MappingFile(
+    mapping = FileMappingSpec(
         config_path, config, all_found_configs, [os.path.abspath(".")]
     )
 
@@ -327,7 +327,7 @@ def test_mapping_has_multiple_base___later_bases_are_preferred():
         second_base_path: second_base_config,
     }
 
-    mapping = MappingFile(
+    mapping = FileMappingSpec(
         config_path, config, all_found_configs, [os.path.abspath(".")]
     )
 
@@ -393,7 +393,7 @@ def test_mapping_has_base_with_base___grand_parent_bases_are_loaded():
         second_base_path: second_base_config,
     }
 
-    mapping = MappingFile(
+    mapping = FileMappingSpec(
         config_path, config, all_found_configs, [os.path.abspath(".")]
     )
 
@@ -438,7 +438,7 @@ def test_mapping_has_base_in_different_search_path___bases_is_loaded():
     }
     all_found_configs = {config_path: config, base_path: base_config}
 
-    mapping = MappingFile(
+    mapping = FileMappingSpec(
         config_path,
         config,
         all_found_configs,
@@ -468,7 +468,7 @@ def test_mapping_file_has_forward_transform___can_run_forward_is_true():
     }
     all_found_configs = {config_path: config}
 
-    mapping = MappingFile(
+    mapping = FileMappingSpec(
         config_path, config, all_found_configs, [os.path.abspath(".")]
     )
 
@@ -484,7 +484,7 @@ def test_mapping_file_has_no_forward_transform___can_run_forward_is_false():
     }
     all_found_configs = {config_path: config}
 
-    mapping = MappingFile(
+    mapping = FileMappingSpec(
         config_path, config, all_found_configs, [os.path.abspath(".")]
     )
 
@@ -501,7 +501,7 @@ def test_mapping_file_has_reverse_transform___can_run_in_reverse_is_true():
     }
     all_found_configs = {config_path: config}
 
-    mapping = MappingFile(
+    mapping = FileMappingSpec(
         config_path, config, all_found_configs, [os.path.abspath(".")]
     )
 
@@ -517,7 +517,7 @@ def test_mapping_file_has_no_reverse_transform___can_run_in_reverse_is_false():
     }
     all_found_configs = {config_path: config}
 
-    mapping = MappingFile(
+    mapping = FileMappingSpec(
         config_path, config, all_found_configs, [os.path.abspath(".")]
     )
 
@@ -573,7 +573,7 @@ def test_multiple_search_paths_contain_files___all_are_loaded():
             standard_search_path=second,
         )
 
-        loaded = mapping.mapping_configs
+        loaded = {c.path: c for c in mapping.mapping_specs}
 
         assert loaded[os.path.join(first, "A-B.yml")].input_format == "A"
         assert loaded[os.path.join(first, "A-B.yml")].output_format == "B"
@@ -607,7 +607,7 @@ def test_yaml_files_with_non_mapping_fields_in_search_paths_are_excluded():
             standard_search_path=first,
         )
 
-        loaded = mapping.mapping_configs
+        loaded = {c.path: c for c in mapping.mapping_specs}
 
         assert os.path.join(first, "A-B.yml") in loaded
         assert os.path.join(first, "B-C.yaml") in loaded
@@ -635,7 +635,7 @@ def test_invalid_mapping_exists___its_excluded_and_warning_is_written():
                 standard_search_path=first,
             )
 
-            loaded = mapping.mapping_configs
+            loaded = {c.path: c for c in mapping.mapping_specs}
 
             expected_error = InvalidMappingFile(
                 "input_format not found in the config file or its bases",
