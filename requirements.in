@@ -2,6 +2,7 @@
 pip-tools
 ipdb
 coverage
+coverage[toml]
 pytest
 pytest-cov
 pytest-flake8

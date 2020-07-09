@@ -10,3 +10,8 @@ lines_after_imports = 2
 skip = ".git"
 force_grid_wrap = 0
 use_parentheses = true
+
+[tool.coverage.run]
+omit = [
+    "converter/__main__.py"
+]

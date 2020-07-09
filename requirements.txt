@@ -15,7 +15,7 @@ certifi==2020.6.20        # via requests
 chardet==3.0.4            # via requests
 click==7.1.2              # via -r requirements-package.in, black, distributed, pip-tools
 cloudpickle==1.4.1        # via distributed
-coverage==5.1             # via -r requirements.in, pytest-cov
+coverage[toml]==5.1       # via -r requirements.in, pytest-cov
 dask[dataframe]==2.19.0   # via -r requirements-package.in, distributed, modin
 decorator==4.4.2          # via ipython, networkx, traitlets
 distributed==2.19.0       # via modin
@@ -85,7 +85,7 @@ sphinxcontrib-jsmath==1.0.1  # via sphinx
 sphinxcontrib-qthelp==1.0.3  # via sphinx
 sphinxcontrib-serializinghtml==1.1.4  # via sphinx
 tblib==1.6.0              # via distributed
-toml==0.10.1              # via black, pytest-black
+toml==0.10.1              # via black, coverage, pytest-black
 toolz==0.10.0             # via dask, distributed, partd
 tornado==6.0.4            # via distributed
 traitlets==4.3.3          # via ipython
