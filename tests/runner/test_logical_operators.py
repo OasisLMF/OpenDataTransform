@@ -558,3 +558,173 @@ def test_filter_contains_not___value_is_bool(runner_class):
         {"c": 10, "d": NaNChecker()},
         {"c": 14, "d": NaNChecker()},
     ]
+
+
+#
+# Any operator
+#
+
+
+@given(runner_class=runners())
+@settings(deadline=None)
+def test_filter_contains_any_is_in(runner_class):
+    input_data = [
+        {"a": 1, "b": 2},
+        {"a": 3, "b": 4},
+        {"a": 5, "b": 6},
+        {"a": 7, "b": 8},
+    ]
+
+    mapping = FakeMapping(
+        "A",
+        "B",
+        [
+            MappingSpec(
+                "A",
+                "B",
+                forward_transform={
+                    "c": [
+                        TransformationEntry(
+                            transformation="a * 2",
+                            when="any [a, b] is in [1, 6]",
+                        )
+                    ],
+                },
+            )
+        ],
+    )
+
+    extractor = FakeConnector(data=input_data)
+    loader = FakeConnector()
+
+    runner_class(Config()).run(extractor, mapping, loader)
+
+    assert list(loader.data) == [
+        {"c": 2},
+        {"c": 10},
+    ]
+
+
+@given(runner_class=runners())
+@settings(deadline=None)
+def test_filter_contains_any_is_not_in(runner_class):
+    input_data = [
+        {"a": 1, "b": 2},
+        {"a": 3, "b": 4},
+        {"a": 5, "b": 6},
+        {"a": 7, "b": 8},
+    ]
+
+    mapping = FakeMapping(
+        "A",
+        "B",
+        [
+            MappingSpec(
+                "A",
+                "B",
+                forward_transform={
+                    "c": [
+                        TransformationEntry(
+                            transformation="a * 2",
+                            when="any [a, b] is not in [1, 2, 3, 5, 6, 8]",
+                        )
+                    ],
+                },
+            )
+        ],
+    )
+
+    extractor = FakeConnector(data=input_data)
+    loader = FakeConnector()
+
+    runner_class(Config()).run(extractor, mapping, loader)
+
+    assert list(loader.data) == [
+        {"c": 6},
+        {"c": 14},
+    ]
+
+
+#
+# All Operator
+#
+
+
+@given(runner_class=runners())
+@settings(deadline=None)
+def test_filter_contains_all_is_not_in(runner_class):
+    input_data = [
+        {"a": 1, "b": 2},
+        {"a": 3, "b": 4},
+        {"a": 5, "b": 6},
+        {"a": 7, "b": 8},
+    ]
+
+    mapping = FakeMapping(
+        "A",
+        "B",
+        [
+            MappingSpec(
+                "A",
+                "B",
+                forward_transform={
+                    "c": [
+                        TransformationEntry(
+                            transformation="a * 2",
+                            when="all [a, b] is in [1, 2, 5, 6]",
+                        )
+                    ],
+                },
+            )
+        ],
+    )
+
+    extractor = FakeConnector(data=input_data)
+    loader = FakeConnector()
+
+    runner_class(Config()).run(extractor, mapping, loader)
+
+    assert list(loader.data) == [
+        {"c": 2},
+        {"c": 10},
+    ]
+
+
+@given(runner_class=runners())
+@settings(deadline=None)
+def test_filter_contains_all_is_in(runner_class):
+    input_data = [
+        {"a": 1, "b": 2},
+        {"a": 3, "b": 4},
+        {"a": 5, "b": 6},
+        {"a": 7, "b": 8},
+    ]
+
+    mapping = FakeMapping(
+        "A",
+        "B",
+        [
+            MappingSpec(
+                "A",
+                "B",
+                forward_transform={
+                    "c": [
+                        TransformationEntry(
+                            transformation="a * 2",
+                            when="all [a, b] is not in [1, 2, 5, 6]",
+                        )
+                    ],
+                },
+            )
+        ],
+    )
+
+    extractor = FakeConnector(data=input_data)
+    loader = FakeConnector()
+
+    runner_class(Config()).run(extractor, mapping, loader)
+
+    assert list(loader.data) == [
+        {"c": 6},
+        {"c": 14},
+    ]

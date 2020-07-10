@@ -9,7 +9,7 @@ from numpy import nan
 from ..connector.base import BaseConnector
 from ..mapping.base import BaseMapping, TransformationEntry, TransformationSet
 from ..transformers import run
-from ..transformers.transform import TransformerMapping
+from ..transformers.transform import GroupWrapper, TransformerMapping
 from .base import BaseRunner
 
 
@@ -17,7 +17,43 @@ def get_logger():
     return logging.getLogger(__name__)
 
 
-def logical_not(value):
+#
+# Group Wrappers
+#
+
+
+class PandasGroupWrapper(GroupWrapper):
+    def in_operator(self, x, y):
+        return reduce(or_, (x == c for c in y), False)
+
+    def not_in_operator(self, x, y):
+        return reduce(and_, (x != c for c in y), True)
+
+
+class PandasAnyWrapper(PandasGroupWrapper):
+    def check_fn(self, values):
+        return reduce(or_, values, False)
+
+
+class PandasAllWrapper(PandasGroupWrapper):
+    def check_fn(self, values):
+        return reduce(and_, values, True)
+
+
+#
+# Transformer overrides
+#
+
+
+def logical_and_transformer(row, lhs, rhs):
+    return lhs & rhs
+
+
+def logical_or_transformer(row, lhs, rhs):
+    return lhs | rhs
+
+
+def logical_not_transformer(row, value):
     try:
         return not bool(value)
     except ValueError:
@@ -26,18 +62,32 @@ def logical_not(value):
         return value.apply(lambda v: not bool(v))
 
 
+def in_transformer(row, lhs, rhs):
+    if hasattr(lhs, "is_in"):
+        return lhs.is_in(rhs)
+    else:
+        return reduce(or_, map(lambda s: lhs == s, rhs))
+
+
+def not_in_transformer(row, lhs, rhs):
+    if hasattr(lhs, "is_not_in"):
+        return lhs.is_not_in(rhs)
+    else:
+        return reduce(and_, map(lambda s: lhs != s, rhs))
+
+
 class PandasRunner(BaseRunner):
     dataframe_type = pd.DataFrame
     series_type = pd.Series
 
     transformer_mapping: TransformerMapping = {
-        "logical_and": lambda r, lhs, rhs: lhs & rhs,
-        "logical_or": lambda r, lhs, rhs: lhs | rhs,
-        "logical_not": lambda r, v: logical_not(v),
-        "is_in": lambda r, lhs, rhs: reduce(or_, map(lambda s: s == lhs, rhs)),
-        "not_in": lambda r, lhs, rhs: reduce(
-            and_, map(lambda s: s != lhs, rhs)
-        ),
+        "logical_and": logical_and_transformer,
+        "logical_or": logical_or_transformer,
+        "logical_not": logical_not_transformer,
+        "is_in": in_transformer,
+        "not_in": not_in_transformer,
+        "any": lambda r, values: PandasAnyWrapper(values),
+        "all": lambda r, values: PandasAllWrapper(values),
     }
 
     def get_dataframe(self, extractor: BaseConnector) -> pd.DataFrame:

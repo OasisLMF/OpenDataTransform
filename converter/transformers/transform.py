@@ -1,6 +1,6 @@
 import re
-from functools import partial, reduce
-from operator import add, and_, eq, ge, gt, le, lt, mul, or_, sub
+from functools import partial
+from operator import add, mul, sub
 from operator import truediv as div
 from typing import Any, Callable, Iterable, List, TypedDict, Union
 
@@ -41,18 +41,13 @@ class TransformerMapping(TypedDict, total=False):
 
 
 class GroupWrapper:
-    eq_operator: Callable[[Any, Any], Any] = eq
-    gt_operator: Callable[[Any, Any], Any] = gt
-    gte_operator: Callable[[Any, Any], Any] = ge
-    lt_operator: Callable[[Any, Any], Any] = lt
-    lte_operator: Callable[[Any, Any], Any] = le
-    in_operator: Callable[[Any, Any], Any] = lambda self, x, y: x in y
-    not_in_operator: Callable[[Any, Any], Any] = lambda self, x, y: x not in y
-
     check_fn: Callable[[Iterable[Any]], Any]
 
     def __init__(self, values):
         self.values = values
+
+    def eq_operator(self, lhs, rhs):
+        return lhs == rhs
 
     def __eq__(self, other):
         return self.check_fn(self.eq_operator(v, other) for v in self.values)
@@ -62,20 +57,38 @@ class GroupWrapper:
             not self.eq_operator(v, other) for v in self.values
         )
 
+    def gt_operator(self, lhs, rhs):
+        return lhs > rhs
+
     def __gt__(self, other):
         return self.check_fn(self.gt_operator(v, other) for v in self.values)
+
+    def gte_operator(self, lhs, rhs):
+        return lhs >= rhs
 
     def __ge__(self, other):
         return self.check_fn(self.gte_operator(v, other) for v in self.values)
 
+    def lt_operator(self, lhs, rhs):
+        return lhs < rhs
+
     def __lt__(self, other):
         return self.check_fn(self.lt_operator(v, other) for v in self.values)
+
+    def lte_operator(self, lhs, rhs):
+        return lhs <= rhs
 
     def __le__(self, other):
         return self.check_fn(self.lte_operator(v, other) for v in self.values)
 
+    def in_operator(self, a, b):
+        return a in b
+
     def is_in(self, other):
         return self.check_fn(self.in_operator(v, other) for v in self.values)
+
+    def not_in_operator(self, a, b):
+        return a not in b
 
     def is_not_in(self, other):
         return self.check_fn(
