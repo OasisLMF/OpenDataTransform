@@ -2,11 +2,14 @@ import re
 from functools import partial
 from operator import add, mul, sub
 from operator import truediv as div
-from typing import Any, Callable, Iterable, List, TypedDict, Union
+from typing import Any, Callable, Iterable, List, Pattern, TypedDict, Union
 
 from lark import Transformer as _LarkTransformer
-from lark import Tree, v_args
+from lark import Tree
+from lark import exceptions as lark_exceptions
+from lark import v_args
 
+from .errors import UnexpectedCharacters
 from .grammar import parser
 
 
@@ -38,6 +41,12 @@ class TransformerMapping(TypedDict, total=False):
     # groupings
     all: Callable[[RowType, List[Any]], Any]
     any: Callable[[RowType, List[Any]], Any]
+
+    # string manipulations
+    str_join: Callable[..., Any]
+    str_replace: Callable[[RowType, Pattern, str], Any]
+    str_match: Callable[[RowType, Pattern], Any]
+    str_search: Callable[[RowType, Pattern], Any]
 
 
 class GroupWrapper:
@@ -105,7 +114,12 @@ class AllWrapper(GroupWrapper):
 
 
 def parse(expression):
-    return parser.parse(expression)
+    try:
+        return parser.parse(expression)
+    except lark_exceptions.UnexpectedCharacters as e:
+        raise UnexpectedCharacters(
+            expression, e.args[0][e.pos_in_stream], e.column
+        )
 
 
 def default_in_transformer(lhs, rhs):
@@ -120,6 +134,27 @@ def default_not_in_transformer(lhs, rhs):
         return lhs.is_not_in(rhs)
     else:
         return lhs not in rhs
+
+
+def default_replace(target, pattern: Pattern, repl):
+    if isinstance(pattern, str):
+        return target.replace(pattern, repl)
+    else:
+        return pattern.sub(repl, target)
+
+
+def default_match(target, pattern: Pattern):
+    if isinstance(pattern, str):
+        return target == pattern
+    else:
+        return bool(pattern.fullmatch(target))
+
+
+def default_search(target, pattern: Pattern):
+    if isinstance(pattern, str):
+        return pattern in target
+    else:
+        return bool(pattern.search(target))
 
 
 def create_transformer_class(row, transformer_mapping):
@@ -142,6 +177,14 @@ def create_transformer_class(row, transformer_mapping):
         "logical_not": lambda r, v: not v,
         "any": lambda r, v: AnyWrapper(v),
         "all": lambda r, v: AllWrapper(v),
+        "str_join": lambda r, join, *objs: join.join(map(str, objs)),
+        "str_replace": lambda r, target, pattern, repl: default_replace(
+            target, pattern, repl
+        ),
+        "str_match": lambda r, target, pattern: default_match(target, pattern),
+        "str_search": lambda r, target, pattern: default_search(
+            target, pattern
+        ),
         **(transformer_mapping or {}),
     }
 
@@ -150,7 +193,6 @@ def create_transformer_class(row, transformer_mapping):
 
     @v_args(inline=True)
     class TreeTransformer(_LarkTransformer):
-        number = float
         array = v_args(inline=False)(list)
         string_escape_re = re.compile(r"`([`'])")
 
@@ -163,8 +205,20 @@ def create_transformer_class(row, transformer_mapping):
             # process any escape characters
             return self.string_escape_re.sub(r"\1", value)
 
+        def regex(self, value=""):
+            return re.compile(self.string(value))
+
+        def iregex(self, value=""):
+            return re.compile(self.string(value), flags=re.IGNORECASE)
+
         def boolean(self, value):
             return value == "True"
+
+        def number(self, value):
+            try:
+                return int(value)
+            except ValueError:
+                return float(value)
 
         lookup = partial(mapped_function, "lookup")
         add = partial(mapped_function, "add")
@@ -184,6 +238,10 @@ def create_transformer_class(row, transformer_mapping):
         logical_and = partial(mapped_function, "logical_and")
         any = partial(mapped_function, "any")
         all = partial(mapped_function, "all")
+        str_join = partial(mapped_function, "str_join")
+        str_replace = partial(mapped_function, "str_replace")
+        str_match = partial(mapped_function, "str_match")
+        str_search = partial(mapped_function, "str_search")
 
     return TreeTransformer
 

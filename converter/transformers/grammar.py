@@ -38,11 +38,24 @@ _grammar = r"""
      | BOOL -> boolean
      | SIGNED_NUMBER -> number
      | "(" expression ")"
+     | string_manip
+     | regex
 
 array: "[" [expression ("," expression)*] "]"
 
 ?lookup: "lookup(" string ")" -> lookup
        | IDENT -> lookup
+
+?string_manip: "join(" string [("," expression)*] ")" -> str_join
+             | "replace(" expression "," pattern "," string ")" -> str_replace
+             | "match(" expression "," pattern ")" -> str_match
+             | "search(" expression "," pattern ")" -> str_search
+
+?pattern: string
+        | regex
+
+?regex: "re" string -> regex
+      | "ire" string -> iregex
 
 ?string: "'" STRING "'" -> string
        | "''"  -> string
