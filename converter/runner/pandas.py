@@ -31,6 +31,10 @@ def get_logger():
 
 
 class PandasGroupWrapper(GroupWrapper):
+    """
+    Base class for the pandas implementation for any and all groups
+    """
+
     def in_operator(self, x, y):
         return reduce(or_, (x == c for c in y), False)
 
@@ -39,11 +43,19 @@ class PandasGroupWrapper(GroupWrapper):
 
 
 class PandasAnyWrapper(PandasGroupWrapper):
+    """
+    Pandas specific implementation of the ``any`` expression
+    """
+
     def check_fn(self, values):
         return reduce(or_, values, False)
 
 
 class PandasAllWrapper(PandasGroupWrapper):
+    """
+    Pandas specific implementation of the ``all`` expression
+    """
+
     def check_fn(self, values):
         return reduce(and_, values, True)
 
@@ -160,10 +172,21 @@ class StrJoin:
 
 
 class PandasRunner(BaseRunner):
+    """
+    Default implementation for a pandas loike runner
+    """
+
     dataframe_type = pd.DataFrame
     series_type = pd.Series
 
     def get_dataframe(self, extractor: BaseConnector) -> pd.DataFrame:
+        """
+        Builds a dataframe from the etractors data
+
+        :param extractor: The extractor providing the input data
+
+        :return: The created dataframe
+        """
         return pd.DataFrame(extractor.extract())
 
     def combine_series(self, first: Union[pd.Series, None], second):
@@ -216,6 +239,15 @@ class PandasRunner(BaseRunner):
     def apply_transformation_entry(
         self, input_df: pd.DataFrame, entry: TransformationEntry,
     ):
+        """
+        Applies a single transformation to the dataset returning the result
+        as a series.
+
+        :param input_df: The dataframe loaded from the extractor
+        :param entry: The transformation to apply
+
+        :return: The transformation result
+        """
         transformer_mapping: TransformerMapping = {
             "logical_and": logical_and_transformer,
             "logical_or": logical_or_transformer,
@@ -258,6 +290,15 @@ class PandasRunner(BaseRunner):
     def apply_column_transformation(
         self, input_df: pd.DataFrame, entry_list: List[TransformationEntry],
     ):
+        """
+        Applies all the transformations for a single output column
+
+        :param input_df: The dataframe loaded from the extractor
+        :param entry_list: A list of all the transformations to apply to
+            generate the output series
+
+        :return: The transformation result
+        """
         result = reduce(
             lambda series, entry: self.combine_series(
                 series, self.apply_transformation_entry(input_df, entry),
@@ -270,6 +311,15 @@ class PandasRunner(BaseRunner):
     def apply_transformation_set(
         self, input_df: pd.DataFrame, transformation_set: TransformationSet,
     ) -> pd.DataFrame:
+        """
+        Applies all the transformations to produce the output dataframe
+
+        :param input_df: The dataframe loaded from the extractor
+        :param transformation_set: The full set of transformations to apply
+            to the ``input_df`` to produce the output dataframe.
+
+        :return: The transformed dataframe
+        """
         return reduce(
             lambda target, col_transforms: self.assign(
                 target,

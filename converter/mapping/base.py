@@ -42,6 +42,10 @@ TransformationSet = Dict[str, List[TransformationEntry]]
 
 
 class MappingSpec:
+    """
+    Class holding information about a given mapping
+    """
+
     def __init__(
         self,
         input_format,
@@ -115,6 +119,9 @@ class BaseMapping:
 
     @property
     def mapping_specs(self) -> Reversible[MappingSpec]:
+        """
+        Returns a list of ``MappingSpec`` objects described by the mapping
+        """
         raise NotImplementedError()
 
     def _build_mapping_graph(self) -> nx.DiGraph:

@@ -12,6 +12,13 @@ from converter.controller import Controller
 
 
 class ColorFormatter(logging.Formatter):
+    """
+    Changes the color of the log message based on the log level. Errors are
+    red, warnings are yellow and debug messages are blue.
+
+    :param colors: Mapping of log level to colors
+    """
+
     colors = {
         logging.ERROR: "red",
         logging.CRITICAL: "red",
@@ -20,12 +27,23 @@ class ColorFormatter(logging.Formatter):
     }
 
     def format(self, record) -> str:
+        """
+        Adds the color to the log message.
+
+        :param record: The record to format
+
+        :return: The formatted message
+        """
         return click.style(
             super().format(record), fg=self.colors.get(record.levelno),
         )
 
 
 class ClickEchoHandler(logging.Handler):
+    """
+    Sends the log message onto `click.echo`
+    """
+
     def emit(self, record):
         click.echo(
             self.format(record), err=record.levelno >= logging.WARNING,
@@ -33,6 +51,15 @@ class ClickEchoHandler(logging.Handler):
 
 
 def init_logging(verbosity, no_color):
+    """
+    Sets up the logging config for the console and files
+
+    :param verbosity: The verbosity level
+        0 - errors and warnings only
+        1 - info
+        2 - debug
+    :param no_color: Don't add the color to the output
+    """
     filename_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
     console_log_level = [logging.WARNING, logging.INFO, logging.DEBUG][
@@ -82,6 +109,15 @@ def init_logging(verbosity, no_color):
 @click.option("--no-color",)
 @click.pass_context
 def cli(ctx, config, verbose, no_color, option):
+    """
+    Initialises the cli grouping with default options.
+
+    :param ctx: The global context
+    :param config: The config path
+    :param verbose: The verbosity level
+    :param no_color: Suppress color on the console
+    :param option: The config options passed on the command line
+    """
     ctx.ensure_object(dict)
 
     init_logging(verbose, no_color)
@@ -98,12 +134,22 @@ def cli(ctx, config, verbose, no_color, option):
 @cli.command()
 @click.pass_context
 def show_config(ctx):
+    """
+    Prints the resolved config to the console
+
+    :param ctx: The global context
+    """
     click.echo(ctx.obj["config"].to_yaml())
 
 
 @cli.command()
 @click.pass_context
 def run(ctx):
+    """
+    Runs the data conversion
+
+    :param ctx: The global context
+    """
     try:
         logging.debug(f"Running with config:\n{ctx.obj['config'].to_yaml()}")
         Controller(ctx.obj["config"]).run()

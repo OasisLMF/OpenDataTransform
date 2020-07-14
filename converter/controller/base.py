@@ -8,6 +8,12 @@ from ..runner.base import BaseRunner
 
 
 class Controller:
+    """
+    Class controlling the transformation flow
+
+    :param config: The resolved normalised config
+    """
+
     def __init__(self, config: Config):
         self.config = config
 
@@ -17,6 +23,10 @@ class Controller:
         return getattr(module, cls)
 
     def run(self):
+        """
+        Generates the converter components from the config and runs the
+        transformation
+        """
         mapping_class: Type[BaseMapping] = self._load_from_module(
             self.config.get(
                 "mapping.path", fallback="converter.mapping.FileMapping"
