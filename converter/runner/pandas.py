@@ -1,4 +1,5 @@
 import logging
+import re
 from functools import reduce
 from operator import and_, or_
 from typing import Any, Dict, Iterable, List, Union
@@ -9,7 +10,14 @@ from numpy import nan
 from ..connector.base import BaseConnector
 from ..mapping.base import BaseMapping, TransformationEntry, TransformationSet
 from ..transformers import run
-from ..transformers.transform import GroupWrapper, TransformerMapping
+from ..transformers.transform import (
+    GroupWrapper,
+    RowType,
+    TransformerMapping,
+    default_match,
+    default_replace,
+    default_search,
+)
 from .base import BaseRunner
 
 
@@ -76,19 +84,84 @@ def not_in_transformer(row, lhs, rhs):
         return reduce(and_, map(lambda s: lhs != s, rhs))
 
 
+#
+# String Manipulations
+#
+
+
+class StrReplace:
+    def __init__(self, series_type):
+        self.series_type = series_type
+
+    def __call__(self, row: RowType, target, pattern: re.Pattern, repl):
+        if isinstance(target, self.series_type):
+            return target.astype(str).str.replace(pattern, repl)
+        else:
+            return default_replace(row, target, pattern, repl)
+
+
+class StrMatch:
+    def __init__(self, series_type):
+        self.series_type = series_type
+
+    def __call__(self, row: RowType, target, pattern: re.Pattern):
+        if isinstance(target, self.series_type):
+            return target.astype(str).str.match(pattern)
+        else:
+            return default_match(row, target, pattern)
+
+
+class StrSearch:
+    def __init__(self, series_type):
+        self.series_type = series_type
+
+    def __call__(self, row: RowType, target, pattern: re.Pattern):
+        if isinstance(target, self.series_type):
+            return target.astype(str).str.contains(pattern)
+        else:
+            return default_search(row, target, pattern)
+
+
+class StrJoin:
+    def __init__(self, series_type):
+        self.series_type = series_type
+
+    def to_str(self, obj):
+        return (
+            obj.astype(str) if isinstance(obj, self.series_type) else str(obj)
+        )
+
+    def concat(self, left, right):
+        left_is_series = isinstance(left, self.series_type)
+        right_is_series = isinstance(right, self.series_type)
+
+        if left_is_series or not right_is_series:
+            # if the left it already a series or if the right isn't a series
+            # the strings will be concatenated in the correct order
+            return self.to_str(left) + self.to_str(right)
+        else:
+            # if right is a series and left isnt force the join to prepend left
+            return self.to_str(right).apply(lambda x: self.to_str(left) + x)
+
+    def join(self, left, join, right):
+        return self.concat(self.concat(left, join), right)
+
+    def __call__(self, row: RowType, join, *elements):
+        if not elements:
+            return ""
+        elif len(elements) == 1:
+            return self.to_str(elements[0])
+        else:
+            return reduce(
+                lambda reduced, element: self.join(reduced, join, element),
+                elements[1:],
+                elements[0],
+            )
+
+
 class PandasRunner(BaseRunner):
     dataframe_type = pd.DataFrame
     series_type = pd.Series
-
-    transformer_mapping: TransformerMapping = {
-        "logical_and": logical_and_transformer,
-        "logical_or": logical_or_transformer,
-        "logical_not": logical_not_transformer,
-        "is_in": in_transformer,
-        "not_in": not_in_transformer,
-        "any": lambda r, values: PandasAnyWrapper(values),
-        "all": lambda r, values: PandasAllWrapper(values),
-    }
 
     def get_dataframe(self, extractor: BaseConnector) -> pd.DataFrame:
         return pd.DataFrame(extractor.extract())
@@ -143,8 +216,22 @@ class PandasRunner(BaseRunner):
     def apply_transformation_entry(
         self, input_df: pd.DataFrame, entry: TransformationEntry,
     ):
+        transformer_mapping: TransformerMapping = {
+            "logical_and": logical_and_transformer,
+            "logical_or": logical_or_transformer,
+            "logical_not": logical_not_transformer,
+            "is_in": in_transformer,
+            "not_in": not_in_transformer,
+            "any": lambda r, values: PandasAnyWrapper(values),
+            "all": lambda r, values: PandasAllWrapper(values),
+            "str_replace": StrReplace(self.series_type),
+            "str_match": StrMatch(self.series_type),
+            "str_search": StrSearch(self.series_type),
+            "str_join": StrJoin(self.series_type),
+        }
+
         # process the when clause to get a filter series
-        filter_series = run(input_df, entry.when, self.transformer_mapping)
+        filter_series = run(input_df, entry.when, transformer_mapping)
 
         if isinstance(filter_series, self.series_type):
             # if we have a series it treat it as a row mapping
@@ -162,9 +249,7 @@ class PandasRunner(BaseRunner):
             )
             return None
 
-        result = run(
-            filtered_input, entry.transformation, self.transformer_mapping,
-        )
+        result = run(filtered_input, entry.transformation, transformer_mapping)
         if isinstance(result, self.series_type):
             return result
         else:

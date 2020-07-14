@@ -44,9 +44,9 @@ class TransformerMapping(TypedDict, total=False):
 
     # string manipulations
     str_join: Callable[..., Any]
-    str_replace: Callable[[RowType, Pattern, str], Any]
-    str_match: Callable[[RowType, Pattern], Any]
-    str_search: Callable[[RowType, Pattern], Any]
+    str_replace: Callable[[RowType, Any, Pattern, str], Any]
+    str_match: Callable[[RowType, Any, Pattern], Any]
+    str_search: Callable[[RowType, Any, Pattern], Any]
 
 
 class GroupWrapper:
@@ -113,48 +113,43 @@ class AllWrapper(GroupWrapper):
     check_fn = all
 
 
-def parse(expression):
-    try:
-        return parser.parse(expression)
-    except lark_exceptions.UnexpectedCharacters as e:
-        raise UnexpectedCharacters(
-            expression, e.args[0][e.pos_in_stream], e.column
-        )
-
-
-def default_in_transformer(lhs, rhs):
+def default_in_transformer(row, lhs, rhs):
     if hasattr(lhs, "is_in"):
         return lhs.is_in(rhs)
     else:
         return lhs in rhs
 
 
-def default_not_in_transformer(lhs, rhs):
+def default_not_in_transformer(row, lhs, rhs):
     if hasattr(lhs, "is_not_in"):
         return lhs.is_not_in(rhs)
     else:
         return lhs not in rhs
 
 
-def default_replace(target, pattern: Pattern, repl):
+def default_replace(row, target, pattern: Pattern, repl):
     if isinstance(pattern, str):
-        return target.replace(pattern, repl)
+        return str(target).replace(pattern, repl)
     else:
-        return pattern.sub(repl, target)
+        return pattern.sub(repl, str(target))
 
 
-def default_match(target, pattern: Pattern):
+def default_match(row, target, pattern: Pattern):
     if isinstance(pattern, str):
-        return target == pattern
+        return str(target) == pattern
     else:
-        return bool(pattern.fullmatch(target))
+        return bool(pattern.fullmatch(str(target)))
 
 
-def default_search(target, pattern: Pattern):
+def default_search(row, target, pattern: Pattern):
     if isinstance(pattern, str):
         return pattern in target
     else:
         return bool(pattern.search(target))
+
+
+def default_join(row, join, *elements):
+    return str(join).join(map(str, elements))
 
 
 def create_transformer_class(row, transformer_mapping):
@@ -166,8 +161,8 @@ def create_transformer_class(row, transformer_mapping):
         "divide": lambda r, lhs, rhs: div(lhs, rhs),
         "eq": lambda r, lhs, rhs: lhs == rhs,
         "not_eq": lambda r, lhs, rhs: lhs != rhs,
-        "is_in": lambda r, lhs, rhs: default_in_transformer(lhs, rhs),
-        "not_in": lambda r, lhs, rhs: default_not_in_transformer(lhs, rhs),
+        "is_in": default_in_transformer,
+        "not_in": default_not_in_transformer,
         "gt": lambda r, lhs, rhs: lhs > rhs,
         "gte": lambda r, lhs, rhs: lhs >= rhs,
         "lt": lambda r, lhs, rhs: lhs < rhs,
@@ -177,14 +172,10 @@ def create_transformer_class(row, transformer_mapping):
         "logical_not": lambda r, v: not v,
         "any": lambda r, v: AnyWrapper(v),
         "all": lambda r, v: AllWrapper(v),
-        "str_join": lambda r, join, *objs: join.join(map(str, objs)),
-        "str_replace": lambda r, target, pattern, repl: default_replace(
-            target, pattern, repl
-        ),
-        "str_match": lambda r, target, pattern: default_match(target, pattern),
-        "str_search": lambda r, target, pattern: default_search(
-            target, pattern
-        ),
+        "str_join": default_join,
+        "str_replace": default_replace,
+        "str_match": default_match,
+        "str_search": default_search,
         **(transformer_mapping or {}),
     }
 
@@ -244,6 +235,15 @@ def create_transformer_class(row, transformer_mapping):
         str_search = partial(mapped_function, "str_search")
 
     return TreeTransformer
+
+
+def parse(expression):
+    try:
+        return parser.parse(expression)
+    except lark_exceptions.UnexpectedCharacters as e:
+        raise UnexpectedCharacters(
+            expression, e.args[0][e.pos_in_stream], e.column
+        )
 
 
 def transform(row, tree, transformer_mapping):
