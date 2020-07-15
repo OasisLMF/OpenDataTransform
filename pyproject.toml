@@ -13,5 +13,6 @@ use_parentheses = true
 
 [tool.coverage.run]
 omit = [
-    "converter/__main__.py"
+    "converter/__main__.py",
+    "examples",
 ]

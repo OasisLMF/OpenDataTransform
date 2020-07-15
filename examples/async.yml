@@ -1,0 +1,11 @@
+mapping:
+  path: examples.async.Mapping
+  options:
+    input_format: A
+    output_format: B
+extractor:
+  path: examples.async.RandomExtractor
+loader:
+  path: examples.async.ConsoleLoader
+runner:
+  path: converter.runner.EagerRunner
