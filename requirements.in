@@ -9,6 +9,7 @@ pytest-flake8
 pytest-black
 pytest-isort
 pytest-mypy
+pytest-asyncio
 hypothesis
 sphinx
 sphinx-autoapi

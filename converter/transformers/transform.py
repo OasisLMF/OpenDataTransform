@@ -2,15 +2,7 @@ import re
 from functools import partial
 from operator import add, mul, sub
 from operator import truediv as div
-from typing import (
-    Any,
-    Callable,
-    Iterable,
-    List,
-    Pattern,
-    TypedDict,
-    Union,
-)
+from typing import Any, Callable, Iterable, List, Pattern, TypedDict, Union
 
 from lark import Transformer as _LarkTransformer
 from lark import Tree

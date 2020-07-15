@@ -2,13 +2,13 @@ import logging
 import re
 from functools import reduce
 from operator import and_, or_
-from typing import Any, Dict, Iterable, List, Union
+from typing import Any, Dict, Iterable, Union
 
 import pandas as pd
 from numpy import nan
 
 from ..connector.base import BaseConnector
-from ..mapping.base import BaseMapping, TransformationEntry, TransformationSet
+from ..mapping.base import BaseMapping, TransformationEntry
 from ..transformers import run
 from ..transformers.transform import (
     GroupWrapper,
@@ -18,7 +18,7 @@ from ..transformers.transform import (
     default_replace,
     default_search,
 )
-from .base import BaseRunner
+from .base import BaseRunner, NotSet, NotSetType
 
 
 def get_logger():
@@ -173,7 +173,7 @@ class StrJoin:
 
 class PandasRunner(BaseRunner):
     """
-    Default implementation for a pandas loike runner
+    Default implementation for a pandas like runner
     """
 
     dataframe_type = pd.DataFrame
@@ -189,7 +189,12 @@ class PandasRunner(BaseRunner):
         """
         return pd.DataFrame(extractor.extract())
 
-    def combine_series(self, first: Union[pd.Series, None], second):
+    def combine_column(
+        self,
+        row,
+        current_column_value: Union[pd.Series, NotSetType],
+        entry: TransformationEntry,
+    ):
         """
         Helper function for combining 2 series. This is used so that
         other pandas implementations can override the behaviour to
@@ -204,41 +209,45 @@ class PandasRunner(BaseRunner):
 
         :return: The combined series
         """
-        if first is None:
-            return second
-        elif second is None:
-            return first
-        else:
-            return first.combine_first(second)
+        new_column_value = self.apply_transformation_entry(row, entry)
 
-    def assign(self, dataframe: Union[pd.DataFrame, None], **assignments):
+        if isinstance(current_column_value, NotSetType):
+            return new_column_value
+        elif isinstance(new_column_value, NotSetType):
+            return current_column_value
+        else:
+            return current_column_value.combine_first(new_column_value)
+
+    def assign(
+        self, output_row: Union[pd.DataFrame, NotSetType], **assignments
+    ):
         """
         Helper function for assigning a series to a dataframe. Some
         implementations of pandas are less efficient if we start with an empty
         dataframe so here we allow for `None` to be passed and create the
         initial dataframe from the first assigned series.
 
-        :param dataframe: The data frame to assign to or None
+        :param output_row: The data frame to assign to or None
         :param assignments: The assignments to apply to the dataframe
 
         :return: The updated dataframe
         """
         for name, series in assignments.items():
-            if series is None:
+            if isinstance(series, NotSetType):
                 series = self.series_type([nan])
 
-            if dataframe is None:
-                dataframe = series.to_frame(name=name)
+            if isinstance(output_row, NotSetType):
+                output_row = series.to_frame(name=name)
             else:
                 series.name = name
-                dataframe, series = dataframe.align(series, axis=0)
-                dataframe = dataframe.assign(**{name: series})
+                output_row, series = output_row.align(series, axis=0)
+                output_row = output_row.assign(**{name: series})
 
-        return dataframe
+        return output_row
 
     def apply_transformation_entry(
         self, input_df: pd.DataFrame, entry: TransformationEntry,
-    ):
+    ) -> Union[pd.Series, NotSetType]:
         """
         Applies a single transformation to the dataset returning the result
         as a series.
@@ -279,59 +288,13 @@ class PandasRunner(BaseRunner):
                 f"A transformer when clause resolves to false in all cases "
                 f"({entry.when})."
             )
-            return None
+            return NotSet
 
         result = run(filtered_input, entry.transformation, transformer_mapping)
         if isinstance(result, self.series_type):
             return result
         else:
             return self.series_type(result, input_df.index)
-
-    def apply_column_transformation(
-        self, input_df: pd.DataFrame, entry_list: List[TransformationEntry],
-    ):
-        """
-        Applies all the transformations for a single output column
-
-        :param input_df: The dataframe loaded from the extractor
-        :param entry_list: A list of all the transformations to apply to
-            generate the output series
-
-        :return: The transformation result
-        """
-        result = reduce(
-            lambda series, entry: self.combine_series(
-                series, self.apply_transformation_entry(input_df, entry),
-            ),
-            entry_list,
-            None,
-        )
-        return result
-
-    def apply_transformation_set(
-        self, input_df: pd.DataFrame, transformation_set: TransformationSet,
-    ) -> pd.DataFrame:
-        """
-        Applies all the transformations to produce the output dataframe
-
-        :param input_df: The dataframe loaded from the extractor
-        :param transformation_set: The full set of transformations to apply
-            to the ``input_df`` to produce the output dataframe.
-
-        :return: The transformed dataframe
-        """
-        return reduce(
-            lambda target, col_transforms: self.assign(
-                target,
-                **{
-                    col_transforms[0]: self.apply_column_transformation(
-                        input_df, col_transforms[1]
-                    )
-                },
-            ),
-            transformation_set.items(),
-            None,
-        )
 
     def transform(
         self, extractor: BaseConnector, mapping: BaseMapping
@@ -344,4 +307,6 @@ class PandasRunner(BaseRunner):
             self.apply_transformation_set, transformations, df,
         )
 
-        return (r.to_dict() for idx, r in transformed.iterrows())
+        return (
+            r.to_dict() for idx, r in transformed.fillna(NotSet).iterrows()
+        )

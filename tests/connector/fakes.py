@@ -12,3 +12,10 @@ class FakeConnector(BaseConnector):
 
     def load(self, data):
         self.data = list(data)
+
+    async def aextract(self):
+        for row in self.data:
+            yield row
+
+    async def aload(self, data):
+        self.data = [row async for row in data]

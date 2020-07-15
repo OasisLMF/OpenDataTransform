@@ -3,9 +3,9 @@ from hypothesis import given, settings
 from converter.config import Config
 from converter.mapping import MappingSpec
 from converter.mapping.base import TransformationEntry
+from converter.runner.base import NotSet
 
 from ..connector.fakes import FakeConnector
-from ..helpers import NaNChecker
 from ..mapping.fakes import FakeMapping
 from .stategies import runners
 
@@ -49,8 +49,8 @@ def test_filter_contains_and(runner_class):
     runner_class(Config()).run(extractor, mapping, loader)
 
     assert list(loader.data) == [
-        {"c": 2, "d": NaNChecker()},
-        {"c": NaNChecker(), "d": 9},
+        {"c": 2, "d": NotSet},
+        {"c": NotSet, "d": 9},
     ]
 
 
@@ -181,8 +181,8 @@ def test_filter_contains_in___lhs_is_int_rhs_is_list_of_lookups(runner_class):
     runner_class(Config()).run(extractor, mapping, loader)
 
     assert list(loader.data) == [
-        {"c": 2, "d": NaNChecker()},
-        {"c": NaNChecker(), "d": 9},
+        {"c": 2, "d": NotSet},
+        {"c": NotSet, "d": 9},
     ]
 
 
@@ -225,10 +225,10 @@ def test_filter_contains_in___lhs_is_int_rhs_is_list_of_ints(runner_class):
     runner_class(Config()).run(extractor, mapping, loader)
 
     assert list(loader.data) == [
-        {"c": 2, "d": NaNChecker()},
-        {"c": 6, "d": NaNChecker()},
-        {"c": 10, "d": NaNChecker()},
-        {"c": 14, "d": NaNChecker()},
+        {"c": 2, "d": NotSet},
+        {"c": 6, "d": NotSet},
+        {"c": 10, "d": NotSet},
+        {"c": 14, "d": NotSet},
     ]
 
 
@@ -273,10 +273,10 @@ def test_filter_contains_in___lhs_is_lookup_rhs_is_list_of_lookups(
     runner_class(Config()).run(extractor, mapping, loader)
 
     assert list(loader.data) == [
-        {"c": 2, "d": NaNChecker()},
-        {"c": NaNChecker(), "d": 7},
-        {"c": 10, "d": NaNChecker()},
-        {"c": NaNChecker(), "d": 11},
+        {"c": 2, "d": NotSet},
+        {"c": NotSet, "d": 7},
+        {"c": 10, "d": NotSet},
+        {"c": NotSet, "d": 11},
     ]
 
 
@@ -367,9 +367,9 @@ def test_filter_contains_not_in___lhs_is_int_rhs_is_list_of_lookups(
     runner_class(Config()).run(extractor, mapping, loader)
 
     assert list(loader.data) == [
-        {"c": NaNChecker(), "d": 5},
+        {"c": NotSet, "d": 5},
         {"c": 6, "d": 7},
-        {"c": 10, "d": NaNChecker()},
+        {"c": 10, "d": NotSet},
         {"c": 14, "d": 11},
     ]
 
@@ -413,10 +413,10 @@ def test_filter_contains_not_in___lhs_is_int_rhs_is_list_of_ints(runner_class):
     runner_class(Config()).run(extractor, mapping, loader)
 
     assert list(loader.data) == [
-        {"c": NaNChecker(), "d": 5},
-        {"c": NaNChecker(), "d": 7},
-        {"c": NaNChecker(), "d": 9},
-        {"c": NaNChecker(), "d": 11},
+        {"c": NotSet, "d": 5},
+        {"c": NotSet, "d": 7},
+        {"c": NotSet, "d": 9},
+        {"c": NotSet, "d": 11},
     ]
 
 
@@ -461,10 +461,10 @@ def test_filter_contains_not_in___lhs_is_lookup_rhs_is_list_of_lookups(
     runner_class(Config()).run(extractor, mapping, loader)
 
     assert list(loader.data) == [
-        {"c": NaNChecker(), "d": 5},
-        {"c": 6, "d": NaNChecker()},
-        {"c": NaNChecker(), "d": 9},
-        {"c": 14, "d": NaNChecker()},
+        {"c": NotSet, "d": 5},
+        {"c": 6, "d": NotSet},
+        {"c": NotSet, "d": 9},
+        {"c": 14, "d": NotSet},
     ]
 
 
@@ -507,9 +507,9 @@ def test_filter_contains_not___value_is_lookup(runner_class):
     runner_class(Config()).run(extractor, mapping, loader)
 
     assert list(loader.data) == [
-        {"c": NaNChecker(), "d": 5},
+        {"c": NotSet, "d": 5},
         {"c": 6, "d": 7},
-        {"c": 10, "d": NaNChecker()},
+        {"c": 10, "d": NotSet},
         {"c": 14, "d": 11},
     ]
 
@@ -553,10 +553,10 @@ def test_filter_contains_not___value_is_bool(runner_class):
     runner_class(Config()).run(extractor, mapping, loader)
 
     assert list(loader.data) == [
-        {"c": 2, "d": NaNChecker()},
-        {"c": 6, "d": NaNChecker()},
-        {"c": 10, "d": NaNChecker()},
-        {"c": 14, "d": NaNChecker()},
+        {"c": 2, "d": NotSet},
+        {"c": 6, "d": NotSet},
+        {"c": 10, "d": NotSet},
+        {"c": 14, "d": NotSet},
     ]
 
 

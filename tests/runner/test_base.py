@@ -9,6 +9,7 @@ from converter.connector import BaseConnector
 from converter.files.yaml import write_yaml
 from converter.mapping import BaseMapping, FileMapping
 from converter.runner import BaseRunner
+from converter.runner.base import BaseAsyncRunner
 from tests.connector.fakes import FakeConnector
 from tests.runner.stategies import runners
 
@@ -310,3 +311,15 @@ def test_base_transform_raises():
             BaseConnector(Config()),
             BaseMapping(Config(), input_format="A", output_format="B"),
         )
+
+
+@pytest.mark.asyncio
+async def test_base_async_transform_raises():
+    with pytest.raises(NotImplementedError):
+        [
+            row
+            async for row in BaseAsyncRunner(Config()).transform(
+                BaseConnector(Config()),
+                BaseMapping(Config(), input_format="A", output_format="B"),
+            )
+        ]

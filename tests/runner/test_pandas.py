@@ -5,7 +5,7 @@ from converter.config import Config
 from converter.files.yaml import write_yaml
 from converter.mapping import FileMapping
 from converter.runner import PandasRunner
-from tests.helpers import NaNChecker
+from converter.runner.base import NotSet
 from tests.runner.test_base import FakeConnector
 
 
@@ -46,10 +46,10 @@ def test_when_is_false___other_transforms_are_performed_warning_is_written():
         )
 
         assert list(forward_loader.data) == [
-            {"c": NaNChecker(), "d": 5},
-            {"c": NaNChecker(), "d": 7},
-            {"c": NaNChecker(), "d": 9},
-            {"c": NaNChecker(), "d": 11},
+            {"c": NotSet, "d": 5},
+            {"c": NotSet, "d": 7},
+            {"c": NotSet, "d": 9},
+            {"c": NotSet, "d": 11},
         ]
 
 

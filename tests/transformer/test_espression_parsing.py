@@ -1,7 +1,12 @@
 from hypothesis import given
 
 from converter.transformers import run
+from converter.transformers.transform import parse
 from tests.transformer.strategies import floats, integers, strings
+
+
+def test_parsing_expression_twice_gives_the_same_result():
+    assert parse("a + b") == parse(parse("a + b"))
 
 
 @given(lhs=floats(), rhs=floats())

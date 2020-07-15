@@ -3,9 +3,9 @@ from hypothesis import given, settings
 from converter.config import Config
 from converter.mapping import MappingSpec
 from converter.mapping.base import TransformationEntry
+from converter.runner.base import NotSet
 
 from ..connector.fakes import FakeConnector
-from ..helpers import NaNChecker
 from ..mapping.fakes import FakeMapping
 from .stategies import runners
 
@@ -146,8 +146,8 @@ def test_when_contains_match(runner_class):
     runner_class(Config()).run(extractor, mapping, loader)
 
     assert list(loader.data) == [
-        {"c": "foo a", "d": NaNChecker()},
-        {"c": NaNChecker(), "d": "oo a oo b"},
+        {"c": "foo a", "d": NotSet},
+        {"c": NotSet, "d": "oo a oo b"},
     ]
 
 
@@ -238,9 +238,9 @@ def test_when_contains_search(runner_class):
     runner_class(Config()).run(extractor, mapping, loader)
 
     assert list(loader.data) == [
-        {"c": NaNChecker(), "d": "foo a foo b"},
-        {"c": "far a", "d": NaNChecker()},
-        {"c": NaNChecker(), "d": "boo a boo b"},
+        {"c": NotSet, "d": "foo a foo b"},
+        {"c": "far a", "d": NotSet},
+        {"c": NotSet, "d": "boo a boo b"},
     ]
 
 
