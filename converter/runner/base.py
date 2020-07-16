@@ -60,11 +60,15 @@ class _BaseRunner:
         return self.apply_transformation_entry(row, entry)
 
     def assign(
-        self, output_row: Union[RowType, NotSetType], **assignments
+        self,
+        input_row: RowType,
+        output_row: Union[RowType, NotSetType],
+        **assignments
     ) -> RowType:
         """
         Helper function for assigning a values to the output row.
 
+        :param input_row: The row loaded from the extractor
         :param output_row: The row object to assign to or None
         :param assignments: The assignments to apply to the row
 
@@ -129,6 +133,7 @@ class _BaseRunner:
         """
         return reduce(
             lambda target, col_transforms: self.assign(
+                row,
                 target,
                 **{
                     col_transforms[0]: self.apply_column_transformation(

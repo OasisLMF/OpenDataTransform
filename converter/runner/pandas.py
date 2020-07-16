@@ -186,6 +186,9 @@ class PandasRunner(BaseRunner):
     dataframe_type = pd.DataFrame
     series_type = pd.Series
 
+    def create_series(self, index, value):
+        return self.series_type(value, index=index)
+
     def get_dataframe(self, extractor: BaseConnector) -> pd.DataFrame:
         """
         Builds a dataframe from the etractors data
@@ -226,7 +229,10 @@ class PandasRunner(BaseRunner):
             return current_column_value.combine_first(new_column_value)
 
     def assign(
-        self, output_row: Union[pd.DataFrame, NotSetType], **assignments
+        self,
+        input_row: pd.DataFrame,
+        output_row: Union[pd.DataFrame, NotSetType],
+        **assignments,
     ):
         """
         Helper function for assigning a series to a dataframe. Some
@@ -234,6 +240,7 @@ class PandasRunner(BaseRunner):
         dataframe so here we allow for `None` to be passed and create the
         initial dataframe from the first assigned series.
 
+        :param input_row: The row loaded from the extractor
         :param output_row: The data frame to assign to or None
         :param assignments: The assignments to apply to the dataframe
 
@@ -241,7 +248,7 @@ class PandasRunner(BaseRunner):
         """
         for name, series in assignments.items():
             if isinstance(series, NotSetType):
-                series = self.series_type([nan])
+                series = self.create_series(input_row.index, nan)
 
             if isinstance(output_row, NotSetType):
                 output_row = series.to_frame(name=name)
@@ -307,7 +314,7 @@ class PandasRunner(BaseRunner):
         if isinstance(result, self.series_type):
             return result
         else:
-            return self.series_type(result, input_df.index)
+            return self.create_series(input_df.index, result)
 
     def transform(
         self, extractor: BaseConnector, mapping: BaseMapping
