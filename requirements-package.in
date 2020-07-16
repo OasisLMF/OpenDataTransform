@@ -1,5 +1,3 @@
-pip-tools
-ipdb
 pandas
 modin[dask]
 dask[dataframe]

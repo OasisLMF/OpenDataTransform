@@ -101,22 +101,42 @@ def init_logging(verbosity, no_color):
 
 
 @click.group()
-@click.option("--option", "-o", nargs=2, multiple=True)
 @click.option(
-    "--config", "-c", default="./config.yml", envvar="CONVERTER_CONFIG"
+    "--option",
+    "-o",
+    nargs=2,
+    multiple=True,
+    help=(
+        "Sets a configuration option, a path and value are required "
+        "eg -o extractor.options.foo.bar bash"
+    ),
 )
-@click.option("--verbose", "-v", count=True)
-@click.option("--no-color",)
+@click.option(
+    "--config",
+    "-c",
+    default="./config.yml",
+    envvar="CONVERTER_CONFIG",
+    help="Path to the configuration file.",
+)
+@click.option(
+    "--verbose",
+    "-v",
+    count=True,
+    help=(
+        "Specifies the verbosity level, if used multiple "
+        "times the verbosity is increased further"
+    ),
+)
+@click.option(
+    "--no-color",
+    help="Disables colorised output.",
+    is_flag=True,
+    flag_value=False,
+)
 @click.pass_context
 def cli(ctx, config, verbose, no_color, option):
     """
     Initialises the cli grouping with default options.
-
-    :param ctx: The global context
-    :param config: The config path
-    :param verbose: The verbosity level
-    :param no_color: Suppress color on the console
-    :param option: The config options passed on the command line
     """
     ctx.ensure_object(dict)
 
@@ -136,8 +156,6 @@ def cli(ctx, config, verbose, no_color, option):
 def show_config(ctx):
     """
     Prints the resolved config to the console
-
-    :param ctx: The global context
     """
     click.echo(ctx.obj["config"].to_yaml())
 
@@ -147,8 +165,6 @@ def show_config(ctx):
 def run(ctx):
     """
     Runs the data conversion
-
-    :param ctx: The global context
     """
     try:
         logging.debug(f"Running with config:\n{ctx.obj['config'].to_yaml()}")
