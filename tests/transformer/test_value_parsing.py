@@ -84,6 +84,10 @@ def test_false_is_parsed_correctly():
     assert run({}, "False") is False
 
 
+def test_null_is_parsed_correctly():
+    assert run({}, "Null") is None
+
+
 @given(values=lists(integers()))
 def test_list_is_parsed_correctly(values):
     assert run({}, f"[{', '.join(map(str, values))}]") == values

@@ -12,6 +12,11 @@ Primitive Types
 
 The transformer language supports the following primitive types:
 
+* booleans - Either :code:`True` or :code:`False` to resolve to a true or false result
+  respectively.
+* null - :code:`Null` is used to specify that a result has no value but has been set by
+  the transformation (this is treated as :code:`None` by the python code in the
+  background).
 * integers - Any number without a decimal point, can be positive or negative.
   Valid integers include :code:`123` and :code:`-45`.
 * floats - Any number with a decimal point or written in e-notation format, can be
@@ -77,10 +82,11 @@ A set of functions are supplied for manipulating string:
 * :code:`join(separator, string1, string2, strings...)` - joins all the provided
   strings with separated by the :code:`separator` string. If any non strings are passed
   into the the function they will be converted into strings first.
-* :code:`replace(target, pattern, repl)` - replaces :code:`pattern` in :code:`target`
-  with :code:`repl`. :code:`pattern` can be either a regular expression or string. If
-  it's a regular expression groups can be used and they will be available for use in
-  :code:`repl`.
+* :code:`replace(target, pattern, repl, [pattern, repl]...)` - replaces :code:`pattern`
+  in :code:`target` with :code:`repl`. Multiple :code:`pattern` and :code:`repl`
+  pairs can be supplied and each will be applied in the order they are given.
+  :code:`pattern` can be either a regular expression or string. If it's a regular
+  expression groups can be used and they will be available for use in :code:`repl`.
 * :code:`match(target, pattern)` - checks if the :code:`target` string matches the
   :code:`pattern`, if they match the result is :code:`True` otherwise :code:`False`.
   :code:`pattern` may be either a string or regular expression. If a regular expression

@@ -298,7 +298,7 @@ def default_not_in_transformer(row, lhs, rhs):
         return lhs not in rhs
 
 
-def default_replace(row, target, pattern: Pattern, repl):
+def default_replace(row, target, *pattern_repl):
     """
     Replaces the pattern in the target string with a given string. The pattern
     can be either a string or regular expression, if a regular expression is
@@ -306,15 +306,24 @@ def default_replace(row, target, pattern: Pattern, repl):
 
     :param row: The row being transformed (not used)
     :param target: The value to perform the replacement on
-    :param pattern: The pattern to find in the target
-    :param repl: The string to replace the pattern with
+    :param pattern_repl: Any number of parameters that have pattern and
+        replacement strings, there should be an even number of elements
+        with the 1st, 3rd, 5th etc representing the patterns and teh 2nd,
+        4th, 6th ets representing the corresponding replacements
 
     :return: The transformed object
     """
-    if isinstance(pattern, str):
-        return str(target).replace(pattern, repl)
-    else:
-        return pattern.sub(repl, str(target))
+    result = target
+    patterns = (p for i, p in enumerate(pattern_repl) if i % 2 == 0)
+    repls = (r for i, r in enumerate(pattern_repl) if i % 2 != 0)
+
+    for pattern, repl in zip(patterns, repls):
+        if isinstance(pattern, str):
+            result = str(result).replace(pattern, repl)
+        else:
+            result = pattern.sub(repl, str(result))
+
+    return result
 
 
 def default_match(row, target, pattern: Pattern):
@@ -440,6 +449,16 @@ class BaseTreeTransformer(_LarkTransformer):
         :return: True if the value is "True", False otherwise
         """
         return value == "True"
+
+    def null(self, value):
+        """
+        Pareses a null from the transformer language.
+
+        :param value: The value to parse (ignored as its always Null)
+
+        :return: None
+        """
+        return None
 
     def number(self, value):
         """

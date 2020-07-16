@@ -89,8 +89,8 @@ class _BaseRunner:
         """
 
         # process the when clause to get a filter series
-        if run(row, entry.when):
-            return run(row, entry.transformation)
+        if run(row, entry.when_tree or entry.when):
+            return run(row, entry.transformation_tree or entry.transformation)
         else:
             return NotSet
 

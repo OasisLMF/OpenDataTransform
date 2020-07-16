@@ -36,6 +36,7 @@ _grammar = r"""
      | string
      | array
      | BOOL -> boolean
+     | NULL -> null
      | SIGNED_NUMBER -> number
      | "(" expression ")"
      | string_manip
@@ -47,7 +48,7 @@ array: "[" [expression ("," expression)*] "]"
        | IDENT -> lookup
 
 ?string_manip: "join(" string [("," expression)*] ")" -> str_join
-             | "replace(" expression "," pattern "," string ")" -> str_replace
+             | "replace(" expression [("," pattern "," string)+] ")" -> str_replace
              | "match(" expression "," pattern ")" -> str_match
              | "search(" expression "," pattern ")" -> str_search
 
@@ -63,11 +64,14 @@ array: "[" [expression ("," expression)*] "]"
 IDENT: /[a-zA-Z][a-zA-Z0-9_]*/
 STRING: /((`['`])|([^']))+/
 BOOL: /True|False/
+NULL: /Null/
 
 %import common.SIGNED_NUMBER
 %import common.WS
 %ignore WS
-"""
+"""  # noqa: E501
+# ignore line length in this file as its not always possible to break lines
+# on the grammar
 
 #: Object for parsing the transformer strings and producing a tree
 parser = lark.Lark(_grammar)

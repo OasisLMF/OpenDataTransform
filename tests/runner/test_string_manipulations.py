@@ -108,6 +108,53 @@ def test_transform_contains_replace_on_non_lookup(runner_class):
 
 @given(runner_class=runners())
 @settings(deadline=None)
+def test_transform_contains_replace_with_multiple_pairs(runner_class):
+    input_data = [
+        {"a": "foo a", "b": "foo b"},
+        {"a": "far a", "b": "far b"},
+        {"a": "boo a", "b": "boo b"},
+        {"a": "bar a", "b": "bar b"},
+    ]
+
+    mapping = FakeMapping(
+        "A",
+        "B",
+        [
+            MappingSpec(
+                "A",
+                "B",
+                forward_transform={
+                    "c": [
+                        TransformationEntry(
+                            transformation="""
+                                replace(
+                                    a + ' ' + b,
+                                    'foo', 'faa',
+                                    'boo', 'bam'
+                                )
+                            """,
+                        )
+                    ],
+                },
+            )
+        ],
+    )
+
+    extractor = FakeConnector(data=input_data)
+    loader = FakeConnector()
+
+    runner_class(Config()).run(extractor, mapping, loader)
+
+    assert list(loader.data) == [
+        {"c": "faa a faa b"},
+        {"c": "far a far b"},
+        {"c": "bam a bam b"},
+        {"c": "bar a bar b"},
+    ]
+
+
+@given(runner_class=runners())
+@settings(deadline=None)
 def test_when_contains_match(runner_class):
     input_data = [
         {"a": "foo a", "b": "foo b"},

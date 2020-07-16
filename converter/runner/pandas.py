@@ -105,11 +105,18 @@ class StrReplace:
     def __init__(self, series_type):
         self.series_type = series_type
 
-    def __call__(self, row: RowType, target, pattern: re.Pattern, repl):
-        if isinstance(target, self.series_type):
-            return target.astype(str).str.replace(pattern, repl)
-        else:
-            return default_replace(row, target, pattern, repl)
+    def __call__(self, row: RowType, target, *pattern_repl):
+        result = target
+        patterns = (p for i, p in enumerate(pattern_repl) if i % 2 == 0)
+        repls = (r for i, r in enumerate(pattern_repl) if i % 2 != 0)
+
+        for pattern, repl in zip(patterns, repls):
+            if isinstance(result, self.series_type):
+                result = result.astype(str).str.replace(pattern, repl)
+            else:
+                result = default_replace(row, result, pattern, repl)
+
+        return result
 
 
 class StrMatch:
@@ -272,7 +279,9 @@ class PandasRunner(BaseRunner):
         }
 
         # process the when clause to get a filter series
-        filter_series = run(input_df, entry.when, transformer_mapping)
+        filter_series = run(
+            input_df, entry.when_tree or entry.when, transformer_mapping
+        )
 
         if isinstance(filter_series, self.series_type):
             # if we have a series it treat it as a row mapping
@@ -290,7 +299,11 @@ class PandasRunner(BaseRunner):
             )
             return NotSet
 
-        result = run(filtered_input, entry.transformation, transformer_mapping)
+        result = run(
+            filtered_input,
+            entry.transformation_tree or entry.transformation,
+            transformer_mapping,
+        )
         if isinstance(result, self.series_type):
             return result
         else:
