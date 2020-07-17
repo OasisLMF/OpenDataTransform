@@ -1,0 +1,4 @@
+include README.rst
+recursive-include converter/_data *
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]

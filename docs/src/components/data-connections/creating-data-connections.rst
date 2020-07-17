@@ -12,9 +12,10 @@ providing default values.
 
 The `extract` accepts no arguments. It takes data from the source and passes it
 into the system. It should return an iterable where each entry is a row of data
-represented as a dictionary of key value pairs. To allow for large data sets this
-should be a python generator object rather than returning a list containing all
-elements.
+represented as a dictionary of key value pairs. If multiple data sources need to
+br joined together to produce an entry for a single row this should be handled
+in the connector. To allow for large data sets this should be a python generator
+object rather than returning a list containing all elements.
 
 The `load` method takes one argument which is an iterable of data rows represented
 by dictionaries of key value pairs. It should take each row and add them to the
