@@ -1,0 +1,11 @@
+mapping:
+  options:
+    input_format: AIR_ACC
+    output_format: OED_ACC
+extractor:
+  options:
+    path: air_acc.csv
+loader:
+  options:
+    path: out.csv
+
