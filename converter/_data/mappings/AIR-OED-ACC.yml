@@ -206,13 +206,13 @@ forward_transform:
     - transformation: 'Null'
   LayerAttachment:
     - transformation: Deductible1TL
-      when: OccLimitTypeCodeTL is 'E' and AttachmentPoint is 0 and DeductibleTypeCodeTL is 'AP' and Deductible1TL > 0
+      when: OccLimitTypeCodeTL is 'E' and AttachmentPoint is 0 and DeductibleTypeCodeTL is 'AP' and Deductible1TL gt 0
     - transformation: AttachmentPoint
   LayerLimit:
     - transformation: OccTotalLimit
-      when: OccLimitTypeCodeTL is in is in ['E', 'B']
+      when: OccLimitTypeCodeTL is in ['E', 'B']
     - transformation: 0
-      when: OccLimitTypeCodeTL is in is 'N'
+      when: OccLimitTypeCodeTL is 'N'
     - transformation: 'Null'
   PolDed6All:
     - transformation: Deductible1TL
@@ -307,7 +307,7 @@ reverse_transform:
     - transformation: 'Null'
   DeductibleTypeCodeTL:
     - transformation: "'AP'"
-      when: LayerAttachment > 0
+      when: LayerAttachment gt 0
     - transformation: "'FR'"
       when: PolDedCode6All is 2
     - transformation: "'PL'"

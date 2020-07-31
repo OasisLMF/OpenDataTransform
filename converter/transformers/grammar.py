@@ -7,8 +7,8 @@ _grammar = r"""
 ?expression: product
            | comparison
            | "not" comparison -> logical_not
-           | comparison "or" comparison -> logical_or
-           | comparison "and" comparison -> logical_and
+           | expression "or" comparison -> logical_or
+           | expression "and" comparison -> logical_and
            | expression "+" product -> add
            | expression "-" product -> subtract
 

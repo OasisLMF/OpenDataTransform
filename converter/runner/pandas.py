@@ -191,7 +191,7 @@ class PandasRunner(BaseRunner):
 
     def get_dataframe(self, extractor: BaseConnector) -> pd.DataFrame:
         """
-        Builds a dataframe from the etractors data
+        Builds a dataframe from the extractors data
 
         :param extractor: The extractor providing the input data
 
@@ -206,18 +206,16 @@ class PandasRunner(BaseRunner):
         entry: TransformationEntry,
     ):
         """
-        Helper function for combining 2 series. This is used so that
-        other pandas implementations can override the behaviour to
-        account for special cases.
+        Combines the current column value with the result of the
+        transformation. If the current value is ``NotSet`` the value of the
+        current transformation will be calculated and applied.
 
-        Some pandas implementations dont like combining on empty series.
-        If first is None we just return the second series which will be in
-        the implementations specific series.
+        :param row: The row loaded from the extractor
+        :param current_column_value: Series representing the current
+            transformed value
+        :param entry: The transformation to apply
 
-        :param first: The preferred series to take data from
-        :param second: The secondary series to take data from
-
-        :return: The combined series
+        :return: The combined column value
         """
         new_column_value = self.apply_transformation_entry(row, entry)
 

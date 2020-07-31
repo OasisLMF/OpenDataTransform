@@ -121,3 +121,7 @@ def test_value_is_false___not_result_is_true():
 
 def test_value_is_true___not_result_is_false():
     assert run({}, "not True") is False
+
+
+def test_value_is_multiple_chained_comparisons_without_brackets():
+    assert run({}, "True and True and False") is False

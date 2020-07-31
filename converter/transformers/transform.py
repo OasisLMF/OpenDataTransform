@@ -549,14 +549,14 @@ def parse(expression: Union[str, Tree]) -> Tree:
 
     :return: The parsd expression tree
     """
-    if isinstance(expression, Tree):
+    if not isinstance(expression, str):
         return expression
 
     try:
         return parser.parse(expression)
     except lark_exceptions.UnexpectedCharacters as e:
         raise UnexpectedCharacters(
-            expression, e.args[0][e.pos_in_stream], e.column
+            expression, expression[e.pos_in_stream], e.column
         )
 
 
