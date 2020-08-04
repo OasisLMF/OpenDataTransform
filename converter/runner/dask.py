@@ -11,7 +11,7 @@ from .pandas import PandasRunner
 def read_pandas_chunk(c):
     # pragma: no cover
     # This is not picked up by coverage since it's a delayed dask object
-    return pd.DataFrame(c, dtype="object")
+    return pd.DataFrame(c)
 
 
 class DaskRunner(PandasRunner):

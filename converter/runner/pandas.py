@@ -179,7 +179,7 @@ class StrJoin:
 
 
 class ConversionError:
-    def __init__(self, value, reason):
+    def __init__(self, value=None, reason=None):
         self.reason = reason
         self.value = value
 
@@ -229,13 +229,15 @@ class PandasRunner(BaseRunner):
                     row[column],
                     conversion.null_values if conversion.nullable else [],
                 )
-                bad_rows = coerced_column.apply(isinstance, args=(ConversionError,))
+                bad_rows = coerced_column.apply(
+                    lambda v: isinstance(v, ConversionError),
+                )
 
-                for error, entry in zip(
-                    coerced_column[bad_rows], row[bad_rows].to_dict("records")
+                for error, (idx, entry) in zip(
+                    coerced_column[bad_rows], row[bad_rows].iterrows()
                 ):
                     self.log_type_coercion_error(
-                        entry, column, error.value, conversion.type, error.reason
+                        entry.to_dict(), column, error.value, conversion.type, error.reason
                     )
 
                 coerced_column = coerced_column[~bad_rows]
