@@ -4,11 +4,11 @@ from unittest.mock import Mock, patch
 
 import pytest
 from hypothesis import given
-from hypothesis.strategies import lists, sampled_from, text
+from hypothesis.strategies import booleans, lists, sampled_from, text
 
 from converter.config import Config
 from converter.files.yaml import write_yaml
-from converter.mapping.base import TransformationEntry
+from converter.mapping.base import ColumnConversion, TransformationEntry
 from converter.mapping.errors import NoConversionPathError
 from converter.mapping.file import (
     FileMapping,
@@ -927,3 +927,108 @@ def test_multiple_steps_are_in_the_conversion___all_steps_are_returned():
             {"b": [TransformationEntry(transformation="c", when="True")]},
             {"a": [TransformationEntry(transformation="b", when="True")]},
         ]
+
+
+#
+# Type loading
+#
+
+
+def test_types_have_null_values_set___processed_null_values_are_loaded():
+    with TemporaryDirectory() as d:
+        write_yaml(
+            os.path.join(d, "A-B.yml"),
+            {
+                "input_format": "A",
+                "output_format": "B",
+                "forward": {
+                    "transform": {"b": [{"transformation": "a"}]},
+                    "types": {
+                        "a": {
+                            "type": "int",
+                            "null_values": [0, "Null", "'NULL'"],
+                        },
+                    },
+                },
+            },
+        )
+
+        transformation = FileMapping(
+            Config(),
+            input_format="A",
+            output_format="B",
+            standard_search_path=d,
+            search_working_dir=False,
+        ).get_transformations()[0]
+
+        assert transformation.types == {
+            "a": ColumnConversion(
+                type="int", nullable=True, null_values=[0, None, "NULL"],
+            ),
+        }
+
+
+@given(booleans())
+def test_nullable_is_set___nullable_on_field_is_correct(nullable):
+    with TemporaryDirectory() as d:
+        write_yaml(
+            os.path.join(d, "A-B.yml"),
+            {
+                "input_format": "A",
+                "output_format": "B",
+                "forward": {
+                    "transform": {"b": [{"transformation": "a"}]},
+                    "types": {
+                        "a": {
+                            "type": "int",
+                            "null_values": [0, "Null", "'NULL'"],
+                            "nullable": nullable,
+                        },
+                    },
+                },
+            },
+        )
+
+        transformation = FileMapping(
+            Config(),
+            input_format="A",
+            output_format="B",
+            standard_search_path=d,
+            search_working_dir=False,
+        ).get_transformations()[0]
+
+        assert transformation.types == {
+            "a": ColumnConversion(
+                type="int", nullable=nullable, null_values=[0, None, "NULL"],
+            ),
+        }
+
+
+def test_null_values_are_set_on_forward___forward_values_are_loaded_into_col():
+    with TemporaryDirectory() as d:
+        write_yaml(
+            os.path.join(d, "A-B.yml"),
+            {
+                "input_format": "A",
+                "output_format": "B",
+                "forward": {
+                    "transform": {"b": [{"transformation": "a"}]},
+                    "types": {"a": {"type": "int",},},
+                    "null_values": [0, "Null", "'NULL'"],
+                },
+            },
+        )
+
+        transformation = FileMapping(
+            Config(),
+            input_format="A",
+            output_format="B",
+            standard_search_path=d,
+            search_working_dir=False,
+        ).get_transformations()[0]
+
+        assert transformation.types == {
+            "a": ColumnConversion(
+                type="int", nullable=True, null_values=[0, None, "NULL"],
+            ),
+        }

@@ -160,19 +160,17 @@ class FileMappingSpec(MappingSpec):
         )
 
         # merge all null values from format specific entries
-        forward_null_values = set(
-            run({}, v)
-            for v in chain(
-                *(b.forward.null_values for b in self.bases if b.forward),
+        forward_null_values = self._parse_null_values(
+            *chain(
                 config.get("forward", {}).get("null_values", []),
+                *(b.forward.null_values for b in self.bases if b.forward),
             )
         )
 
-        reverse_null_values = set(
-            run({}, v)
-            for v in chain(
-                *(b.reverse.null_values for b in self.bases if b.reverse),
+        reverse_null_values = self._parse_null_values(
+            *chain(
                 config.get("reverse", {}).get("null_values", []),
+                *(b.reverse.null_values for b in self.bases if b.reverse),
             )
         )
 
@@ -180,18 +178,19 @@ class FileMappingSpec(MappingSpec):
         # config
         forward_types = self._reduce_types(
             *(b.forward.types for b in self.bases if b.forward),
-            config.get("forward", {}).get("types", {}),
+            self._process_raw_types(
+                config.get("forward", {}).get("types", {}),
+                forward_null_values,
+            ),
         )
-        for types in forward_types.items():
-            types.null_values = types.null_values or forward_null_values
 
         reverse_types = self._reduce_types(
             *(b.reverse.types for b in self.bases if b.reverse),
-            config.get("reverse", {}).get("types", {}),
+            self._process_raw_types(
+                config.get("reverse", {}).get("types", {}),
+                reverse_null_values,
+            ),
         )
-
-        for types in reverse_types.items():
-            types.null_values = types.null_values or reverse_null_values
 
         super().__init__(
             input_format,
@@ -214,8 +213,25 @@ class FileMappingSpec(MappingSpec):
 
         all_found_configs[self.path] = self
 
-    @staticmethod
-    def _resolve_property(*values: Union[None, str]) -> Union[None, str]:
+    @classmethod
+    def _parse_null_values(cls, *raw):
+        return list({run({}, v) for v in raw})
+
+    @classmethod
+    def _process_raw_types(cls, types, null_values):
+        return {
+            k: {
+                **v,
+                "null_values": cls._parse_null_values(
+                    *v.get("null_values", [])
+                )
+                or null_values,
+            }
+            for k, v in types.items()
+        }
+
+    @classmethod
+    def _resolve_property(cls, *values: Union[None, str]) -> Union[None, str]:
         """
         Finds the first non None value
 

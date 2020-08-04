@@ -26,7 +26,7 @@ class FakeMapping(BaseMapping):
         return self.specs
 
 
-def make_simple_mapping(transformation_set):
+def make_simple_mapping(transformation_set, types=None):
     return FakeMapping(
         "A",
         "B",
@@ -35,7 +35,10 @@ def make_simple_mapping(transformation_set):
                 "A",
                 "B",
                 forward=DirectionalMapping(
-                    "A", "B", transformation_set=transformation_set
+                    "A",
+                    "B",
+                    transformation_set=transformation_set,
+                    types=types or {},
                 ),
             )
         ],

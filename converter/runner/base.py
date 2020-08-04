@@ -78,20 +78,23 @@ class _BaseRunner:
 
     def coerce_row_types(self, row, conversions: ColumnConversions):
         coerced_row = {}
-
-        for column, conversion in conversions.items():
-            try:
-                coerced_row[column] = self.row_value_conversions[
-                    conversion.type  # type: ignore
-                ](
-                    row[column],
-                    conversion.null_values if conversion.nullable else [],
-                )
-            except Exception as e:
-                self.log_type_coercion_error(
-                    row, column, row[column], conversion.type, e
-                )
-                return None
+        for column, value in row.items():
+            conversion = conversions.get(column)
+            if not conversion:
+                coerced_row[column] = value
+            else:
+                try:
+                    coerced_row[column] = self.row_value_conversions[
+                        conversion.type  # type: ignore
+                    ](
+                        value,
+                        conversion.null_values if conversion.nullable else [],
+                    )
+                except Exception as e:
+                    self.log_type_coercion_error(
+                        row, column, row[column], conversion.type, e
+                    )
+                    return None
 
         return coerced_row
 
@@ -199,7 +202,7 @@ class _BaseRunner:
                 target,
                 **{
                     col_transforms[0]: self.apply_column_transformation(
-                        row, col_transforms[1]
+                        coerced_row, col_transforms[1]
                     )
                 },
             ),
@@ -280,4 +283,5 @@ class BaseAsyncRunner(_BaseRunner):
         :return: An iterable containing the transformed data
         """
         raise NotImplementedError()
+        # This is here so that mypy knows its an async iterable
         yield {}  # pragma: no cover

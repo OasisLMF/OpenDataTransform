@@ -592,6 +592,9 @@ def run(
 
     :return: The transformed result
     """
+    if not isinstance(expression, (str, Tree)):
+        return expression
+
     return transform(
         row, parse(expression), transformer_mapping=transformer_mapping
     )

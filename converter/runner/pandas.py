@@ -202,14 +202,14 @@ class PandasRunner(BaseRunner):
     """
 
     row_value_conversions = {
-        "int": lambda col, null_values: col.as_type(
-            type_converter(int, null_values)
+        "int": lambda col, null_values: col.apply(
+            type_converter(int, null_values), convert_dtype=False,
         ),
-        "float": lambda col, null_values: col.as_type(
-            type_converter(float, null_values)
+        "float": lambda col, null_values: col.apply(
+            type_converter(float, null_values), convert_dtype=False,
         ),
-        "string": lambda col, null_values: col.as_type(
-            type_converter(str, null_values)
+        "string": lambda col, null_values: col.apply(
+            type_converter(str, null_values), convert_dtype=False,
         ),
     }
 
@@ -219,29 +219,38 @@ class PandasRunner(BaseRunner):
     def coerce_row_types(self, row, conversions: ColumnConversions):
         coerced_row = NotSet
 
-        for column, conversion in conversions.items():
-            coerced_column = self.row_value_conversions[conversion.type](
-                row[column],
-                conversion.null_values if conversion.nullable else [],
-            )
-            bad_rows = coerced_column[
-                coerced_column.apply(isinstance, args=(ConversionError,))
-            ]
-
-            for error, row in zip(
-                coerced_column[bad_rows], row[bad_rows].to_dict("records")
-            ):
-                self.log_type_coercion_error(
-                    row, column, error.value, conversion.type, error.reason
+        for column in row.columns:
+            conversion = conversions.get(column)
+            if not conversion:
+                coerced_column = row[column]
+                bad_rows = None
+            else:
+                coerced_column = self.row_value_conversions[conversion.type](
+                    row[column],
+                    conversion.null_values if conversion.nullable else [],
                 )
+                bad_rows = coerced_column.apply(isinstance, args=(ConversionError,))
+
+                for error, entry in zip(
+                    coerced_column[bad_rows], row[bad_rows].to_dict("records")
+                ):
+                    self.log_type_coercion_error(
+                        entry, column, error.value, conversion.type, error.reason
+                    )
+
+                coerced_column = coerced_column[~bad_rows]
 
             if isinstance(coerced_row, NotSetType):
                 coerced_row = coerced_column.to_frame(column)
             else:
-                coerced_row = coerced_row[~bad_rows]
                 coerced_row[column] = coerced_column
 
-            row = row[~bad_rows]
+            # remove the bad rows from the input row and the coerced row
+            # so that no bad rows arent processed anymore and bad rows
+            # arent included in the final coerced value
+            if bad_rows is not None and len(bad_rows):
+                row = row[~bad_rows]
+                coerced_row = coerced_row[~bad_rows]
 
         return coerced_row
 
@@ -256,7 +265,7 @@ class PandasRunner(BaseRunner):
 
         :return: The created dataframe
         """
-        return pd.DataFrame(extractor.extract())
+        return pd.DataFrame(extractor.extract(), dtype="object")
 
     def combine_column(
         self,
@@ -279,7 +288,7 @@ class PandasRunner(BaseRunner):
         if not isinstance(current_column_value, NotSetType):
             row = row[self.create_series(current_column_value.index, False)]
 
-        if len(row) == 0:
+        if isinstance(row, NotSetType) or len(row) == 0:
             return current_column_value
 
         new_column_value = self.apply_transformation_entry(row, entry)
@@ -317,7 +326,9 @@ class PandasRunner(BaseRunner):
                 output_row = series.to_frame(name=name)
             else:
                 series.name = name
-                output_row, series = output_row.align(series, axis=0)
+                output_row, series = output_row.align(
+                    series, axis=0, fill_value=NotSet
+                )
                 output_row = output_row.assign(**{name: series})
 
         return output_row
@@ -390,6 +401,4 @@ class PandasRunner(BaseRunner):
             self.apply_transformation_set, transformations, df,
         )
 
-        return (
-            r.to_dict() for idx, r in transformed.fillna(NotSet).iterrows()
-        )
+        return (r.to_dict() for idx, r in transformed.iterrows())
