@@ -8,8 +8,12 @@ from typing import Dict, Iterable, List, Reversible, TypedDict, Union
 
 from ..errors import ConverterError
 from ..files.yaml import read_yaml
+from ..transformers import run
 from .base import (
     BaseMapping,
+    ColumnConversion,
+    ColumnConversions,
+    DirectionalMapping,
     MappingSpec,
     TransformationEntry,
     TransformationSet,
@@ -25,14 +29,32 @@ RawTransformConfig = TypedDict(
 )
 
 
+RawColumnConversionConfig = TypedDict(
+    "RawColumnConversionConfig",
+    {"type": str, "nullable": bool, "null_values": List},
+    total=False,
+)
+
+
+RawDirectionalConfig = TypedDict(
+    "RawDirectionalConfig",
+    {
+        "transform": Dict[str, List[RawTransformConfig]],
+        "types": Dict[str, RawColumnConversionConfig],
+        "null_values": List,
+    },
+    total=False,
+)
+
+
 RawMappingConfig = TypedDict(
     "RawMappingConfig",
     {
         "bases": List[str],
         "input_format": str,
         "output_format": str,
-        "forward_transform": Dict[str, List[RawTransformConfig]],
-        "reverse_transform": Dict[str, List[RawTransformConfig]],
+        "forward": RawDirectionalConfig,
+        "reverse": RawDirectionalConfig,
     },
     total=False,
 )
@@ -69,10 +91,10 @@ class FileMappingSpec(MappingSpec):
         configs.
     :param output_format: The output format resolved from the parent and
         current configs.
-    :param forward_transform: The transforms from changing from the input
-        format to output format (the current config is merged with the parents)
-    :param reverse_transform: The transforms from changing from the ouptut
-        format to input format (the current config is merged with the parents)
+    :param forward: The configuration for changing from the input format to
+        output format (the current config is merged with the parents)
+    :param reverse: The configuration for changing from the output format to
+        input format (the current config is merged with the parents)
     """
 
     def __init__(
@@ -128,20 +150,66 @@ class FileMappingSpec(MappingSpec):
 
         # merge the transforms from all the parents and the current config
         forward_transform: TransformationSet = self._reduce_transforms(
-            *(b.forward_transform for b in self.bases),
-            config.get("forward_transform", {}),
+            *(b.forward.transformation_set for b in self.bases if b.forward),
+            config.get("forward", {}).get("transform", {}),
         )
 
         reverse_transform: TransformationSet = self._reduce_transforms(
-            *(b.reverse_transform for b in self.bases),
-            config.get("reverse_transform", {}),
+            *(b.reverse.transformation_set for b in self.bases if b.reverse),
+            config.get("reverse", {}).get("transform", {}),
         )
+
+        # merge all null values from format specific entries
+        forward_null_values = set(
+            run({}, v)
+            for v in chain(
+                *(b.forward.null_values for b in self.bases if b.forward),
+                config.get("forward", {}).get("null_values", []),
+            )
+        )
+
+        reverse_null_values = set(
+            run({}, v)
+            for v in chain(
+                *(b.reverse.null_values for b in self.bases if b.reverse),
+                config.get("reverse", {}).get("null_values", []),
+            )
+        )
+
+        # merge the column conversions from all the parents and the current
+        # config
+        forward_types = self._reduce_types(
+            *(b.forward.types for b in self.bases if b.forward),
+            config.get("forward", {}).get("types", {}),
+        )
+        for types in forward_types.items():
+            types.null_values = types.null_values or forward_null_values
+
+        reverse_types = self._reduce_types(
+            *(b.reverse.types for b in self.bases if b.reverse),
+            config.get("reverse", {}).get("types", {}),
+        )
+
+        for types in reverse_types.items():
+            types.null_values = types.null_values or reverse_null_values
 
         super().__init__(
             input_format,
             output_format,
-            forward_transform=forward_transform,
-            reverse_transform=reverse_transform,
+            forward=DirectionalMapping(
+                input_format=input_format,
+                output_format=output_format,
+                transformation_set=forward_transform,
+                types=forward_types,
+                null_values=list(forward_null_values),
+            ),
+            reverse=DirectionalMapping(
+                input_format=input_format,
+                output_format=output_format,
+                transformation_set=reverse_transform,
+                types=reverse_types,
+                null_values=list(reverse_null_values),
+            ),
         )
 
         all_found_configs[self.path] = self
@@ -157,9 +225,12 @@ class FileMappingSpec(MappingSpec):
         """
         return next(reversed([v for v in values if v]), None)
 
-    @staticmethod
+    @classmethod
     def _reduce_transforms(
-        *transform_configs: Union[TransformationSet, Dict]
+        cls,
+        *transform_configs: Union[
+            TransformationSet, Dict[str, List[RawTransformConfig]]
+        ],
     ) -> TransformationSet:
         """
         Merges the current configs transforms with all the parents.
@@ -181,6 +252,25 @@ class FileMappingSpec(MappingSpec):
                 },
             },
             transform_configs,
+            {},
+        )
+
+    @classmethod
+    def _reduce_types(
+        cls,
+        *transform_types: Union[
+            ColumnConversions, Dict[str, RawColumnConversionConfig]
+        ],
+    ):
+        return reduce(
+            lambda types, current: {
+                **types,
+                **{  # type: ignore
+                    k: ColumnConversion(**v) if isinstance(v, dict) else v
+                    for k, v in current.items()
+                },
+            },
+            transform_types,
             {},
         )
 
@@ -364,8 +454,8 @@ class FileMapping(BaseMapping):
                         "bases",
                         "input_format",
                         "output_format",
-                        "forward_transform",
-                        "reverse_transform",
+                        "forward",
+                        "reverse",
                     }
                 )
             )

@@ -1,5 +1,5 @@
 import logging
-from typing import Dict, List, Reversible, Union
+from typing import Dict, List, NamedTuple, Reversible, Union
 
 import networkx as nx
 from lark import Tree
@@ -41,6 +41,23 @@ class TransformationEntry:
 TransformationSet = Dict[str, List[TransformationEntry]]
 
 
+class ColumnConversion(NamedTuple):
+    type: str
+    nullable: bool = True
+    null_values: List = []
+
+
+ColumnConversions = Dict[str, ColumnConversion]
+
+
+class DirectionalMapping(NamedTuple):
+    input_format: str
+    output_format: str
+    transformation_set: TransformationSet
+    types: Dict[str, ColumnConversion] = {}
+    null_values: List = []
+
+
 class MappingSpec:
     """
     Class holding information about a given mapping
@@ -50,13 +67,13 @@ class MappingSpec:
         self,
         input_format,
         output_format,
-        forward_transform: TransformationSet = None,
-        reverse_transform: TransformationSet = None,
+        forward: DirectionalMapping = None,
+        reverse: DirectionalMapping = None,
     ):
         self.input_format = input_format
         self.output_format = output_format
-        self.forward_transform = forward_transform or {}
-        self.reverse_transform = reverse_transform or {}
+        self.forward = forward
+        self.reverse = reverse
 
     @property
     def can_run_forwards(self):
@@ -66,8 +83,8 @@ class MappingSpec:
         :return: True is the mapping can be applied forwards, False otherwise
         """
         return (
-            self.forward_transform is not None
-            and len(self.forward_transform) > 0
+            self.forward is not None
+            and len(self.forward.transformation_set) > 0
         )
 
     @property
@@ -78,8 +95,8 @@ class MappingSpec:
         :return: True is the mapping can be applied in reverse, False otherwise
         """
         return (
-            self.reverse_transform is not None
-            and len(self.reverse_transform) > 0
+            self.reverse is not None
+            and len(self.reverse.transformation_set) > 0
         )
 
 
@@ -141,14 +158,14 @@ class BaseMapping:
                 g.add_edge(
                     mapping.input_format,
                     mapping.output_format,
-                    transform_set=mapping.forward_transform,
+                    transform=mapping.forward,
                 )
 
             if mapping.can_run_in_reverse:
                 g.add_edge(
                     mapping.output_format,
                     mapping.input_format,
-                    transform_set=mapping.reverse_transform,
+                    transform=mapping.reverse,
                 )
 
         return g
@@ -164,11 +181,12 @@ class BaseMapping:
 
         return self._mapping_graph
 
-    def get_transformations(self) -> List[TransformationSet]:
+    def get_transformations(self) -> List[DirectionalMapping]:
         """
-        Gets a full transformation set for the provided input and output paths.
+        Gets a column transformations and full transformation set for the
+        provided input and output paths.
 
-        :return: The transformation set for the conversion path.
+        :return: The mappings along the conversion path.
         """
         try:
             path = nx.shortest_path(
@@ -185,9 +203,9 @@ class BaseMapping:
 
         # parse the trees of the path so that is doesnt need
         # to be done for every row
-        transformations = [edge["transform_set"] for edge in edges]
-        for transform_set in transformations:
-            for transform in transform_set.values():
+        transformations = [edge["transform"] for edge in edges]
+        for mapping in transformations:
+            for transform in mapping.transformation_set.values():
                 for case in transform:
                     case.parse()
 

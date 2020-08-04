@@ -1,13 +1,25 @@
 import asyncio
+import json
+import logging
 from functools import reduce
-from typing import Any, AsyncIterable, Dict, Iterable, List, Union
+from typing import (
+    Any,
+    AsyncIterable,
+    Callable,
+    Dict,
+    Iterable,
+    List,
+    TypedDict,
+    Union,
+)
 
 from converter.config import Config
 from converter.connector.base import BaseConnector
 from converter.mapping.base import (
     BaseMapping,
+    ColumnConversions,
+    DirectionalMapping,
     TransformationEntry,
-    TransformationSet,
 )
 from converter.transformers.transform import run
 
@@ -31,10 +43,57 @@ class NotSetType:
 NotSet = NotSetType()
 
 
+class Converters(TypedDict):
+    int: Callable[[Any, List], Union[int, None]]
+    float: Callable[[Any, List], Union[float, None]]
+    string: Callable[[Any, List], Union[str, None]]
+
+
+def build_converter(t) -> Callable[[Any, List], Any]:
+    def _converter(value, null_values):
+        if value in null_values:
+            return None
+        return t(value)
+
+    return _converter
+
+
 class _BaseRunner:
+    row_value_conversions: Converters = {
+        "int": build_converter(int),
+        "float": build_converter(float),
+        "string": build_converter(str),
+    }
+
     def __init__(self, config: Config, **options):
         self.config = config
         self._options = options
+
+    @classmethod
+    def log_type_coercion_error(cls, row, column, value, to_type, reason):
+        logging.warning(
+            f"Cannot coerce {column} ({value}) to {to_type}. "
+            f"Reason: {reason}. Row: {json.dumps(row)}."
+        )
+
+    def coerce_row_types(self, row, conversions: ColumnConversions):
+        coerced_row = {}
+
+        for column, conversion in conversions.items():
+            try:
+                coerced_row[column] = self.row_value_conversions[
+                    conversion.type  # type: ignore
+                ](
+                    row[column],
+                    conversion.null_values if conversion.nullable else [],
+                )
+            except Exception as e:
+                self.log_type_coercion_error(
+                    row, column, row[column], conversion.type, e
+                )
+                return None
+
+        return coerced_row
 
     def combine_column(
         self,
@@ -48,8 +107,7 @@ class _BaseRunner:
         current transformation will be calculated and applied.
 
         :param row: The row loaded from the extractor
-        :param current_column_value: Series representing the current
-            transformed value
+        :param current_column_value: The current transformed value
         :param entry: The transformation to apply
 
         :return: The combined column value
@@ -63,7 +121,7 @@ class _BaseRunner:
         self,
         input_row: RowType,
         output_row: Union[RowType, NotSetType],
-        **assignments
+        **assignments,
     ) -> RowType:
         """
         Helper function for assigning a values to the output row.
@@ -120,17 +178,21 @@ class _BaseRunner:
         return result
 
     def apply_transformation_set(
-        self, row: RowType, transformation_set: TransformationSet,
+        self, row: RowType, transformations: DirectionalMapping,
     ) -> RowType:
         """
         Applies all the transformations to produce the output row
 
         :param row: The current input row
-        :param transformation_set: The full set of transformations to apply
-            to the ``row`` to produce the output row.
+        :param transformations: The full set of column conversions and
+            transformation sets to apply to the ``row`` row.
 
-        :return: The transformed dataframe
+        :return: The transformed row
         """
+        coerced_row = self.coerce_row_types(row, transformations.types)
+        if coerced_row is None:
+            return NotSet
+
         return reduce(
             lambda target, col_transforms: self.assign(
                 row,
@@ -141,7 +203,7 @@ class _BaseRunner:
                     )
                 },
             ),
-            transformation_set.items(),
+            transformations.transformation_set.items(),
             NotSet,
         )
 

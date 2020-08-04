@@ -32,13 +32,17 @@ def test_mapping_applies_to_all_cols___forward_and_reverse_gets_to_the_input(
             {
                 "input_format": "A",
                 "output_format": "B",
-                "forward_transform": {
-                    "c": [{"transformation": "a * 2"}],
-                    "d": [{"transformation": "b + 3"}],
+                "forward": {
+                    "transform": {
+                        "c": [{"transformation": "a * 2"}],
+                        "d": [{"transformation": "b + 3"}],
+                    }
                 },
-                "reverse_transform": {
-                    "a": [{"transformation": "c / 2"}],
-                    "b": [{"transformation": "d - 3"}],
+                "reverse": {
+                    "transform": {
+                        "a": [{"transformation": "c / 2"}],
+                        "b": [{"transformation": "d - 3"}],
+                    }
                 },
             },
         )
@@ -101,13 +105,17 @@ def test_multiple_mapping_steps___forward_and_reverse_gets_to_the_input(
             {
                 "input_format": "A",
                 "output_format": "B",
-                "forward_transform": {
-                    "c": [{"transformation": "a * 2"}],
-                    "d": [{"transformation": "b + 3"}],
+                "forward": {
+                    "transform": {
+                        "c": [{"transformation": "a * 2"}],
+                        "d": [{"transformation": "b + 3"}],
+                    }
                 },
-                "reverse_transform": {
-                    "a": [{"transformation": "c / 2"}],
-                    "b": [{"transformation": "d - 3"}],
+                "reverse": {
+                    "transform": {
+                        "a": [{"transformation": "c / 2"}],
+                        "b": [{"transformation": "d - 3"}],
+                    }
                 },
             },
         )
@@ -116,13 +124,17 @@ def test_multiple_mapping_steps___forward_and_reverse_gets_to_the_input(
             {
                 "input_format": "B",
                 "output_format": "C",
-                "forward_transform": {
-                    "e": [{"transformation": "c * 3"}],
-                    "f": [{"transformation": "d + 4"}],
+                "forward": {
+                    "transform": {
+                        "e": [{"transformation": "c * 3"}],
+                        "f": [{"transformation": "d + 4"}],
+                    }
                 },
-                "reverse_transform": {
-                    "c": [{"transformation": "e / 3"}],
-                    "d": [{"transformation": "f - 4"}],
+                "reverse": {
+                    "transform": {
+                        "c": [{"transformation": "e / 3"}],
+                        "d": [{"transformation": "f - 4"}],
+                    }
                 },
             },
         )
@@ -183,16 +195,20 @@ def test_multiple_transforms_could_apply___first_is_applied(runner_class,):
             {
                 "input_format": "A",
                 "output_format": "B",
-                "forward_transform": {
-                    "c": [
-                        {"transformation": "a * 2"},
-                        {"transformation": "a * 4"},
-                    ],
-                    "d": [{"transformation": "b + 3"}],
+                "forward": {
+                    "transform": {
+                        "c": [
+                            {"transformation": "a * 2"},
+                            {"transformation": "a * 4"},
+                        ],
+                        "d": [{"transformation": "b + 3"}],
+                    }
                 },
-                "reverse_transform": {
-                    "a": [{"transformation": "c / 2"}],
-                    "b": [{"transformation": "d - 3"}],
+                "reverse": {
+                    "transform": {
+                        "a": [{"transformation": "c / 2"}],
+                        "b": [{"transformation": "d - 3"}],
+                    }
                 },
             },
         )
@@ -253,14 +269,18 @@ def test_row_is_value___value_is_set_on_all_columns(runner_class,):
             {
                 "input_format": "A",
                 "output_format": "B",
-                "forward_transform": {
-                    "c": [{"transformation": "a * 2"}],
-                    "d": [{"transformation": "b + 3"}],
-                    "e": [{"transformation": "'foo'"}],
+                "forward": {
+                    "transform": {
+                        "c": [{"transformation": "a * 2"}],
+                        "d": [{"transformation": "b + 3"}],
+                        "e": [{"transformation": "'foo'"}],
+                    }
                 },
-                "reverse_transform": {
-                    "a": [{"transformation": "c / 2"}],
-                    "b": [{"transformation": "d - 3"}],
+                "reverse": {
+                    "transform": {
+                        "a": [{"transformation": "c / 2"}],
+                        "b": [{"transformation": "d - 3"}],
+                    }
                 },
             },
         )

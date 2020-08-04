@@ -23,9 +23,11 @@ def test_when_is_false___other_transforms_are_performed_warning_is_written():
             {
                 "input_format": "A",
                 "output_format": "B",
-                "forward_transform": {
-                    "c": [{"transformation": "a * 2", "when": "False"}],
-                    "d": [{"transformation": "b + 3"}],
+                "forward": {
+                    "transform": {
+                        "c": [{"transformation": "a * 2", "when": "False"}],
+                        "d": [{"transformation": "b + 3"}],
+                    }
                 },
             },
         )
@@ -67,12 +69,14 @@ def test_runner_handles_when_secondary_cases_are_false():
             {
                 "input_format": "A",
                 "output_format": "B",
-                "forward_transform": {
-                    "c": [
-                        {"transformation": "a * 2"},
-                        {"transformation": "a * 3", "when": "False"},
-                    ],
-                    "d": [{"transformation": "b + 3"}],
+                "forward": {
+                    "transform": {
+                        "c": [
+                            {"transformation": "a * 2"},
+                            {"transformation": "a * 3", "when": "False"},
+                        ],
+                        "d": [{"transformation": "b + 3"}],
+                    }
                 },
             },
         )

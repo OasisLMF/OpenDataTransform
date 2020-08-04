@@ -8,7 +8,7 @@ import pandas as pd
 from numpy import nan
 
 from ..connector.base import BaseConnector
-from ..mapping.base import BaseMapping, TransformationEntry
+from ..mapping.base import BaseMapping, ColumnConversions, TransformationEntry
 from ..transformers import run
 from ..transformers.transform import (
     GroupWrapper,
@@ -178,13 +178,72 @@ class StrJoin:
             )
 
 
+class ConversionError:
+    def __init__(self, value, reason):
+        self.reason = reason
+        self.value = value
+
+
+def type_converter(to_type, null_values):
+    def _converter(value):
+        try:
+            if value in null_values:
+                return None
+            return to_type(value)
+        except Exception as e:
+            return ConversionError(value, e)
+
+    return _converter
+
+
 class PandasRunner(BaseRunner):
     """
     Default implementation for a pandas like runner
     """
 
+    row_value_conversions = {
+        "int": lambda col, null_values: col.as_type(
+            type_converter(int, null_values)
+        ),
+        "float": lambda col, null_values: col.as_type(
+            type_converter(float, null_values)
+        ),
+        "string": lambda col, null_values: col.as_type(
+            type_converter(str, null_values)
+        ),
+    }
+
     dataframe_type = pd.DataFrame
     series_type = pd.Series
+
+    def coerce_row_types(self, row, conversions: ColumnConversions):
+        coerced_row = NotSet
+
+        for column, conversion in conversions.items():
+            coerced_column = self.row_value_conversions[conversion.type](
+                row[column],
+                conversion.null_values if conversion.nullable else [],
+            )
+            bad_rows = coerced_column[
+                coerced_column.apply(isinstance, args=(ConversionError,))
+            ]
+
+            for error, row in zip(
+                coerced_column[bad_rows], row[bad_rows].to_dict("records")
+            ):
+                self.log_type_coercion_error(
+                    row, column, error.value, conversion.type, error.reason
+                )
+
+            if isinstance(coerced_row, NotSetType):
+                coerced_row = coerced_column.to_frame(column)
+            else:
+                coerced_row = coerced_row[~bad_rows]
+                coerced_row[column] = coerced_column
+
+            row = row[~bad_rows]
+
+        return coerced_row
 
     def create_series(self, index, value):
         return self.series_type(value, index=index)
@@ -217,6 +276,12 @@ class PandasRunner(BaseRunner):
 
         :return: The combined column value
         """
+        if not isinstance(current_column_value, NotSetType):
+            row = row[self.create_series(current_column_value.index, False)]
+
+        if len(row) == 0:
+            return current_column_value
+
         new_column_value = self.apply_transformation_entry(row, entry)
 
         if isinstance(current_column_value, NotSetType):

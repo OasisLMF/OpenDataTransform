@@ -1,12 +1,11 @@
 from hypothesis import given, settings
 
 from converter.config import Config
-from converter.mapping import MappingSpec
 from converter.mapping.base import TransformationEntry
 from converter.runner.base import NotSet
 
 from ..connector.fakes import FakeConnector
-from ..mapping.fakes import FakeMapping
+from ..mapping.fakes import make_simple_mapping
 from .stategies import runners
 
 
@@ -20,29 +19,19 @@ def test_transform_contains_replace(runner_class):
         {"a": "bar a", "b": "bar b"},
     ]
 
-    mapping = FakeMapping(
-        "A",
-        "B",
-        [
-            MappingSpec(
-                "A",
-                "B",
-                forward_transform={
-                    "c": [
-                        TransformationEntry(
-                            transformation="replace(a, 'oo', 'aa')",
-                        )
-                    ],
-                    "d": [
-                        TransformationEntry(
-                            transformation=(
-                                r"replace(a + ' ' + b, re'oo (.)', '\1\1')"
-                            ),
-                        )
-                    ],
-                },
-            )
-        ],
+    mapping = make_simple_mapping(
+        {
+            "c": [
+                TransformationEntry(transformation="replace(a, 'oo', 'aa')",)
+            ],
+            "d": [
+                TransformationEntry(
+                    transformation=(
+                        r"replace(a + ' ' + b, re'oo (.)', '\1\1')"
+                    ),
+                )
+            ],
+        }
     )
 
     extractor = FakeConnector(data=input_data)
@@ -68,29 +57,19 @@ def test_transform_contains_replace_on_non_lookup(runner_class):
         {"a": "bar a", "b": "bar b"},
     ]
 
-    mapping = FakeMapping(
-        "A",
-        "B",
-        [
-            MappingSpec(
-                "A",
-                "B",
-                forward_transform={
-                    "c": [
-                        TransformationEntry(
-                            transformation="replace('foo', 'oo', 'aa')",
-                        )
-                    ],
-                    "d": [
-                        TransformationEntry(
-                            transformation=(
-                                r"replace('foo, bee', re'o{2}', 'aa')"
-                            ),
-                        )
-                    ],
-                },
-            )
-        ],
+    mapping = make_simple_mapping(
+        {
+            "c": [
+                TransformationEntry(
+                    transformation="replace('foo', 'oo', 'aa')",
+                )
+            ],
+            "d": [
+                TransformationEntry(
+                    transformation=(r"replace('foo, bee', re'o{2}', 'aa')"),
+                )
+            ],
+        }
     )
 
     extractor = FakeConnector(data=input_data)
@@ -116,28 +95,20 @@ def test_transform_contains_replace_with_multiple_pairs(runner_class):
         {"a": "bar a", "b": "bar b"},
     ]
 
-    mapping = FakeMapping(
-        "A",
-        "B",
-        [
-            MappingSpec(
-                "A",
-                "B",
-                forward_transform={
-                    "c": [
-                        TransformationEntry(
-                            transformation="""
-                                replace(
-                                    a + ' ' + b,
-                                    'foo', 'faa',
-                                    'boo', 'bam'
-                                )
-                            """,
+    mapping = make_simple_mapping(
+        {
+            "c": [
+                TransformationEntry(
+                    transformation="""
+                        replace(
+                            a + ' ' + b,
+                            'foo', 'faa',
+                            'boo', 'bam'
                         )
-                    ],
-                },
-            )
-        ],
+                    """,
+                )
+            ],
+        }
     )
 
     extractor = FakeConnector(data=input_data)
@@ -163,28 +134,19 @@ def test_when_contains_match(runner_class):
         {"a": "bar a", "b": "bar b"},
     ]
 
-    mapping = FakeMapping(
-        "A",
-        "B",
-        [
-            MappingSpec(
-                "A",
-                "B",
-                forward_transform={
-                    "c": [
-                        TransformationEntry(
-                            transformation="a", when="match(a, 'foo a')",
-                        )
-                    ],
-                    "d": [
-                        TransformationEntry(
-                            transformation="a + ' ' + b",
-                            when="match(a, re'oo.*')",
-                        )
-                    ],
-                },
-            )
-        ],
+    mapping = make_simple_mapping(
+        {
+            "c": [
+                TransformationEntry(
+                    transformation="a", when="match(a, 'foo a')",
+                )
+            ],
+            "d": [
+                TransformationEntry(
+                    transformation="a + ' ' + b", when="match(a, re'oo.*')",
+                )
+            ],
+        }
     )
 
     extractor = FakeConnector(data=input_data)
@@ -208,28 +170,20 @@ def test_when_contains_match_on_non_lookup(runner_class):
         {"a": "bar a", "b": "bar b"},
     ]
 
-    mapping = FakeMapping(
-        "A",
-        "B",
-        [
-            MappingSpec(
-                "A",
-                "B",
-                forward_transform={
-                    "c": [
-                        TransformationEntry(
-                            transformation="a", when="match('foo', 'foo')",
-                        )
-                    ],
-                    "d": [
-                        TransformationEntry(
-                            transformation="a + ' ' + b",
-                            when="match('foo a', re'.*oo.*')",
-                        )
-                    ],
-                },
-            )
-        ],
+    mapping = make_simple_mapping(
+        {
+            "c": [
+                TransformationEntry(
+                    transformation="a", when="match('foo', 'foo')",
+                )
+            ],
+            "d": [
+                TransformationEntry(
+                    transformation="a + ' ' + b",
+                    when="match('foo a', re'.*oo.*')",
+                )
+            ],
+        }
     )
 
     extractor = FakeConnector(data=input_data)
@@ -255,28 +209,20 @@ def test_when_contains_search(runner_class):
         {"a": "bar a", "b": "bar b"},
     ]
 
-    mapping = FakeMapping(
-        "A",
-        "B",
-        [
-            MappingSpec(
-                "A",
-                "B",
-                forward_transform={
-                    "c": [
-                        TransformationEntry(
-                            transformation="a", when="search(a, 'far')",
-                        )
-                    ],
-                    "d": [
-                        TransformationEntry(
-                            transformation="a + ' ' + b",
-                            when=r"search(a + ' ' + b, re'a\s\w+oo')",
-                        )
-                    ],
-                },
-            )
-        ],
+    mapping = make_simple_mapping(
+        {
+            "c": [
+                TransformationEntry(
+                    transformation="a", when="search(a, 'far')",
+                )
+            ],
+            "d": [
+                TransformationEntry(
+                    transformation="a + ' ' + b",
+                    when=r"search(a + ' ' + b, re'a\s\w+oo')",
+                )
+            ],
+        }
     )
 
     extractor = FakeConnector(data=input_data)
@@ -301,29 +247,20 @@ def test_when_contains_search_on_non_lookup(runner_class):
         {"a": "bar a", "b": "bar b"},
     ]
 
-    mapping = FakeMapping(
-        "A",
-        "B",
-        [
-            MappingSpec(
-                "A",
-                "B",
-                forward_transform={
-                    "c": [
-                        TransformationEntry(
-                            transformation="a",
-                            when="search('a foo b', 'foo')",
-                        )
-                    ],
-                    "d": [
-                        TransformationEntry(
-                            transformation="a + ' ' + b",
-                            when=r"search('foo a bar', re'oo.\w')",
-                        )
-                    ],
-                },
-            )
-        ],
+    mapping = make_simple_mapping(
+        {
+            "c": [
+                TransformationEntry(
+                    transformation="a", when="search('a foo b', 'foo')",
+                )
+            ],
+            "d": [
+                TransformationEntry(
+                    transformation="a + ' ' + b",
+                    when=r"search('foo a bar', re'oo.\w')",
+                )
+            ],
+        }
     )
 
     extractor = FakeConnector(data=input_data)
@@ -349,22 +286,14 @@ def test_transform_contains_join_of_lookups_str_and_non_str(runner_class):
         {"a": "bar a", "b": 4},
     ]
 
-    mapping = FakeMapping(
-        "A",
-        "B",
-        [
-            MappingSpec(
-                "A",
-                "B",
-                forward_transform={
-                    "c": [
-                        TransformationEntry(
-                            transformation="join(', ', 'bar', a, 5, b, 0)",
-                        )
-                    ],
-                },
-            )
-        ],
+    mapping = make_simple_mapping(
+        {
+            "c": [
+                TransformationEntry(
+                    transformation="join(', ', 'bar', a, 5, b, 0)",
+                )
+            ],
+        }
     )
 
     extractor = FakeConnector(data=input_data)
@@ -390,18 +319,8 @@ def test_transform_contains_join_of_nothing(runner_class):
         {"a": "bar a", "b": 4},
     ]
 
-    mapping = FakeMapping(
-        "A",
-        "B",
-        [
-            MappingSpec(
-                "A",
-                "B",
-                forward_transform={
-                    "c": [TransformationEntry(transformation="join(', ')",)],
-                },
-            )
-        ],
+    mapping = make_simple_mapping(
+        {"c": [TransformationEntry(transformation="join(', ')",)]}
     )
 
     extractor = FakeConnector(data=input_data)
@@ -427,20 +346,8 @@ def test_transform_contains_join_of_single_element(runner_class):
         {"a": "bar a", "b": 4},
     ]
 
-    mapping = FakeMapping(
-        "A",
-        "B",
-        [
-            MappingSpec(
-                "A",
-                "B",
-                forward_transform={
-                    "c": [
-                        TransformationEntry(transformation="join(', ', a)",)
-                    ],
-                },
-            )
-        ],
+    mapping = make_simple_mapping(
+        {"c": [TransformationEntry(transformation="join(', ', a)",)]}
     )
 
     extractor = FakeConnector(data=input_data)

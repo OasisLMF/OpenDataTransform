@@ -3,7 +3,7 @@ from typing import Any, AsyncIterable, Dict
 
 from converter.connector import BaseConnector
 from converter.mapping import BaseMapping
-from converter.runner.base import BaseAsyncRunner, NotSet
+from converter.runner.base import BaseAsyncRunner, NotSet, NotSetType
 
 
 class EagerRunner(BaseAsyncRunner):
@@ -25,6 +25,9 @@ class EagerRunner(BaseAsyncRunner):
             transformed = reduce(
                 self.apply_transformation_set, transformations, row
             )
+
+            if isinstance(transformed, NotSetType):
+                continue
 
             if len([v for v in transformed.values() if v != NotSet]) > 0:
                 # only yield rows that have some values set
