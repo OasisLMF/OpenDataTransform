@@ -27,7 +27,6 @@ class BufferedCsvReader(TextIOBase):
                 writer = csv.DictWriter(
                     csv_file,
                     fieldnames=entry.keys(),
-                    quoting=csv.QUOTE_NONNUMERIC,
                 )
 
                 if self._first:

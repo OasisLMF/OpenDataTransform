@@ -108,3 +108,8 @@ properties:
 
   If :code:`transform` are present in any of the bases they are all merged together
   preferring the later parents and this mapping file.
+
+  To add a default fallback value add a transformation to the end of the transform
+  list that has a :code:`transformation` and no :code:`when` clause. This will
+  always resolve and only after all other transformations have been skipped due to
+  their :code:`when` clause failing.
