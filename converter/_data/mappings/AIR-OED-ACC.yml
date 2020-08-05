@@ -3,9 +3,84 @@ input_format: AIR_ACC
 output_format: OED_ACC
 forward:
   types:
-    - field:
-      type:
-      nullable:
+    ExposureSetName:
+      type: string
+    ContractID:
+      type: string
+    InsuredName:
+      type: string
+    SubmitStatusCode:
+      type: string
+    ExpiringContractID:
+      type: string
+    CurrencyCode:
+      type: string
+    UserDefined1:
+      type: string
+    UserDefined2:
+      type: string
+    UserDefined3:
+      type: string
+    UserDefined4:
+      type: string
+    UserDefined5:
+      type: string
+    InceptionDate:
+      type: string
+    ExpirationDate:
+      type: string
+    ProducerName:
+      type: string
+    Underwriter:
+      type: string
+    Branch:
+      type: string
+    UserLineOfBusiness:
+      type: string
+    Premium:
+      type: int
+    PerilSetCode:
+      type: string
+    DeductibleTypeCode:
+      type: string
+    DeductibleTypeCodeTL:
+      type: string
+    OccLimitTypeCode:
+      type: string
+    OccLimit1:
+      type: int
+    OccLimit2:
+      type: int
+    OccLimit3:
+      type: int
+    OccLimit4:
+      type: int
+    Attachment1:
+      type: int
+    Attachment2:
+      type: int
+    Attachment3:
+      type: int
+    Attachment4:
+      type: int
+    Deductible1:
+      type: int
+    Deductible2:
+      type: int
+    OccParticipation:
+      type: float
+    OccTotalLimit:
+      type: int
+    OccLimitTypeCodeTL:
+      type: string
+    Deductible1TL:
+      type: int
+    Deductible2TL:
+      type: int
+    AttachmentPoint:
+      type: int
+    LayerID:
+      type: string
   null_values:
     - "'NULL'"
   transform:
@@ -154,63 +229,63 @@ forward:
         when: OccLimitTypeCode is 'B' and DeductibleTypeCode is in ['N', 'MI', 'MA', 'MM']
       - transformation: OccLimit2
         when: OccLimitTypeCode is 'E' and DeductibleTypeCode is in ['N', 'MI', 'MA', 'MM']
-      - transformation: 'Null'
+      - transformation: Null
     CondDed6All:
       - transformation: Attachment1
         when: OccLimitTypeCode is in ['B', 'E'] and DeductibleTypeCode is in ['N', 'MI', 'MA', 'MM']
-      - transformation: 'Null'
+      - transformation: Null
     CondMinDed6All:
       - transformation: Deductible1
         when: OccLimitTypeCode is in ['B', 'E'] and DeductibleTypeCode is in ['N', 'MI', 'MA', 'MM']
-      - transformation: 'Null'
+      - transformation: Null
     CondMaxDed6All:
       - transformation: Deductible2
         when: OccLimitTypeCode is in ['B', 'E'] and DeductibleTypeCode is in ['MA', 'MM']
-      - transformation: 'Null'
+      - transformation: Null
     CondLimit5PD:
       - transformation: OccLimit1
         when: DeductibleTypeCode is 'N' and OccLimitTypeCode is 'CB'
-      - transformation: 'Null'
+      - transformation: Null
     CondDed5PD:
       - transformation: Attachment1
         when: DeductibleTypeCode is 'N' and OccLimitTypeCode is 'CB'
-      - transformation: 'Null'
+      - transformation: Null
     CondLimit4BI:
       - transformation: OccLimit4
         when: DeductibleTypeCode is 'N' and OccLimitTypeCode is in ['CB', 'C']
-      - transformation: 'Null'
+      - transformation: Null
     CondDed4BI:
       - transformation: Attachment4
         when: DeductibleTypeCode is 'N' and OccLimitTypeCode is in ['CB', 'C']
-      - transformation: 'Null'
+      - transformation: Null
     CondLimit1Building:
       - transformation: OccLimit1
         when: DeductibleTypeCode is 'N' and OccLimitTypeCode is 'C'
-      - transformation: 'Null'
+      - transformation: Null
     CondDed1Building:
       - transformation: Attachment1
         when: DeductibleTypeCode is 'N' and OccLimitTypeCode is 'C'
-      - transformation: 'Null'
+      - transformation: Null
     CondLimit2Other:
       - transformation: OccLimit2
         when: DeductibleTypeCode is 'N' and OccLimitTypeCode is 'C'
-      - transformation: 'Null'
+      - transformation: Null
     CondDed2Other:
       - transformation: Attachment2
         when: DeductibleTypeCode is 'N' and OccLimitTypeCode is 'C'
-      - transformation: 'Null'
+      - transformation: Null
     CondLimit3Contents:
       - transformation: OccLimit3
         when: DeductibleTypeCode is 'N' and OccLimitTypeCode is 'C'
-      - transformation: 'Null'
+      - transformation: Null
     CondDed3Contents:
       - transformation: Attachment3
         when: DeductibleTypeCode is 'N' and OccLimitTypeCode is 'C'
-      - transformation: 'Null'
+      - transformation: Null
     LayerParticipation:
       - transformation: OccParticipation
         when: OccLimitTypeCodeTL is 'E'
-      - transformation: 'Null'
+      - transformation: Null
     LayerAttachment:
       - transformation: AttachmentPoint
         when: Deductible1TL is in [Null, '', 'NULL']
@@ -222,30 +297,30 @@ forward:
         when: OccLimitTypeCodeTL is in ['E', 'B']
       - transformation: 0
         when: OccLimitTypeCodeTL is 'N'
-      - transformation: 'Null'
+      - transformation: Null
     PolDed6All:
       - transformation: Deductible1TL
         when: Deductible1TL is in ['B', 'FR', 'PL']
-      - transformation: 'Null'
+      - transformation: Null
     PolDedCode6All:
       - transformation: 2
         when: DeductibleTypeCodeTL is 'FR'
-      - transformation: 'Null'
+      - transformation: Null
     PolDedType6All:
       - transformation: 1
         when: DeductibleTypeCodeTL is 'PL'
-      - transformation: 'Null'
+      - transformation: Null
     PolMinDed6All:
       - transformation: Deductible1TL
         when: DeductibleTypeCodeTL is in ['MI', 'MM']
-      - transformation: 'Null'
+      - transformation: Null
     PolMaxDed6All:
       - transformation: Deductible2TL
         when: DeductibleTypeCodeTL is in ['MA', 'MM']
-      - transformation: 'Null'
+      - transformation: Null
     PolNumber:
       - transformation: "'None'"
-        when: LayerID is in [Null, '', 'NULL']
+        when: LayerID is Null
       - transformation: LayerID
 reverse:
   transform:
@@ -310,11 +385,11 @@ reverse:
             ';', ', '
           )
         when: AccPeril is not 'AA1'
-      - transformation: 'Null'
+      - transformation: Null
     DeductibleTypeCode:
       - transformation: "'N'"
         when: any [CondLimit5PD, CondDed5PD, CondLimit4BI, CondDed4BI, CondLimit1Building, CondDed1Building, CondLimit2Other, CondDed2Other, CondDed2Other, CondLimit3Contents, CondDed3Contents] is not in [Null, '', 'NULL']
-      - transformation: 'Null'
+      - transformation: Null
     DeductibleTypeCodeTL:
       - transformation: "'AP'"
         when: LayerAttachment gt 0
@@ -322,7 +397,7 @@ reverse:
         when: PolDedCode6All is 2
       - transformation: "'PL'"
         when: PolDedType6All is 1
-      - transformation: 'Null'
+      - transformation: Null
     OccLimitTypeCode:
       - transformation: "'CB'"
         when: any [CondLimit5PD, CondDed5PD] is not in [Null, '', 'NULL']
@@ -330,7 +405,7 @@ reverse:
         when: any [CondLimit1Building, CondDed1Building, CondLimit2Other, CondDed2Other, CondLimit3Contents, CondDed3Contents] is not in [Null, '', 'NULL']
       - transformation: "'B'"
         when: CondLimit6All is not in [Null, '', 'NULL']
-      - transformation: 'Null'
+      - transformation: Null
     OccLimit1:
       - transformation: CondLimit6All
         when: CondLimit6All is not in [Null, '', 'NULL']
@@ -338,21 +413,21 @@ reverse:
         when: CondLimit5PD is not in [Null, '', 'NULL']
       - transformation: CondLimit1Building
         when: CondLimit1Building is not in [Null, '', 'NULL']
-      - transformation: 'Null'
+      - transformation: Null
     OccLimit2:
       - transformation: CondLimit6All
         when: CondLimit6All is not in [Null, '', 'NULL']
       - transformation: CondLimit2Other
         when: CondLimit2Other is not in [Null, '', 'NULL']
-      - transformation: 'Null'
+      - transformation: Null
     OccLimit3:
       - transformation: CondLimit3Contents
         when: CondLimit3Contents is not in [Null, '', 'NULL']
-      - transformation: 'Null'
+      - transformation: Null
     OccLimit4:
       - transformation: CondLimit4BI
         when: CondLimit4BI is not in [Null, '', 'NULL']
-      - transformation: 'Null'
+      - transformation: Null
     Attachment1:
       - transformation: CondDed6All
         when: CondLimit6All is not in [Null, '', 'NULL']
@@ -360,19 +435,19 @@ reverse:
         when: CondDed5PD is not in [Null, '', 'NULL']
       - transformation: CondDed1Building
         when: CondDed1Building is not in [Null, '', 'NULL']
-      - transformation: 'Null'
+      - transformation: Null
     Attachment2:
       - transformation: CondDed2Other
         when: CondDed2Other is not in [Null, '', 'NULL']
-      - transformation: 'Null'
+      - transformation: Null
     Attachment3:
       - transformation: CondDed3Contents
         when: CondDed3Contents is not in [Null, '', 'NULL']
-      - transformation: 'Null'
+      - transformation: Null
     Attachment4:
       - transformation: CondDed4BI
         when: CondDed4BI is not in [Null, '', 'NULL']
-      - transformation: 'Null'
+      - transformation: Null
     Deductible1:
       - transformation: CondMinDed6All
     Deductible2:
@@ -380,10 +455,10 @@ reverse:
     OccParticipation:
       - transformation: LayerParticipation
         when: LayerParticipation is not in [Null, '', 'NULL']
-      - transformation: 'Null'
+      - transformation: Null
     OccTotalLimit:
       - transformation: LayerLimit
-        when: LayerLimit is not in ['Null', 0]
+        when: LayerLimit is not in [Null, 0]
     OccLimitTypeCodeTL:
       - transformation: "'N'"
         when: LayerLimit is 0
@@ -391,7 +466,7 @@ reverse:
         when: LayerAttachment is 0
       - transformation: ['E', 'B']
         when: LayerLimit is not in [Null, '', 'NULL']
-      - transformation: 'Null'
+      - transformation: Null
     Deductible1TL:
       - transformation: LayerAttachment
         when: LayerAttachment is not in [Null, '', 'NULL']
@@ -399,14 +474,14 @@ reverse:
         when: PolDed6All is in ['B', 'FR', 'PL']
       - transformation: PolMinDed6All
         when: PolMinDed6All is in ['MI', 'MM']
-      - transformation: 'Null'
+      - transformation: Null
     Deductible2TL:
       - transformation: PolMaxDed6All
         when: PolMaxDed6All is in ['MA', 'MM']
-      - transformation: 'Null'
+      - transformation: Null
     AttachmentPoint:
       - transformation: LayerAttachment
     LayerID:
       - transformation: PolNumber
         when: PolNumber is not "'None'"
-      - transformation: 'Null'
+      - transformation: Null

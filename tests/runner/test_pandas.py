@@ -5,7 +5,7 @@ from converter.config import Config
 from converter.files.yaml import write_yaml
 from converter.mapping import FileMapping
 from converter.runner import PandasRunner
-from converter.runner.base import NotSet
+from converter.types.notset import NotSet
 from tests.runner.test_base import FakeConnector
 
 

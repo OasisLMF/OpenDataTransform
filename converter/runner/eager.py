@@ -3,7 +3,8 @@ from typing import Any, AsyncIterable, Dict
 
 from converter.connector import BaseConnector
 from converter.mapping import BaseMapping
-from converter.runner.base import BaseAsyncRunner, NotSet, NotSetType
+from converter.runner.base import BaseAsyncRunner
+from converter.types.notset import NotSet, NotSetType
 
 
 class EagerRunner(BaseAsyncRunner):

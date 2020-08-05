@@ -2,7 +2,7 @@ from hypothesis import given, settings
 
 from converter.config import Config
 from converter.mapping.base import ColumnConversion, TransformationEntry
-from converter.runner.base import NotSet
+from converter.types.notset import NotSet
 
 from ..connector.fakes import FakeConnector
 from ..mapping.fakes import make_simple_mapping

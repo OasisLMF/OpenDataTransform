@@ -22,25 +22,10 @@ from converter.mapping.base import (
     TransformationEntry,
 )
 from converter.transformers.transform import run
+from converter.types.notset import NotSet, NotSetType
 
 
 RowType = Any
-
-
-class NotSetType:
-    """
-    Value used when a transformation has not been applied due to  fix
-    ambiguity with ``None`` being a valid value
-    """
-
-    def __bool__(self):
-        return False
-
-    def __eq__(self, other):
-        return isinstance(other, NotSetType)
-
-
-NotSet = NotSetType()
 
 
 class Converters(TypedDict):
@@ -189,6 +174,10 @@ class _BaseRunner:
 
         :return: The transformed row
         """
+        logging.info(
+            f"Running transformation set {transformations.input_format} -> "
+            f"{transformations.output_format}."
+        )
         coerced_row = self.coerce_row_types(row, transformations.types)
         if coerced_row is None:
             return NotSet

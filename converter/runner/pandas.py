@@ -19,7 +19,8 @@ from ..transformers.transform import (
     default_replace,
     default_search,
 )
-from .base import BaseRunner, NotSet, NotSetType
+from ..types.notset import NotSet, NotSetType
+from .base import BaseRunner
 
 
 def get_logger():
@@ -296,7 +297,10 @@ class PandasRunner(BaseRunner):
         :return: The combined column value
         """
         if not isinstance(current_column_value, NotSetType):
-            row = row[self.create_series(current_column_value.index, False)]
+            row = row[
+                self.create_series(current_column_value.index, False)
+                & self.create_series(row.index, True)
+            ]
 
         if isinstance(row, NotSetType) or len(row) == 0:
             return current_column_value

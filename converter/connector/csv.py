@@ -2,6 +2,7 @@ import csv
 from typing import Any, Dict, Iterable
 
 from converter.connector.base import BaseConnector
+from converter.types.notset import NotSetType
 
 
 class CsvConnector(BaseConnector):
@@ -33,6 +34,12 @@ class CsvConnector(BaseConnector):
             "nonnumeric": csv.QUOTE_NONNUMERIC,
         }.get(options.get("quoting", "nonnumeric"))
 
+    def _data_serializer(self, row):
+        return {
+            k: v if v is not None and not isinstance(v, NotSetType) else ""
+            for k, v in row.items()
+        }
+
     def load(self, data: Iterable[Dict[str, Any]]):
         try:
             data = iter(data)
@@ -48,8 +55,8 @@ class CsvConnector(BaseConnector):
             if self.write_header:
                 writer.writeheader()
 
-            writer.writerow(first_row)
-            writer.writerows(data)
+            writer.writerow(self._data_serializer(first_row))
+            writer.writerows(map(self._data_serializer, data))
 
     def extract(self) -> Iterable[Dict[str, Any]]:
         with open(self.file_path, "r") as f:

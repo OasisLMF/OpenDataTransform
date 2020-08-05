@@ -2,7 +2,7 @@ import csv
 import os
 
 from ..files.csv import BufferedCsvReader
-from .base import NotSetType
+from ..types.notset import NotSetType
 from .pandas import PandasRunner
 
 
