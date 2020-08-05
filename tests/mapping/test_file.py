@@ -1013,7 +1013,7 @@ def test_null_values_are_set_on_forward___forward_values_are_loaded_into_col():
                 "output_format": "B",
                 "forward": {
                     "transform": {"b": [{"transformation": "a"}]},
-                    "types": {"a": {"type": "int",},},
+                    "types": {"a": {"type": "int"}},
                     "null_values": [0, "Null", "'NULL'"],
                 },
             },

@@ -21,10 +21,14 @@ class BufferedCsvReader(TextIOBase):
     def read(self, size=None):
         csv_file = StringIO(self.buffer)
 
-        while len(self.buffer) < size:
+        while len(csv_file.getvalue()) < size:
             try:
                 entry = next(self.source)
-                writer = csv.DictWriter(csv_file, fieldnames=entry.keys())
+                writer = csv.DictWriter(
+                    csv_file,
+                    fieldnames=entry.keys(),
+                    quoting=csv.QUOTE_NONNUMERIC,
+                )
 
                 if self._first:
                     self._first = False

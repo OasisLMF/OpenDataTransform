@@ -1,4 +1,5 @@
 import logging
+import math
 import re
 from functools import reduce
 from operator import and_, or_
@@ -184,10 +185,13 @@ class ConversionError:
         self.value = value
 
 
-def type_converter(to_type, null_values):
+def type_converter(to_type, nullable, null_values):
     def _converter(value):
         try:
-            if value in null_values:
+            if nullable and (
+                value in null_values
+                or (isinstance(value, float) and math.isnan(value))
+            ):
                 return None
             return to_type(value)
         except Exception as e:
@@ -202,14 +206,15 @@ class PandasRunner(BaseRunner):
     """
 
     row_value_conversions = {
-        "int": lambda col, null_values: col.apply(
-            type_converter(int, null_values), convert_dtype=False,
+        "int": lambda col, nullable, null_values: col.apply(
+            type_converter((lambda v: int(float(v))), nullable, null_values),
+            convert_dtype=False,
         ),
-        "float": lambda col, null_values: col.apply(
-            type_converter(float, null_values), convert_dtype=False,
+        "float": lambda col, nullable, null_values: col.apply(
+            type_converter(float, nullable, null_values), convert_dtype=False,
         ),
-        "string": lambda col, null_values: col.apply(
-            type_converter(str, null_values), convert_dtype=False,
+        "string": lambda col, nullable, null_values: col.apply(
+            type_converter(str, nullable, null_values), convert_dtype=False,
         ),
     }
 
@@ -226,8 +231,7 @@ class PandasRunner(BaseRunner):
                 bad_rows = None
             else:
                 coerced_column = self.row_value_conversions[conversion.type](
-                    row[column],
-                    conversion.null_values if conversion.nullable else [],
+                    row[column], conversion.nullable, conversion.null_values,
                 )
                 bad_rows = coerced_column.apply(
                     lambda v: isinstance(v, ConversionError),
@@ -237,7 +241,11 @@ class PandasRunner(BaseRunner):
                     coerced_column[bad_rows], row[bad_rows].iterrows()
                 ):
                     self.log_type_coercion_error(
-                        entry.to_dict(), column, error.value, conversion.type, error.reason
+                        entry.to_dict(),
+                        column,
+                        error.value,
+                        conversion.type,
+                        error.reason,
                     )
 
                 coerced_column = coerced_column[~bad_rows]

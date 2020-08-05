@@ -1,7 +1,7 @@
 from hypothesis import given, settings
 
 from converter.config import Config
-from converter.mapping.base import TransformationEntry
+from converter.mapping.base import ColumnConversion, TransformationEntry
 from converter.runner.base import NotSet
 
 from ..connector.fakes import FakeConnector
@@ -293,7 +293,8 @@ def test_transform_contains_join_of_lookups_str_and_non_str(runner_class):
                     transformation="join(', ', 'bar', a, 5, b, 0)",
                 )
             ],
-        }
+        },
+        types={"b": ColumnConversion(type="int")},
     )
 
     extractor = FakeConnector(data=input_data)
