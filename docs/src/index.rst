@@ -22,5 +22,6 @@ implementation.
    config.rst
    components/data-connections/index.rst
    components/mappings/index.rst
+   components/runners/index.rst
    components/cli/index.rst
    package/index.rst
