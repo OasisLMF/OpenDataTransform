@@ -1,5 +1,5 @@
 import logging
-from typing import Dict, List, NamedTuple, Reversible, Union
+from typing import Dict, List, NamedTuple, Reversible, Set, Union
 
 import networkx as nx
 from lark import Tree
@@ -44,7 +44,7 @@ TransformationSet = Dict[str, List[TransformationEntry]]
 class ColumnConversion(NamedTuple):
     type: str
     nullable: bool = True
-    null_values: List = []
+    null_values: Set = set()
 
 
 ColumnConversions = Dict[str, ColumnConversion]
@@ -54,8 +54,8 @@ class DirectionalMapping(NamedTuple):
     input_format: str
     output_format: str
     transformation_set: TransformationSet
-    types: Dict[str, ColumnConversion] = {}
-    null_values: List = []
+    types: Dict[str, ColumnConversion] = dict()
+    null_values: Set = set()
 
 
 class MappingSpec:

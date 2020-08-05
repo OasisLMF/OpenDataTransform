@@ -963,7 +963,7 @@ def test_types_have_null_values_set___processed_null_values_are_loaded():
 
         assert transformation.types == {
             "a": ColumnConversion(
-                type="int", nullable=True, null_values=[0, None, "NULL"],
+                type="int", nullable=True, null_values={0, None, "NULL"},
             ),
         }
 
@@ -999,7 +999,7 @@ def test_nullable_is_set___nullable_on_field_is_correct(nullable):
 
         assert transformation.types == {
             "a": ColumnConversion(
-                type="int", nullable=nullable, null_values=[0, None, "NULL"],
+                type="int", nullable=nullable, null_values={0, None, "NULL"},
             ),
         }
 
@@ -1029,6 +1029,6 @@ def test_null_values_are_set_on_forward___forward_values_are_loaded_into_col():
 
         assert transformation.types == {
             "a": ColumnConversion(
-                type="int", nullable=True, null_values=[0, None, "NULL"],
+                type="int", nullable=True, null_values={0, None, "NULL"},
             ),
         }

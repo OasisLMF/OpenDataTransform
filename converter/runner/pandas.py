@@ -260,7 +260,7 @@ class PandasRunner(BaseRunner):
             # arent included in the final coerced value
             if bad_rows is not None and len(bad_rows):
                 row = row[~bad_rows]
-                coerced_row = coerced_row[~bad_rows]
+                coerced_row = coerced_row[~bad_rows]  # type: ignore
 
         return coerced_row
 

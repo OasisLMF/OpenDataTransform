@@ -44,14 +44,14 @@ NotSet = NotSetType()
 
 
 class Converters(TypedDict):
-    int: Callable[[Any, List], Union[int, None]]
-    float: Callable[[Any, List], Union[float, None]]
-    string: Callable[[Any, List], Union[str, None]]
+    int: Callable[[Any, bool, List], Union[int, None]]
+    float: Callable[[Any, bool, List], Union[float, None]]
+    string: Callable[[Any, bool, List], Union[str, None]]
 
 
-def build_converter(t) -> Callable[[Any, List], Any]:
-    def _converter(value, null_values):
-        if value in null_values:
+def build_converter(t) -> Callable[[Any, bool, List], Any]:
+    def _converter(value, nullable, null_values):
+        if nullable and value in null_values:
             return None
         return t(value)
 
@@ -86,10 +86,7 @@ class _BaseRunner:
                 try:
                     coerced_row[column] = self.row_value_conversions[
                         conversion.type  # type: ignore
-                    ](
-                        value,
-                        conversion.null_values if conversion.nullable else [],
-                    )
+                    ](value, conversion.nullable, conversion.null_values,)
                 except Exception as e:
                     self.log_type_coercion_error(
                         row, column, row[column], conversion.type, e

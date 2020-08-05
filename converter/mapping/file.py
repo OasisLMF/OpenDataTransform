@@ -4,7 +4,7 @@ import os
 from collections import OrderedDict
 from functools import reduce
 from itertools import chain, product
-from typing import Dict, Iterable, List, Reversible, TypedDict, Union
+from typing import Dict, Iterable, List, Reversible, Set, TypedDict, Union
 
 from ..errors import ConverterError
 from ..files.yaml import read_yaml
@@ -162,14 +162,14 @@ class FileMappingSpec(MappingSpec):
         # merge all null values from format specific entries
         forward_null_values = self._parse_null_values(
             *chain(
-                config.get("forward", {}).get("null_values", []),
+                config.get("forward", {}).get("null_values", set()),
                 *(b.forward.null_values for b in self.bases if b.forward),
             )
         )
 
         reverse_null_values = self._parse_null_values(
             *chain(
-                config.get("reverse", {}).get("null_values", []),
+                config.get("reverse", {}).get("null_values", set()),
                 *(b.reverse.null_values for b in self.bases if b.reverse),
             )
         )
@@ -200,22 +200,22 @@ class FileMappingSpec(MappingSpec):
                 output_format=output_format,
                 transformation_set=forward_transform,
                 types=forward_types,
-                null_values=list(forward_null_values),
+                null_values=forward_null_values,
             ),
             reverse=DirectionalMapping(
                 input_format=input_format,
                 output_format=output_format,
                 transformation_set=reverse_transform,
                 types=reverse_types,
-                null_values=list(reverse_null_values),
+                null_values=reverse_null_values,
             ),
         )
 
         all_found_configs[self.path] = self
 
     @classmethod
-    def _parse_null_values(cls, *raw):
-        return list({run({}, v) for v in raw})
+    def _parse_null_values(cls, *raw) -> Set:
+        return {run({}, v) for v in raw}
 
     @classmethod
     def _process_raw_types(cls, types, null_values):
@@ -281,8 +281,12 @@ class FileMappingSpec(MappingSpec):
         return reduce(
             lambda types, current: {
                 **types,
-                **{  # type: ignore
-                    k: ColumnConversion(**v) if isinstance(v, dict) else v
+                **{
+                    k: (
+                        ColumnConversion(**v)  # type: ignore
+                        if isinstance(v, dict)
+                        else v
+                    )
                     for k, v in current.items()
                 },
             },
