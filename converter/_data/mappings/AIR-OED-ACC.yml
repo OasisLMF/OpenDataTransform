@@ -323,6 +323,99 @@ forward:
         when: LayerID is Null
       - transformation: LayerID
 reverse:
+  types:
+    PortNumber:
+      type: string
+    AccNumber:
+      type: string
+    AccName:
+      type: string
+    AccStatus:
+      type: string
+    ExpiringAccNumber:
+      type: string
+    AccCurrency:
+      type: string
+    AccUserDef1:
+      type: string
+    AccUserDef2:
+      type: string
+    AccUserDef3:
+      type: string
+    AccUserDef4:
+      type: string
+    AccUserDef5:
+      type: string
+    PolInceptionDate:
+      type: string
+    PolExpiryDate:
+      type: string
+    ProducerName:
+      type: string
+    Underwriter:
+      type: string
+    BranchName:
+      type: string
+    LOB:
+      type: string
+    PolGrossPremium:
+      type: int
+    AccPeril:
+      type: string
+    PolPerilsCovered:
+      type: string
+    PolPeril:
+      type: string
+    CondPeril:
+      type: string
+    CondLimit6All:
+      type: int
+    CondDed6All:
+      type: int
+    CondMinDed6All:
+      type: int
+    CondMaxDed6All:
+      type: int
+    CondLimit5PD:
+      type: int
+    CondDed5PD:
+      type: int
+    CondLimit4BI:
+      type: int
+    CondDed4BI:
+      type: int
+    CondLimit1Building:
+      type: int
+    CondDed1Building:
+      type: int
+    CondLimit2Other:
+      type: int
+    CondDed2Other:
+      type: int
+    CondLimit3Contents:
+      type: int
+    CondDed3Contents:
+      type: int
+    LayerParticipation:
+      type: float
+    LayerAttachment:
+      type: int
+    LayerLimit:
+      type: int
+    PolDed6All:
+      type: int
+    PolDedCode6All:
+      type: int
+    PolDedType6All:
+      type: int
+    PolMinDed6All:
+      type: int
+    PolMaxDed6All:
+      type: int
+    PolNumber:
+      type: string
+  null_values:
+    - "''"
   transform:
     ExposureSetName:
       - transformation: PortNumber
@@ -483,5 +576,5 @@ reverse:
       - transformation: LayerAttachment
     LayerID:
       - transformation: PolNumber
-        when: PolNumber is not "'None'"
+        when: PolNumber is not 'None'
       - transformation: Null
