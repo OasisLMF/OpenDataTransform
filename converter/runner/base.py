@@ -56,12 +56,31 @@ class _BaseRunner:
 
     @classmethod
     def log_type_coercion_error(cls, row, column, value, to_type, reason):
+        """
+        Logs a failure of a row type coercion
+
+        :param row: The input row that failed
+        :param column: The name of the column in which the error occurred
+        :param value: The value of the failing column
+        :param to_type: The type the coercion was attempting
+        :param reason: The error message
+        """
         logging.warning(
             f"Cannot coerce {column} ({value}) to {to_type}. "
             f"Reason: {reason}. Row: {json.dumps(row)}."
         )
 
     def coerce_row_types(self, row, conversions: ColumnConversions):
+        """
+        Changes data types of each input column. If a cast fails a warning
+        will be written to the logs and the row will be ignored.
+
+        :param row: The input row.
+        :param conversions: The set of conversions to run
+
+        :return: The updated input row if there are no errors, ``None`` if
+            any updates fail.
+        """
         coerced_row = {}
         for column, value in row.items():
             conversion = conversions.get(column)
@@ -71,7 +90,7 @@ class _BaseRunner:
                 try:
                     coerced_row[column] = self.row_value_conversions[
                         conversion.type  # type: ignore
-                    ](value, conversion.nullable, conversion.null_values,)
+                    ](value, conversion.nullable, conversion.null_values)
                 except Exception as e:
                     self.log_type_coercion_error(
                         row, column, row[column], conversion.type, e
