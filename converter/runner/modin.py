@@ -1,4 +1,3 @@
-import csv
 import os
 
 from ..files.csv import BufferedCsvReader
@@ -17,9 +16,7 @@ class ModinRunner(PandasRunner):
 
         self.dataframe_type = pd.DataFrame
         self.series_type = pd.Series
-        return pd.read_csv(
-            BufferedCsvReader(extractor.extract()),
-        )
+        return pd.read_csv(BufferedCsvReader(extractor.extract()))
 
     def combine_column(self, *args, **kwargs):
         combined = super().combine_column(*args, **kwargs)

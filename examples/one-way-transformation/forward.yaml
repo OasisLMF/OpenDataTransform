@@ -1,0 +1,10 @@
+mapping:
+  options:
+    input_format: A
+    output_format: C
+extractor:
+  options:
+    path: A.csv
+loader:
+  options:
+    path: C.csv

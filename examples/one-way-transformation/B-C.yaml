@@ -1,0 +1,13 @@
+input_format: B
+output_format: C
+forward:
+  types:
+    c:
+      type: float
+    d:
+      type: float
+  transform:
+    e:
+      - transformation: c * 4
+    f:
+      - transformation: d + 5

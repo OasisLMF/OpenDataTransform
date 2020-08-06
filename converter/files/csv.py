@@ -24,10 +24,7 @@ class BufferedCsvReader(TextIOBase):
         while len(csv_file.getvalue()) < size:
             try:
                 entry = next(self.source)
-                writer = csv.DictWriter(
-                    csv_file,
-                    fieldnames=entry.keys(),
-                )
+                writer = csv.DictWriter(csv_file, fieldnames=entry.keys(),)
 
                 if self._first:
                     self._first = False

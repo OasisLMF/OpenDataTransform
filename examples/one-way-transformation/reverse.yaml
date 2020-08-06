@@ -1,0 +1,10 @@
+mapping:
+  options:
+    input_format: C
+    output_format: A
+extractor:
+  options:
+    path: C.csv
+loader:
+  options:
+    path: REV.csv

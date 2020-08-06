@@ -203,8 +203,8 @@ class FileMappingSpec(MappingSpec):
                 null_values=forward_null_values,
             ),
             reverse=DirectionalMapping(
-                input_format=input_format,
-                output_format=output_format,
+                input_format=output_format,
+                output_format=input_format,
                 transformation_set=reverse_transform,
                 types=reverse_types,
                 null_values=reverse_null_values,
