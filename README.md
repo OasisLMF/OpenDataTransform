@@ -2,7 +2,7 @@
 
 Converts between one data source to another.
 
-Full docs can be found `here <./docs>`_.
+Full docs can be found [here](./docs).
 
 ## Dependencies
 
