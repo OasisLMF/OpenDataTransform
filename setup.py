@@ -17,7 +17,7 @@ def read_reqs():
 
 
 def read_readme():
-    reqs_path = os.path.join(root_path, "README.rst")
+    reqs_path = os.path.join(root_path, "README.md")
     return readfile(reqs_path)
 
 
