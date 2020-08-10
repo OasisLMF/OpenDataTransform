@@ -6,6 +6,14 @@ transformation and passing the transformed data onto the loader. The base runner
 handles all dictionary like rows but can be reimplemented to handle running the
 transformations in any architecture (such as the :code:`PandasRunner`).
 
+.. note:: The runner expects the extractor to provide data on a row by row basis,
+          if multiple sources need to be queried to produce the extracted data
+          they must be merged together to produce complete rows (using sql joins
+          for example). Similarly, when loading the data connection will receive
+          rows containing complete records and it's the job of the connection to
+          transform them into multiple queries if multiple tables or databases
+          should be updated.
+
 Coercing data types
 -------------------
 
