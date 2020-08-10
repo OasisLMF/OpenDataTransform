@@ -56,7 +56,7 @@ class Controller:
 
         runner_class: Type[BaseRunner] = self._load_from_module(
             self.config.get(
-                "runner.path", fallback="converter.runner.ModinRunner"
+                "runner.path", fallback="converter.runner.PandasRunner"
             )
         )
         runner: BaseRunner = runner_class(

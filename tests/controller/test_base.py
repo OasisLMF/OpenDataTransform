@@ -85,7 +85,7 @@ def test_component_class_paths_default___default_component_classes_are_used():
     mapping = Mock()
 
     with patch(
-        "converter.runner.ModinRunner", return_value=runner,
+        "converter.runner.PandasRunner", return_value=runner,
     ) as runner_ctor_mock, patch(
         "converter.connector.CsvConnector", side_effect=[extractor, loader],
     ) as connector_ctor_mock, patch(
