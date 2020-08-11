@@ -2,7 +2,7 @@
 
 Converts between one data source to another.
 
-Full docs can be found [here](./docs).
+Full docs can be found [here](https://oasislmf.github.io/OasisDataConverter/).
 
 ## Dependencies
 
