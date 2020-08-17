@@ -39,7 +39,7 @@ forward:
       type: string
     Premium:
       type: int
-    PerilSetCode:
+    PerilSet:
       type: string
     DeductibleTypeCode:
       type: string
@@ -123,7 +123,7 @@ forward:
     AccPeril:
       - transformation: |
           replace(
-            PerilSetCode,
+            PerilSet,
             'WS', 'ZZ1',
             'CF', 'WSS',
             'EQ', 'QEQ',
@@ -142,14 +142,14 @@ forward:
             'TR', 'MM1',
             'TS', 'QTS',
             'WF', 'BBF',
-            ', ', ';'
+            ' ', ';'
           )
-        when: PerilSetCode is not in [Null, '', 'NULL']
+        when: PerilSet is not in [Null, '', 'NULL']
       - transformation: "'AA1'"
     PolPerilsCovered:
       - transformation: |
           replace(
-            PerilSetCode,
+            PerilSet,
             'WS', 'ZZ1',
             'CF', 'WSS',
             'EQ', 'QEQ',
@@ -168,14 +168,14 @@ forward:
             'TR', 'MM1',
             'TS', 'QTS',
             'WF', 'BBF',
-            ', ', ';'
+            ' ', ';'
           )
-        when: PerilSetCode is not in [Null, '', 'NULL']
+        when: PerilSet is not in [Null, '', 'NULL']
       - transformation: "'AA1'"
     PolPeril:
       - transformation: |
           replace(
-            PerilSetCode,
+            PerilSet,
             'WS', 'ZZ1',
             'CF', 'WSS',
             'EQ', 'QEQ',
@@ -194,14 +194,14 @@ forward:
             'TR', 'MM1',
             'TS', 'QTS',
             'WF', 'BBF',
-            ', ', ';'
+            ' ', ';'
           )
-        when: PerilSetCode is not in [Null, '', 'NULL']
+        when: PerilSet is not in [Null, '', 'NULL']
       - transformation: "'AA1'"
     CondPeril:
       - transformation: |
           replace(
-            PerilSetCode,
+            PerilSet,
             'WS', 'ZZ1',
             'CF', 'WSS',
             'EQ', 'QEQ',
@@ -220,9 +220,9 @@ forward:
             'TR', 'MM1',
             'TS', 'QTS',
             'WF', 'BBF',
-            ', ', ';'
+            ' ', ';'
           )
-        when: PerilSetCode is not in [Null, '', 'NULL']
+        when: PerilSet is not in [Null, '', 'NULL']
       - transformation: "'AA1'"
     CondLimit6All:
       - transformation: OccLimit1
@@ -453,7 +453,7 @@ reverse:
       - transformation: LOB
     Premium:
       - transformation: PolGrossPremium
-    PerilSetCode:
+    PerilSet:
       - transformation: |
           replace(
             AccPeril,
@@ -475,7 +475,7 @@ reverse:
             'QTS', 'TS',
             'BBF', 'WF',
             'ZZ1', 'WS',
-            ';', ', '
+            ';', ' '
           )
         when: AccPeril is not 'AA1'
       - transformation: Null
