@@ -1,6 +1,6 @@
 # Mapping to convert AIR CEDE location data to OED
 # update May 2021
-input_format: AIR_LOC_v2
+input_format: AIR_LOC_v3
 output_format: OED_LOC
 forward:
   types:
@@ -10,34 +10,32 @@ forward:
       type: string
     LocationName:
       type: string
+    LocationGroup:
+      type: string
+    IsPrimary:
+      type: string
+    IsTenant:
+      type: string
     InceptionDate:
       type: string
     ExpirationDate:
       type: string
-    SubArea:
+    Street:
+      type: string
+    City:
       type: string
     Area:
       type: string
+    CRESTA:
+      type: string
+    PostalCode:
+      type: string
     CountryISO:
-      type: string 
+      type: string
     Latitude:
       type: float
     Longitude:
       type: float
-    YearBuilt:
-      type: int
-    ConstructionCodeType:
-      type: string
-    ConstructionCode:
-      type: int
-    OccupancyCodeType:
-      type: string 
-    OccupancyCode:
-      type: int
-    Currency:
-      type: string
-    LocPerils:
-      type: string
     BuildingValue:
       type: float
     OtherValue:
@@ -46,28 +44,132 @@ forward:
       type: float
     TimeElementValue:
       type: float
-    SublimitArea:
+    DaysCovered:
+      type: int
+    Currency:
+      type: string
+    RiskCount:
+      type: int
+    Premium:
+      type: string
+    ConstructionCode:
+      type: string
+    OccupancyCode:
+      type: string
+    YearBuilt:
+      type: int
+    NumberOfStories:
+      type: int
+    BuildingHeight:
+      type: string
+    NonCatGroundUpLoss:
+      type: string
+    UDF1:
+      type: string
+    UDF2:
+      type: string
+    UDF3:
+      type: string
+    UDF4:
+      type: string
+    UDF5:
+      type: string
+    FloorArea:
+      type: string
+    FloorAreaUnitCode:
+      type: string
+    FloorsOccupied:
+      type: string
+    CustomFloodSOP:
+      type: string
+    CustomFloodZone:
+      type: string
+    BuildingCondition:
+      type: string
+    BuildingShape:
+      type: string
+    Torsion:
+      type: string
+    SoftStory:
+      type: string
+    ShapeIrregularity:
+      type: string
+    Retrofit:
+      type: string
+    ShortColumn:
+      type: string
+    Ornamentation:
+      type: string
+    Redundancy:
+      type: string
+    TallOneStory:
       type: string
     RoofGeometry:
-      type: int
+      type: string
     RoofPitch:
-      type: int
+      type: string
     RoofCover:
-      type: int
+      type: string
     RoofDeck:
-      type: int
+      type: string
     RoofCoverAttachment:
-      type: int
+      type: string
     RoofDeckAttachment:
-      type: int
+      type: string
     RoofAnchorage:
-      type: int
+      type: string
     RoofAttachedStructure:
-      type: int
+      type: string
     RoofYearBuilt:
-      type: int
+      type: string
+    Tank:
+      type: string
+    Chimney:
+      type: string
+    GlassType:
+      type: string
     WindowProtection:
-      type: int
+      type: string
+    ExternalDoors:
+      type: string
+    BuildingExteriorOpening:
+      type: string
+    BrickVeneer:
+      type: string
+    FoundationConnection:
+      type: string
+    FoundationType:
+      type: string
+    InternalPartition:
+      type: string
+    LatticeType:
+      type: string
+    AttachedStructures:
+      type: string
+    AppurtenantStructures:
+      type: string
+    Pounding:
+      type: string
+    TreeExposure:
+      type: string
+    SmallDebris:
+      type: string
+    TerrainRoughness:
+      type: string
+    BasementLevelCount:
+      type: string
+    BaseFloodElevation:
+      type: string
+    BaseFloodElevationUnit:
+      type: string
+    FirstFloorHeight:
+      type: string
+    FirstFloorHeightUnit:
+      type: string
+    ServiceEquipmentProtection:
+      type: string
+    LocPerils:
+      type: string
     LocLimitType:
       type: string
     LimitBldg:
@@ -92,8 +194,10 @@ forward:
       type: float
     DeductTime:
       type: float
+    SublimitArea:
+      type: string
   null_values:
-    - "''"
+      - "''"
   transform:
     PortNumber:
       - transformation: "1"
@@ -101,20 +205,52 @@ forward:
       - transformation: ContractID
     LocNumber:
       - transformation: LocationID
-    CountryCode:
-      - transformation: CountryISO
+    LocName:
+      - transformation: LocationName
+    LocGroup:
+      - transformation: LocationGroup
+    IsPrimary:
+      - transformation: IsPrimary
+    IsTenant:
+      - transformation: IsTenant
+    LocInceptionDate:
+      - transformation: InceptionDate
+    LocExpiryDate:
+      - transformation: ExpirationDate
+    StreetAddress:
+      - transformation: Street
+    City:
+      - transformation: City
     AreaCode:
       - transformation: Area
     GeogName1:
-      - transformation: SubArea
+      - transformation: CRESTA
+    PostalCode:
+      - transformation: PostalCode
+    CountryCode:
+      - transformation: CountryISO
     Latitude:
       - transformation: Latitude
     Longitude:
       - transformation: Longitude
-    YearBuilt:
-      - transformation: YearBuilt
+    BuildingTIV:
+      - transformation: BuildingValue
+    OtherTIV:
+      - transformation: OtherValue
+    ContentsTIV:
+      - transformation: ContentsValue
+    BITIV:
+      - transformation: TimeElementValue
+    BIPOI:
+      - transformation: DaysCovered
+    LocCurrency:
+      - transformation: Currency
+    NumberOfBuildings:
+      - transformation: RiskCount
+    LocGrossPremium:
+      - transformation: Premium
     ConstructionCode:
-      - transformation:
+      - transformation: |
           replace(
             ConstructionCode,
             '100','5000',
@@ -311,7 +447,7 @@ forward:
             '2261','5612',
             '2271','5651',
             '2281','5657',
-            '800','7000'            
+            '800','7000'
             )
     OccupancyCode:
       - transformation: |
@@ -450,45 +586,118 @@ forward:
             '908','3008',
             '909','3009'
           )
-    CurrencyCode:
-      - transformation: Currency
-    LocPerilsCovered:
-      - transformation: |
-          replace(
-            LocPerils,
-            'PAL','AA1',
-            'PEA','QQ1',
-            'PEF','BBF;QFF',
-            'PES','QEQ',
-            'PFF','QFF',
-            'PFL','ORF',
-            'PLQ','QLF',
-            'PLS','QLS',
-            'PNC','BFR',
-            'PPH','OSF',
-            'PSH','WSS',
-            'PSL','QSL',
-            'PTR','MTR',
-            'PTS','QTS',
-            'PWA','WW1',
-            'PWB','BBF',
-            'PWF','WW2;QFF;BBF',
-            'PWH','WTC',
-            'PWT','XSL;XTD;XHL',
-            'PWW','ZZ1',
-            'PWX','XZ1',
-            '+', ';'
-          )
-        when: LocPerils is not in [Null, '', 'NULL']
-      - transformation: "'AA1'"
-    BuildingTIV:
-      - transformation: BuildingValue
-    OtherTIV:
-      - transformation: OtherValue
-    ContentsTIV:
-      - transformation: ContentsValue
-    BITIV:
-      - transformation: TimeElementValue
+    YearBuilt:
+      - transformation: YearBuilt
+    NumberOfStoreys:
+      - transformation: NumberOfStories
+    BuildingHeight:
+      - transformation: BuildingHeight
+    NonCatGroundUpLoss:
+      - transformation: NonCatGroundUpLoss
+    LocUserDef1:
+      - transformation: UDF1
+    LocUserDef2:
+      - transformation: UDF2
+    LocUserDef3:
+      - transformation: UDF3
+    LocUserDef4:
+      - transformation: UDF4
+    LocUserDef5:
+      - transformation: UDF5
+    FloorArea:
+      - transformation: FloorArea
+    FloorAreaUnit:
+      - transformation: FloorAreaUnitCode
+    FloorsOccupied:
+      - transformation: FloorsOccupied
+    CustomFloodSOP:
+      - transformation: CustomFloodSOP
+    CustomFloodZone:
+      - transformation: CustomFloodZone
+    BuildingCondition:
+      - transformation: BuildingCondition
+    BuildingShape:
+      - transformation: BuildingShape
+    Torsion:
+      - transformation: Torsion
+    SoftStory:
+      - transformation: SoftStory
+    ShapeIrregularity:
+      - transformation: ShapeIrregularity
+    Retrofit:
+      - transformation: Retrofit
+    ShortColumn:
+      - transformation: ShortColumn
+    Ornamentation:
+      - transformation: Ornamentation
+    Redundancy:
+      - transformation: Redundancy
+    TallOneStory:
+      - transformation: TallOneStory
+    RoofGeometry:
+      - transformation: RoofGeometry
+    RoofPitch:
+      - transformation: RoofPitch
+    RoofCover:
+      - transformation: RoofCover
+    RoofDeck:
+      - transformation: RoofDeck
+    RoofCoverAttachment:
+      - transformation: RoofCoverAttachment
+    RoofDeckAttachment:
+      - transformation: RoofDeckAttachment
+    RoofAnchorage:
+      - transformation: RoofAnchorage
+    RoofAttachedStructures:
+      - transformation: RoofAttachedStructure
+    RoofYearBuilt:
+      - transformation: RoofYearBuilt
+    Tank:
+      - transformation: Tank
+    Chimney:
+      - transformation: Chimney
+    GlassType:
+      - transformation: GlassType
+    WindowProtection:
+      - transformation: WindowProtection
+    ExternalDoors:
+      - transformation: ExternalDoors
+    BuildingExteriorOpening:
+      - transformation: BuildingExteriorOpening
+    BrickVeneer:
+      - transformation: BrickVeneer
+    FoundationConnection:
+      - transformation: FoundationConnection
+    FoundationType:
+      - transformation: FoundationType
+    InternalPartition:
+      - transformation: InternalPartition
+    LatticeType:
+      - transformation: LatticeType
+    WallAttachedStructure:
+      - transformation: AttachedStructures
+    AppurtenantStructure:
+      - transformation: AppurtenantStructures
+    Pounding:
+      - transformation: Pounding
+    TreeExposure:
+      - transformation: TreeExposure
+    SmallDebris:
+      - transformation: SmallDebris
+    TerrainRoughness:
+      - transformation: TerrainRoughness
+    BasementLevelCount:
+      - transformation: BasementLevelCount
+    BaseFloodElevation:
+      - transformation: BaseFloodElevation
+    BaseFloodElevationUnit:
+      - transformation: BaseFloodElevationUnit
+    FirstFloorHeight:
+      - transformation: FirstFloorHeight
+    FirstFloorHeightUnit:
+      - transformation: FirstFloorHeightUnit
+    ServiceEquipmentProtection:
+      - transformation: ServiceEquipmentProtection
     LocPeril:
       - transformation: |
           replace(
@@ -516,28 +725,33 @@ forward:
             'PWX','XZ1',
             '+', ';'
           )
-        when: LocPerils is not in [Null, '', 'NULL']
-      - transformation: "'AA1'"
-    RoofGeometry:
-      - transformation: RoofGeometry
-    RoofPitch:
-      - transformation: RoofPitch
-    RoofCover:
-      - transformation: RoofCover
-    RoofDeck:
-      - transformation: RoofDeck
-    RoofCoverAttachment:
-      - transformation: RoofCoverAttachment
-    RoofDeckAttachment:
-      - transformation: RoofDeckAttachment
-    RoofAnchorage:
-      - transformation: RoofAnchorage
-    RoofAttachedStructure:
-      - transformation: RoofAttachedStructure
-    RoofYearBuilt:
-      - transformation: RoofYearBuilt
-    WindowProtection:
-      - transformation: WindowProtection
+    LocPerilsCovered:
+      - transformation: |
+          replace(
+            LocPerils,
+            'PAL','AA1',
+            'PEA','QQ1',
+            'PEF','BBF;QFF',
+            'PES','QEQ',
+            'PFF','QFF',
+            'PFL','ORF',
+            'PLQ','QLF',
+            'PLS','QLS',
+            'PNC','BFR',
+            'PPH','OSF',
+            'PSH','WSS',
+            'PSL','QSL',
+            'PTR','MTR',
+            'PTS','QTS',
+            'PWA','WW1',
+            'PWB','BBF',
+            'PWF','WW2;QFF;BBF',
+            'PWH','WTC',
+            'PWT','XSL;XTD;XHL',
+            'PWW','ZZ1',
+            'PWX','XZ1',
+            '+', ';'
+          )
     LocLimit1Building:
       - transformation: LimitBldg
         when: LocLimitType is 'C'
@@ -553,5 +767,20 @@ forward:
     LocLimit6All:
       - transformation: LimitBldg
         when: LocLimitType is 'S'
+    LocDed1Building:
+      - transformation: DeductBldg
+        when: DeductType is 'C'
+    LocDed2Other:
+      - transformation: DeductOther
+        when: DeductType is 'C'
+    LocDed3Contents:
+      - transformation: DeductContent
+        when: DeductType is 'C'
+    LocDed4BI:
+      - transformation: DeductTime
+        when: DeductType is 'C'
+    LocDed6All:
+      - transformation: DeductBldg
+        when: DeductType is 'S'
     CondNumber:
       - transformation: SublimitArea
