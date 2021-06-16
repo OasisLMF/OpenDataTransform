@@ -1,16 +1,16 @@
-Welcome to the documentation for The Exposure Open Data Transformation
+Welcome to the documentation for The Open Exposure Data Transformation
 ================================================
 
-The Exposure Open Data Transformation (ODT) is an industry collaboration to develop a framework
+The Open Exposure Data Transformation is an industry collaboration to develop a framework
 for converting catastrophe model exposure data from one data format to another. 
 The collaboration is coordinated by The Insurance Development Forum (IDF) `Risk Modelling Steering Group (RMSG) <https://www.insdevforum.org/working-groups/rmsg/>`_ 
 with OASIS leading development of the framework in partnership with model vendors and users. The project is conducted under the IDF RMSG
 Interoperabilty Technical Working Group (ITWG) whose members, drawn from over 30 organisations, have collaborated in the vision and design of this framework. 
 
-The ODT provides an open-source, free, and model-agnostic exposure tranformation framework to improve 
+The Open Exposure Data Transformation provides an open-source, free, and model-agnostic exposure tranformation framework to improve 
 efficiency and transparency of exposure transformations in the insurance market.
 
-Advantages of the Exposure ODT include:
+Advantages of the Open Exposure Data Transformation include:
 * Mapping files can be trusted. They provide 'industry accepted' transformations between model formats. They are developed, reviewed and tested through collaboration of model vendors and experts users, and are peer reviewed by members of the ITWG. 
 * The mapping files are easy-to-read so they transparently communciate the assumptions used in converting data between a model pair.
 * Multiple mapping files can be included in a single transformation to move between two models, via the OED format.
@@ -20,12 +20,12 @@ Advantages of the Exposure ODT include:
 * Mapping files can be provided as a set, with one mapping file for each of the account, location, and reinsurance files.
 * Transformations can be run locally, through a Python Shell, once the package has been downloaded and installed from `the project GitHub pages <https://github.com/OasisLMF/OasisDataConverter/>`_.
 
-The Open Exposure Data (OED) standard is at the core of the Exposure ODT. Each mapping files facilitates conversion to and from one other model format to OED.
+The Open Exposure Data (OED) standard is at the core of the Open Exposure Data Transformation. 
+Each mapping files facilitates conversion to and from one other model format to OED.
 OED is curated by OASIS, under the  `Open Data Standards (ODS) Initiative <https://oasislmf.org/open-data-standards>`_.
 
 
-The ODT converter is designed to convert exposure data from one format to another as long as both formats can be expressed as an iterable of dictionaries. 
-That is, the possible field values must be mapped to a key (field name) for each model format.
+The Open Exposure Data Transformation converter is designed to convert exposure data from one format to another as long as both formats can be expressed as an iterable of dictionaries. That is, the possible field values must be mapped to a key (field name) for each model format.
 
 The convertor framework is modular, using several swappable components:
 * Data Connections for specifying how the input and output data should be processed by the system. The current version support csv file input and output 
