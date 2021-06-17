@@ -2,15 +2,15 @@
 
 The Open Exposure Data Transformation is an industry collaboration to develop a framework for converting catastrophe model exposure data from one data format to another. 
 
-The collaboration is coordinated by The Insurance Development Forum (IDF) [Risk Modelling Steering Group (RMSG)](https://www.insdevforum.org/working-groups/rmsg/) with OASIS leading development of the framework in partnership with model vendors and users. 
-The project is conducted under the IDF RMSG Interoperabilty Technical Working Group (ITWG) whose members, drawn from over 30 organisations, have collaborated in the vision and design of this framework. 
+It provides an open-source, free, and model-agnostic exposure transformation framework to improve efficiency and transparency of exposure transformations in the insurance market.
 
-The Open Exposure Data Transformation provides an open-source, free, and model-agnostic exposure tranformation framework to improve efficiency and transparency of exposure transformations in the insurance market.
+The collaboration is coordinated by The Insurance Development Forum (IDF) [Risk Modelling Steering Group (RMSG)](https://www.insdevforum.org/working-groups/rmsg/) with OASIS leading development of the framework in partnership with model vendors and users. 
+The project is conducted under the IDF RMSG Interoperability Technical Working Group (ITWG) whose members, from over 30 organisations, have collaborated in the vision and design of this framework. 
 
 
 Advantages of the Open Exposure Data Transformation include:
 * Mapping files can be trusted. They provide 'industry accepted' transformations between model formats. They are developed, reviewed and tested through collaboration of model vendors and experts users, and are peer reviewed by members of the ITWG. 
-* The mapping files are easy-to-read so they transparently communciate the assumptions used in converting data between a model pair.
+* The mapping files are easy-to-read so they transparently communicate the assumptions used in converting data between a model pair.
 * Multiple mapping files can be included in a single transformation to move between two models, via the OED format.
 * While the mapping files provide an 'industry default', users can easily amend the file to meet the needs of a particular client or portfolio.
 * Mapping files can be shared with data around the market, to clearly communicate the transformation assumptions that have been applied.
@@ -27,7 +27,7 @@ Full docs can be found [here](https://oasislmf.github.io/OasisDataConverter/).
 
 ## Available transformations
 ### AIR <-> OED
-Status: 2nd phase of development. Following the development of a basic tranformation (location information, primary modifiers), the group is now developing and testing a more complex transformation. Further information to follow when second phase mapping published for testing.
+Status: 2nd phase of development. Following the development of a basic transformation (location information, primary modifiers), the group is now developing and testing a more complex mapping. Further information to follow when second phase mapping published for testing.
 Model References: 
 AIR CEDE v8 https://unicede.air-worldwide.com/ts-tsre_all/help_ts_exposure-data_val-rules-exposure-data.html
 
