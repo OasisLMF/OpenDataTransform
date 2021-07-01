@@ -1,0 +1,186 @@
+# Mapping to convert GED4ALL location data to OED BASED ON MAPPING OF ALL GED4ALL SCHEMA FIELDS TO OED FIELDS
+# v0.1 mapped only those used in a specific project version of mapping by JBA.
+# types express type for origin format
+# transform expressed OED destination column first.
+## Several fields derive from a geometry field or TAXONOMY STRING. These fields may need to be parsed to a text field, as GEM/JBA had done previously, before conversion (mapping functionality to pull from string is difficult, though achievable).
+## Field names used below are those given in GED4ALL SCHEMA (https://docs.riskdatalibrary.org/exposure.html#buildings).
+## They differ from those used in JBA MAPPING v0.1, which were taken form a JBA flat file.
+input_format: GED4ALL_LOC
+output_format: OED_LOC
+forward:
+  types:
+    ExposureSetName:
+      type: string
+    ContractID:
+      type: string
+    LocationId:
+      type: string
+    CountryCode:
+      type: string
+    AreaCode:
+      type: string
+    Subareacode:
+      type: string
+    Latitude:
+      type: float
+    Longitude:
+      type: float
+    YearBuilt:
+      type: int
+    AIRConstructionCodeA:
+      type: int
+    AIROccupancyCode:
+      type: int
+    CurrencyCode:
+      type: string
+    PerilSet:
+      type: string
+    ReplacementValueA:
+      type: float
+    ReplacementValueB:
+      type: float
+    ReplacementValueC:
+      type: float
+    ReplacementValueD:
+      type: float
+    BUILDINGS:
+      type: float
+  null_values:
+    - "'NULL'"
+  transform:
+#    PortNumber:
+#      - transformation: ExposureSetName
+#    AccNumber:
+#      - transformation: ContractID
+    LocNumber:
+      - transformation: asset_id
+    LocName:
+	 - transformation: asset_ref
+#    CountryCode:
+#      - transformation: CNTR_CODE {THIS MAPPING IS BASED ON JBA FLAT FILE - GEOCODING REQUIRED IF JUST USING GED4ALL SCHEMA FIELDS}
+#		when: CNTR_CODE is [‘EL’]
+#	- transformation: “‘GR’”
+#    AreaCode:
+#      - transformation: AreaCode
+#    GeogName1:
+#      - transformation: Subareacode
+    Latitude:
+      - transformation: THE_GEOM #{MUST BE DERIVED FROM THE_GEOM CODED}
+    Longitude:
+      - transformation: THE_GEOM #{MUST BE DERIVED FROM THE_GEOM CODED}
+    OrgOccupancyScheme:
+      - transformation: taxonomy_source
+    ConstructionCode:
+      - transformation: | #{VALUE MAPPING REQUIRED}
+          replace(
+            TAXONOMY,
+            'EU+ETO/LWAL/','5000',
+		  'EU+ETR/','5000',
+		  'UNK/','5000',
+		  'W/​','5050',
+		  'W/LFM+DUC/​','5050',
+		  'W/LWAL+DUC/​','5050',
+		  'W+W99/​','5050',
+		  'W+W​','5050',
+		  'W+WLI/​','5050',
+		  'W+WS/​','5050',
+		  'MUR/​','5103',
+		  'MUR+ADO/LWAL/​','5103',
+		  'MUR+ADO/LWAL+DNO/FW/​','5103',
+		  'MUR+ADO/LWAL+DNO/​','5103',
+		  'MUR+CBS/​','5103',
+		  'MUR+CBS/LWAL+DNO/​','5103',
+  		  'MUR+CLBRS/LWAL/​','5103',
+		  'MUR+CLBRS/LWAL+DNO/FW​','5103',
+		  'MUR+CLBRS/LWAL+DNO/​','5103',
+		  'MUR+MOCL/LWAL+DNO/FC/​','5103',
+		  'MUR+STDRE/​','5103',
+		  'MUR+STRUB/​','5103',
+		  'MUR+STRUB/LWAL/​','5103',
+		  'MCF/LWAL+DUL/​','5105',
+		  'MCF+CBS/LFM+DUL/​','5105',
+		  'MCF+CBS/LWAL/​','5105',
+		  'MR+CBS/LWAL/​','5105',
+		  'MR+MOC/LWAL+DNO/FC/​','5105',
+		  'MR+STDRE+RW/​','5105',
+		  'CR/LFINF/​','5150',
+		  'CR/LFINF+DUL/​','5150',
+		  'CR/LFM+DNO/​','5150',
+		  'CR/LFM+DUL/​','5150',
+		  'CR+CIP/LFINF+DU​','5150',
+		  'CR+CIP/LFINF+DUL/​','5150',
+		  'CR+CIP/LFINF+DUM/​','5150',
+		  'CR+CIP/LFM+DUC/FC/​','5150',
+		  'CR+CIP/LFM+DUL/​','5150',
+		  'CR+CIP/LFM+DUM/​','5150',
+		  'CR+CIP/LWAL+DUM/​','5150',
+		  'CR+PC/LFM+DUL/​','5150',
+		  'CR+PC/LFM+DUM/​','5150',
+		  'CR+PC/LWAL+DUC/FC/​','5150',
+		  'S/LFM+DU​','5200​',
+		  'S/LFM+DUM/​','5200​',            
+            )
+    OccupancyCode:
+      - transformation: |
+          replace(
+            Use,
+            ‘Res’,’1050',
+            ‘Com’,’1100',
+            ‘Ind’,’1150',
+            ‘Hlc’,’1105’,
+            ‘Edu’,’1231’,
+          )
+    FloorArea:
+      - transformation: area
+    FloorAreaUnit:
+      - transformation: area_unit
+    CurrencyCode:
+      - transformation: “‘EUR’”
+    LocPerilsCovered:
+      - transformation: "'AA1'"
+    BuildingTIV:
+      - transformation: IF cost_type_name = buildings THEN value ELSE 0 #TO BE CLARIFIED
+    OtherTIV:
+      - transformation: 0
+    ContentsTIV:
+      - transformation: IF cost_type_name = contents THEN value ELSE 0 #TO BE CLARIFIED
+    BITIV:
+      - transformation: IF cost_type_name = bi THEN value ELSE 0 #TO BE CLARIFIED
+    LocPeril:
+      - transformation: "'AA1'"
+    NumberOfBuildings:
+      - transformation: number_of_units
+    FoundationType:
+      - transformation: #derive from taxonomy string {TBC HOW}
+    RoofCover:
+      - transformation: #derive from taxonomy string {TBC HOW}
+    RoofShape:
+      - transformation: #derive from taxonomy string {TBC HOW}
+    BuildingExteriorOpening:
+      - transformation: #derive from taxonomy string {TBC HOW}
+    FirstFloorHeight:
+      - transformation: #derive from taxonomy string {TBC HOW}
+    FirstFloorHeightUnit:
+      - transformation: #derive from taxonomy string {TBC HOW}
+    ShapeIrregularity:
+      - transformation: #derive from taxonomy string {TBC HOW}
+    BuildingShape:
+      - transformation: #derive from taxonomy string {TBC HOW}
+    Condition:
+      - transformation: #derive from taxonomy string {TBC HOW}
+    YearBuilt:
+      - transformation: #derive from taxonomy string {TBC HOW}
+    BuildingHeight:
+      - transformation: #derive from taxonomy string {TBC HOW}
+    BuildingHeightUnit:
+      - transformation: #derive from taxonomy string {TBC HOW}
+    Basement:
+      - transformation: #derive from taxonomy string {TBC HOW}
+    BasementLevelCount:
+      - transformation: #derive from taxonomy string {TBC HOW}
+    NumberOfStoreys:
+      - transformation: #derive from taxonomy string {TBC HOW}
+    Redundancy:
+      - transformation: #derive from taxonomy string {TBC HOW}
+    InternalPartition:
+      - transformation: #derive from taxonomy string {TBC HOW}
