@@ -1,0 +1,143 @@
+# Mapping to convert GED4ALL location data to OED - developed form project-specific mapping created by JBA.
+# types express type for origin format
+# transform expressed OED destination column first.
+input_format: GED4ALL_LOC
+output_format: OED_LOC
+forward:
+  types:
+    ExposureSetName:
+      type: string
+    ContractID:
+      type: string
+    LocationId:
+      type: string
+    CountryCode:
+      type: string
+    AreaCode:
+      type: string
+    Subareacode:
+      type: string
+    Latitude:
+      type: float
+    Longitude:
+      type: float
+    YearBuilt:
+      type: int
+    AIRConstructionCodeA:
+      type: int
+    AIROccupancyCode:
+      type: int
+    CurrencyCode:
+      type: string
+    PerilSet:
+      type: string
+    ReplacementValueA:
+      type: float
+    ReplacementValueB:
+      type: float
+    ReplacementValueC:
+      type: float
+    ReplacementValueD:
+      type: float
+    BUILDINGS:
+      type: float
+  null_values:
+    - "'NULL'"
+  transform:
+#    PortNumber:
+#      - transformation: ExposureSetName
+#    AccNumber:
+#      - transformation: ContractID
+#    LocNumber:
+#      - transformation: LocationId
+    CountryCode:
+      - transformation: CNTR_CODE
+		when: CNTR_CODE is [‘EL’]
+	- transformation: “‘GR’”
+#    AreaCode:
+#      - transformation: AreaCode
+#    GeogName1:
+#      - transformation: Subareacode
+    Latitude:
+      - transformation: LATITUDE
+    Longitude:
+      - transformation: LONGITUDE
+    YearBuilt:
+      - transformation: YearBuilt
+    ConstructionCode:
+      - transformation: |
+          replace(
+            TAXONOMY,
+            'EU+ETO/LWAL/','5000',
+		  'EU+ETR/','5000',
+		  'UNK/','5000',
+		  'W/​','5050',
+		  'W/LFM+DUC/​','5050',
+		  'W/LWAL+DUC/​','5050',
+		  'W+W99/​','5050',
+		  'W+W​','5050',
+		  'W+WLI/​','5050',
+		  'W+WS/​','5050',
+		  'MUR/​','5103',
+		  'MUR+ADO/LWAL/​','5103',
+		  'MUR+ADO/LWAL+DNO/FW/​','5103',
+		  'MUR+ADO/LWAL+DNO/​','5103',
+		  'MUR+CBS/​','5103',
+		  'MUR+CBS/LWAL+DNO/​','5103',
+  		  'MUR+CLBRS/LWAL/​','5103',
+		  'MUR+CLBRS/LWAL+DNO/FW​','5103',
+		  'MUR+CLBRS/LWAL+DNO/​','5103',
+		  'MUR+MOCL/LWAL+DNO/FC/​','5103',
+		  'MUR+STDRE/​','5103',
+		  'MUR+STRUB/​','5103',
+		  'MUR+STRUB/LWAL/​','5103',
+		  'MCF/LWAL+DUL/​','5105',
+		  'MCF+CBS/LFM+DUL/​','5105',
+		  'MCF+CBS/LWAL/​','5105',
+		  'MR+CBS/LWAL/​','5105',
+		  'MR+MOC/LWAL+DNO/FC/​','5105',
+		  'MR+STDRE+RW/​','5105',
+		  'CR/LFINF/​','5150',
+		  'CR/LFINF+DUL/​','5150',
+		  'CR/LFM+DNO/​','5150',
+		  'CR/LFM+DUL/​','5150',
+		  'CR+CIP/LFINF+DU​','5150',
+		  'CR+CIP/LFINF+DUL/​','5150',
+		  'CR+CIP/LFINF+DUM/​','5150',
+		  'CR+CIP/LFM+DUC/FC/​','5150',
+		  'CR+CIP/LFM+DUL/​','5150',
+		  'CR+CIP/LFM+DUM/​','5150',
+		  'CR+CIP/LWAL+DUM/​','5150',
+		  'CR+PC/LFM+DUL/​','5150',
+		  'CR+PC/LFM+DUM/​','5150',
+		  'CR+PC/LWAL+DUC/FC/​','5150',
+		  'S/LFM+DU​','5200​',
+		  'S/LFM+DUM/​','5200​',            
+            )
+    OccupancyCode:
+      - transformation: |
+          replace(
+            OCCUPANCY,
+            ‘Res’,’1050',
+            ‘Com’,’1100',
+            ‘Ind’,’1150',
+            ‘Hlc’,’1105’,
+            ‘Edu’,’1231’,
+          )
+    CurrencyCode:
+      - transformation: “‘EUR’”
+    LocPerilsCovered:
+      - transformation: "'AA1'"
+    BuildingTIV:
+      - transformation: TOTAL_REPL_COST_USD
+    OtherTIV:
+      - transformation: 0
+    ContentsTIV:
+      - transformation: 0
+    BITIV:
+      - transformation: 0
+    LocPeril:
+      - transformation: "'AA1'"
+    NumberOfBuildings:
+      - transformation: BUILDINGS
+
