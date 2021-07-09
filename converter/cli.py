@@ -60,7 +60,12 @@ def init_logging(verbosity, no_color):
         2 - debug
     :param no_color: Don't add the color to the output
     """
-    filename_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    
+    if not os.path.exists('log'):
+        os.mkdir('log')
+
+    time_string = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    filename_time = os.path.join('log',time_string)
 
     console_log_level = [logging.WARNING, logging.INFO, logging.DEBUG][
         min(2, verbosity)  # max verbosity level is 2

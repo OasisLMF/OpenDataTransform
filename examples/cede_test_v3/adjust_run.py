@@ -9,8 +9,8 @@ import subprocess
 import pandas as pd
 
 #set assumed encoding
-ENCODE='ISO-8859-1'
-
+#ENCODE='ISO-8859-1'
+#ENCODE='UTF-8'
 
 def parse_arguments():
     """
@@ -22,40 +22,18 @@ def parse_arguments():
 
     parser = argparse.ArgumentParser(description='transformation adjustments and execution')
     parser.add_argument(
-        '-l', '--location_file', required=True, 
-        help='The location file'
-    )
-    parser.add_argument(
-        '-a', '--account_file', required=True, 
-        help='The account file'
-    )
-    parser.add_argument(
-        '-cl', '--location_config_file', required=True, 
-        help='The location config file'
-    )
-    parser.add_argument(
-        '-ca', '--account_config_file', required=True, 
-        help='The account config file'
+        '-c', '--config', required=True, 
+        help='configuration file for adjustment aspects'
     )
     args = parser.parse_args()
 
     # Check files and directories exist
-    if not os.path.exists(args.location_file):
-        raise Exception('location file does not exist.')
-
-    if not os.path.exists(args.account_file):
-        raise Exception('account file does not exist.')
-
-    if not os.path.exists(args.location_config_file):
-        raise Exception('location config file does not exist.')
-
-    if not os.path.exists(args.account_config_file):
-        raise Exception('account config file does not exist.')
+    if not os.path.exists(args.config):
+        raise Exception('config file does not exist.')
 
     return args
 
-def get_filename(config_file):
-    ###not used
+def get_filename(config_file,module):
     """
     Extract filename from config.
 
@@ -64,7 +42,7 @@ def get_filename(config_file):
     """
     with open(config_file,'r') as c:
         conf = yaml.safe_load(c)
-        filename = conf['extractor']['options']['path']
+        filename = conf[module]['options']['path']
 
     return(filename)
 
@@ -103,6 +81,30 @@ def pad_codes(df,pad_char,str_len):
 
     return df
 
+def check_peril(LocPerilsCovered):
+    wind_perils = ['AA1','WTC','WW1']
+    surge_perils = ['AA1','WSS','WW1']
+    wind=surge=False
+
+    for p in wind_perils:
+        if p in LocPerilsCovered:
+            wind = True
+
+    for p in surge_perils:
+        if p in LocPerilsCovered:
+            surge = True
+
+    if wind and surge:
+        UpdatedLocPerilsCovered = 'WW1' 
+    elif wind and not surge:
+        UpdatedLocPerilsCovered = 'WTC'
+    elif surge and not wind:
+        UpdatedLocPerilsCovered = 'WSS'
+    else:
+        UpdatedLocPerilsCovered = LocPerilsCovered
+    
+    return UpdatedLocPerilsCovered
+
 def main():
     """
     Main function: pre-process data -> run transformations -> post process
@@ -110,35 +112,47 @@ def main():
     """
     # Parse arguments from command line
     args = parse_arguments()
-
-    location_file = args.location_file
-    account_file = args.account_file
+    conf = args.config
+    
+    with open(conf,'r',encoding='utf8') as c:
+        conf = yaml.safe_load(c)
+        location_file = conf['config']['location_file']
+        account_file = conf['config']['account_file']
+        location_config_file = conf['config']['location_config_file']
+        account_config_file = conf['config']['account_config_file']
+        input_file_encoding = conf['config']['input_file_encoding']
+        ara_adjustment = conf['config']['ara_locperilscovered_adjustment']
 
     #read input files
-    df_location = pd.read_csv(location_file,encoding=ENCODE)
-    df_account = pd.read_csv(account_file,encoding=ENCODE)
+    df_location = pd.read_csv(location_file,encoding=input_file_encoding)
+    df_account = pd.read_csv(account_file,encoding=input_file_encoding)
 
     #factorize sub-limit ref
     df_location, df_account = factorize_sublimits(df_location,df_account)
 
     #pad construction and occupancy codes
     df_location[['ConstructionCode','OccupancyCode']] = pad_codes(df_location[['ConstructionCode','OccupancyCode']],'0',4)
-    print(df_location[['ConstructionCode','OccupancyCode']])
-
 
     #write out updated files
     location_file_out = 'appended_{}'.format(location_file)
     account_file_out = 'appended_{}'.format(account_file)
-
     df_location.to_csv(location_file_out,index=False)
     df_account.to_csv(account_file_out,index=False)
 
     #create adjusted yml config file
-    location_config_file = args.location_config_file
-    yml_adj = adjust_yaml(location_config_file,'extractor')
+    yml_loc_adj = adjust_yaml(location_config_file,'extractor')
+    yml_acc_adj = adjust_yaml(account_config_file,'extractor')
 
     #run transformation
-    subprocess.run(['converter', '-c',yml_adj,'run'])
+    subprocess.run(['converter', '-c',yml_loc_adj,'run'])
+    subprocess.run(['converter', '-c',yml_acc_adj,'run'])
+
+    #post adjust for ARA
+    if ara_adjustment:
+        transformed_loc_file = get_filename(yml_loc_adj,'loader')
+        df_location = pd.read_csv(transformed_loc_file)
+        df_location['LocPerilsCovered'] = df_location['LocPerilsCovered'].apply(lambda x: check_peril(x))
+        df_location.to_csv(transformed_loc_file,index=False)
 
 
 

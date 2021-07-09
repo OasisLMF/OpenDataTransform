@@ -60,6 +60,10 @@ forward:
       type: float
     SublimitDedAmt2:
       type: float
+    CondName:
+      type: string
+    CondNumber:
+      type: int
   null_values:
   - "''"
   transform:
@@ -191,7 +195,7 @@ forward:
             '+', ';'
           )
     CondNumber:
-    - transformation: SublimitArea
+    - transformation: CondNumber
     CondLimit6All:
     - transformation: SublimitLimitA
     CondMinDed6All:
