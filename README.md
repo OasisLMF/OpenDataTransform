@@ -1,6 +1,6 @@
-# The Open Exposure Data Transformation
+# The Open Exposure Data Transformation Framework
 
-The Open Exposure Data Transformation is an industry collaboration to develop a framework for converting catastrophe model exposure data from one data format to another. 
+The Open Exposure Data Transformation Framework is an industry collaboration to develop a framework for converting catastrophe model exposure data from one data format to another. 
 
 It provides an open-source, free, and model-agnostic exposure transformation framework to improve efficiency and transparency of exposure transformations in the insurance market.
 
@@ -31,10 +31,10 @@ Status: 2nd phase of development. Following the development of a basic transform
 Model References: 
 AIR CEDE v8 https://unicede.air-worldwide.com/ts-tsre_all/help_ts_exposure-data_val-rules-exposure-data.html
 
-### GFDRR Risk Data LIbrary Project <-> OED
+### GED4ALL <-> OED
 Status: Discovery phase. Investigating the potential for data transformation
 Model References 
-GED4ALL taxonomy https://wiki.openstreetmap.org/wiki/GED4ALL 
+GED4ALL taxonomy https://docs.riskdatalibrary.org/exposure.html
 Risk Data Library Exposure Schema https://docs.riskdatalibrary.org/exposure.html
 
 
