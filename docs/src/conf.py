@@ -19,9 +19,9 @@ sys.path.insert(0, os.path.abspath(".."))
 
 # -- Project information -----------------------------------------------------
 
-project = "Oasis Data Converter"
-copyright = "2020, OasisLMF"
-author = "OasisLMF"
+project = "Open Exposure Data Transformation Oasis Data Converter"
+#copyright = ""
+author = "Insurance Development Forum"
 
 
 # -- General configuration ---------------------------------------------------
