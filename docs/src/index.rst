@@ -1,14 +1,15 @@
-Welcome to the documentation for The Open Exposure Data Transformation
+The Open Exposure Data Transformation
 ================================================
 
-The Open Exposure Data Transformation is an industry collaboration to develop a framework
-for converting catastrophe model exposure data from one data format to another. 
+The Open Exposure Data Transformation is an industry collaboration to develop a framework for converting catastrophe model exposure data from one data format to another. 
+
 The collaboration is coordinated by The Insurance Development Forum (IDF) `Risk Modelling Steering Group (RMSG) <https://www.insdevforum.org/working-groups/rmsg/>`_ 
 with OASIS leading development of the framework in partnership with model vendors and users. The project is conducted under the IDF RMSG
 Interoperabilty Technical Working Group (ITWG) whose members, drawn from over 30 organisations, have collaborated in the vision and design of this framework. 
 
 The Open Exposure Data Transformation provides an open-source, free, and model-agnostic exposure tranformation framework to improve 
 efficiency and transparency of exposure transformations in the insurance market.
+
 
 Advantages of the Open Exposure Data Transformation include:
 
@@ -50,6 +51,7 @@ Each of these components are configurable and even swappable to some new impleme
    :caption: Contents:
 
    config.rst
+   component/testing/index.rst
    components/data-connections/index.rst
    components/mappings/index.rst
    components/runners/index.rst
