@@ -45,6 +45,10 @@ specific properties.
 For each element the :code:`path` property is a python path to a valid
 python class.
 
+`An example config file for CEDE-OED account file transformation <https://github.com/OasisLMF/OEDtransform/blob/master/examples/cede_test_v3/cede_test_acc.yml>`_.
+
+`An example config file for CEDE-OED location file transformation <https://github.com/OasisLMF/OEDtransform/blob/master/examples/cede_test_v3/cede_test_loc.yml>`_.
+
 Environment Configuration
 -------------------------
 
