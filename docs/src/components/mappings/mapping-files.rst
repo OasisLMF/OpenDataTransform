@@ -46,6 +46,13 @@ and back again. In the mapping files the concept of 'forward' is moving from the
 :code:`input_format` to the :code:`output_format` and 'reverse' is transforming from
 the :code:`output_format` to the :code:`input_format`.
 
+`example files`
+  ---------------
+
+* `An example CEDE-OED account mapping file <https://github.com/OasisLMF/OEDtransform/blob/master/examples/cede_test_v3/AIR-OED-ACC_v3.yml>`_
+* `An example CEDE-OED location mapping file <https://github.com/OasisLMF/OEDtransform/blob/master/examples/cede_test_v3/AIR-OED-LOC_v3.yml>`_
+
+
 Each of the fields in the mapping file is described below.
 
 `bases`
@@ -113,3 +120,6 @@ properties:
   list that has a :code:`transformation` and no :code:`when` clause. This will
   always resolve and only after all other transformations have been skipped due to
   their :code:`when` clause failing.
+  
+  
+
