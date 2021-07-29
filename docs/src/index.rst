@@ -7,7 +7,7 @@ The collaboration is coordinated by The Insurance Development Forum (IDF) `Risk 
 with OASIS leading development of the framework in partnership with model vendors and users. The project is conducted under the IDF RMSG
 Interoperabilty Technical Working Group (ITWG) whose members, drawn from over 30 organisations, have collaborated in the vision and design of this framework. 
 
-The Open Exposure Data Transformation provides an open-source, free, and model-agnostic exposure tranformation framework to improve 
+The Open Exposure Data Transformation provides an open-source, free, and model-agnostic exposure transformation framework to improve 
 efficiency and transparency of exposure transformations in the insurance market.
 
 
@@ -15,7 +15,7 @@ Advantages of the Open Exposure Data Transformation include:
 
 * Mapping files can be trusted. They provide 'industry accepted' transformations between model formats. They are developed, reviewed and tested through collaboration of model vendors and experts users, and are peer reviewed by members of the ITWG. 
 
-* The mapping files are easy-to-read so they transparently communciate the assumptions used in converting data between a model pair.
+* The mapping files are easy-to-read so they transparently communicate the assumptions used in converting data between a model pair.
 
 * Multiple mapping files can be included in a single transformation to move between two models, via the OED format.
 
