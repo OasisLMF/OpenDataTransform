@@ -51,7 +51,7 @@ Each of these components are configurable and even swappable to some new impleme
    :caption: Contents:
 
    config.rst
-   component/testing/index.rst
+   components/testing/index.rst
    components/data-connections/index.rst
    components/mappings/index.rst
    components/runners/index.rst
