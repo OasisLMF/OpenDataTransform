@@ -5,7 +5,7 @@ The Open Exposure Data Transformation is an industry collaboration to develop a 
 
 The collaboration is coordinated by The Insurance Development Forum (IDF) `Risk Modelling Steering Group (RMSG) <https://www.insdevforum.org/working-groups/rmsg/>`_ 
 with OASIS leading development of the framework in partnership with model vendors and users. The project is conducted under the IDF RMSG
-Interoperabilty Technical Working Group (ITWG) whose members, drawn from over 30 organisations, have collaborated in the vision and design of this framework. 
+Interoperability Technical Working Group (ITWG) whose members, drawn from over 30 organisations, have collaborated in the vision and design of this framework. 
 
 The Open Exposure Data Transformation provides an open-source, free, and model-agnostic exposure transformation framework to improve 
 efficiency and transparency of exposure transformations in the insurance market.
