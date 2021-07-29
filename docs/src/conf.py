@@ -19,7 +19,7 @@ sys.path.insert(0, os.path.abspath(".."))
 
 # -- Project information -----------------------------------------------------
 
-project = "Open Exposure Data Transformation Oasis Data Converter"
+project = "Open Exposure Data Transform"
 #copyright = ""
 author = "Insurance Development Forum"
 
