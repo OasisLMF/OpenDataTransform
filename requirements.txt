@@ -78,6 +78,7 @@ six==1.15.0               # via astroid, packaging, pip-tools, python-dateutil, 
 snowballstemmer==2.0.0    # via sphinx
 sortedcontainers==2.2.2   # via distributed, hypothesis
 sphinx-autoapi==1.4.0     # via -r requirements.in
+sphinx_rtd_theme==1.0.0   # via sphinx
 sphinx==3.1.1             # via -r requirements.in, sphinx-autoapi
 sphinxcontrib-applehelp==1.0.2  # via sphinx
 sphinxcontrib-devhelp==1.0.2  # via sphinx
