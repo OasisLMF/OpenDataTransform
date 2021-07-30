@@ -28,8 +28,6 @@ Advantages of the Open Exposure Data Transformation
 
 * Mapping files can be provided as a set, with one mapping file for each of the account, location, and reinsurance files.
 
-* Transformations can be run locally, through a Python Shell, once the package has been downloaded and installed from `the project GitHub pages <https://github.com/OasisLMF/OasisDataConverter/>`_.
-
 
 Open Exposure Data
 ---------------------
@@ -42,7 +40,8 @@ OED is curated by OASIS, under the  `Open Data Standards (ODS) Initiative <https
 Operation of the framework
 ---------------------------
 
-The Open Exposure Data Transformation is currently run via the command line (see github readme.md). A web-based user interface is under development.
+The Open Exposure Data Transformation is currently run locally, through a Python Shell or command line. Download and install the package from `the project GitHub pages <https://github.com/OasisLMF/OasisDataConverter/>`_.
+A web-based user interface is under development.
 
 The Open Exposure Data Transformation is designed to convert exposure data from one format to another as long as both formats can be expressed as an iterable of dictionaries. That is, the possible field values must be mapped to a key (field name) for each model format.
 
