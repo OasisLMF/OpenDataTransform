@@ -11,7 +11,8 @@ The Open Exposure Data Transformation provides an open-source, free, and model-a
 efficiency and transparency of exposure transformations in the insurance market.
 
 
-Advantages of the Open Exposure Data Transformation include:
+Advantages of the Open Exposure Data Transformation
+-------------------------------------------------------
 
 * Mapping files can be trusted. They provide 'industry accepted' transformations between model formats. They are developed, reviewed and tested through collaboration of model vendors and experts users, and are peer reviewed by members of the ITWG. 
 
@@ -29,12 +30,21 @@ Advantages of the Open Exposure Data Transformation include:
 
 * Transformations can be run locally, through a Python Shell, once the package has been downloaded and installed from `the project GitHub pages <https://github.com/OasisLMF/OasisDataConverter/>`_.
 
+
+Open Exposure Data
+---------------------
+
 The Open Exposure Data (OED) standard is at the core of the Open Exposure Data Transformation. 
 Each mapping files facilitates conversion to and from one other model format to OED.
 OED is curated by OASIS, under the  `Open Data Standards (ODS) Initiative <https://oasislmf.org/open-data-standards>`_.
 
 
-The Open Exposure Data Transformation converter is designed to convert exposure data from one format to another as long as both formats can be expressed as an iterable of dictionaries. That is, the possible field values must be mapped to a key (field name) for each model format.
+Operation of the framework
+---------------------------
+
+The Open Exposure Data Transformation is currently run via the command line (see github readme.md). A web-based user interface is under development.
+
+The Open Exposure Data Transformation is designed to convert exposure data from one format to another as long as both formats can be expressed as an iterable of dictionaries. That is, the possible field values must be mapped to a key (field name) for each model format.
 
 The convertor framework is modular, using several swappable components:
 
