@@ -22,6 +22,8 @@ sys.path.insert(0, os.path.abspath(".."))
 project = "Open Exposure Data Transform"
 #copyright = ""
 author = "Insurance Development Forum"
+html_title = 'Open Exposure Data Transformation'
+html_short_title = 'OED Transform'
 
 
 # -- General configuration ---------------------------------------------------
@@ -47,6 +49,8 @@ html_theme = "alabaster"
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
+html_favicon = "_static/idf_square.ico"
+html_logo = "_static/IDF_Original.jpg"
 
 autoapi_type = "python"
 autoapi_dirs = ["../../converter"]
