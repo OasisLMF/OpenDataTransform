@@ -24,7 +24,7 @@ project = "Open Data Transformation"
 author = "Insurance Development Forum"
 html_title = "Open Data Transformation"
 html_short_title = "Open Data Transformation"
-logo_only = "True"
+logo_only = True
 
 
 # -- General configuration ---------------------------------------------------
@@ -48,7 +48,7 @@ templates_path = ["_templates"]
 html_theme = "sphinx_rtd_theme"
 
 
-html_show_copyright = "False"
+html_show_copyright = False
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
