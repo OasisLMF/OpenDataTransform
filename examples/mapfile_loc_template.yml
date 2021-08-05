@@ -1,8 +1,8 @@
-# MAPPING VERSION: OED-AIR-0.2
+# MAPPING VERSION: OED-AIR-1.0
+# CREATOR: IDF Open Data Transformation steering committee
 # MODEL VERSIONS: OED 1.1.5 | AIR CEDE (flat file) v8
-# MAP FILETYPE: LOcation
-# LICENSE: BSD 3-clause license
-# SOURCE: https://github.com/OasisLMF/OasisDataConverter/
-# Creator: Stuart Fraser, IDF RMSG
+# MAP FILETYPE: Location
+# LICENSE: BSD 3 clause license
+# SOURCE: https://github.com/OasisLMF/OpenDataTransform/
 
-<mapping logic follows>
+<mapping logic to follow>
