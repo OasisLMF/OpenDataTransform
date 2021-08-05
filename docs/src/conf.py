@@ -52,6 +52,10 @@ html_theme = "sphinx_rtd_theme"
 html_static_path = ["_static"]
 html_favicon = "idf_square.ico"
 html_logo = "IDF_Original.jpg"
+html_css_files = [
+    'css/custom.css',
+]
+
 
 autoapi_type = "python"
 autoapi_dirs = ["../../converter"]
