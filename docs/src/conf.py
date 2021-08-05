@@ -23,7 +23,6 @@ project = "Open Data Transformation"
 author = "Insurance Development Forum"
 html_title = "Open Data Transformation"
 html_short_title = "Open Data Transformation"
-logo_only = True
 
 
 # -- General configuration ---------------------------------------------------
