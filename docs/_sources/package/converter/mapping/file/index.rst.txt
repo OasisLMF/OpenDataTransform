@@ -1,0 +1,123 @@
+:mod:`converter.mapping.file`
+=============================
+
+.. py:module:: converter.mapping.file
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   converter.mapping.file.FileMappingSpec
+   converter.mapping.file.FileMapping
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   converter.mapping.file.get_logger
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   converter.mapping.file.RawTransformConfig
+   converter.mapping.file.RawColumnConversionConfig
+   converter.mapping.file.RawDirectionalConfig
+   converter.mapping.file.RawMappingConfig
+
+
+.. function:: get_logger()
+
+
+.. data:: RawTransformConfig
+   
+
+   
+
+.. data:: RawColumnConversionConfig
+   
+
+   
+
+.. data:: RawDirectionalConfig
+   
+
+   
+
+.. data:: RawMappingConfig
+   
+
+   
+
+.. exception:: InvalidMappingFile(reason: str, path: str)
+
+
+   Bases: :py:obj:`converter.errors.ConverterError`
+
+   Error raised when a mapping file fails validation
+
+   :param reason: String representing the reason for the failure.
+   :param path: Path to the failing file.
+
+
+.. class:: FileMappingSpec(path: str, config: RawMappingConfig, all_found_configs: Dict[str, Union[FileMappingSpec, RawMappingConfig]], search_paths: List[str])
+
+
+   Bases: :py:obj:`converter.mapping.base.MappingSpec`
+
+   A file representing a conversion mapping between 2 formats.
+
+   This class will also load any base configs represented by the config.
+
+   The final result is added to `all_found_configs` so that further mappings
+   can use this to lookup parents rather than processing the raw config again.
+
+   :param path: Absolute path to the mapping file.
+   :param raw_config: The raw config data from the mapping file.
+   :param bases: A list of `MappingFile` objects to use as the base files
+   :param input_format: The input format resolved from the parent and current
+       configs.
+   :param output_format: The output format resolved from the parent and
+       current configs.
+   :param forward: The configuration for changing from the input format to
+       output format (the current config is merged with the parents)
+   :param reverse: The configuration for changing from the output format to
+       input format (the current config is merged with the parents)
+
+
+.. class:: FileMapping(config, search_paths: List[str] = None, standard_search_path: str = os.path.join(os.path.dirname(__file__), '..', '_data', 'mappings'), search_working_dir=True, **options)
+
+
+   Bases: :py:obj:`converter.mapping.base.BaseMapping`
+
+   A mapping of all file mapping on the system in the search directories.
+
+   :param config: The global config for the system
+   :param search_paths: All the paths in the system to check for configs
+
+   .. method:: raw_configs(self) -> Dict[str, RawMappingConfig]
+      :property:
+
+      Gets the raw configs from teh system. If they have not yet been loaded
+      they are loaded here.
+
+
+   .. method:: mapping_specs(self) -> Reversible[FileMappingSpec]
+      :property:
+
+      Gets all the hydrated mapping configs keyed by their absolute paths.
+      If they have not already been loaded they are loaded here.
+
+
+

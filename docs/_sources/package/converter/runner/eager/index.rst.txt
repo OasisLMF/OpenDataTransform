@@ -1,0 +1,49 @@
+:mod:`converter.runner.eager`
+=============================
+
+.. py:module:: converter.runner.eager
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   converter.runner.eager.EagerRunner
+
+
+
+
+.. class:: EagerRunner(config: converter.config.Config, **options)
+
+
+   Bases: :py:obj:`converter.runner.base.BaseAsyncRunner`
+
+   Runs the transformations on the extracted data and writes it to the data
+   loader. The connectors and transformation are all async objects allowing
+   for async data providers such as websockets or polled apis to be used as
+   a data connection.
+
+   The connectors and transformations should be done in an eager way so that
+   each row is processed and passed to the loader as it's received or cached
+   for processing later. After each row if processed the next should be
+   awaited so that new data can be extracted.
+
+   :param config: The global config for the system
+
+   .. method:: transform(self, extractor: converter.connector.BaseConnector, mapping: converter.mapping.BaseMapping) -> AsyncIterable[Dict[str, Any]]
+      :async:
+
+      Runs the transformation on each row as its passed in and yields the
+      result to the loader
+
+      :param extractor: The data connection to extract data from
+      :param mapping: Mapping object describing the transformations to apply
+
+      :return: An async iterable containing the transformed data
+
+
+

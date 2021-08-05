@@ -1,0 +1,63 @@
+:mod:`converter.runner.dask`
+============================
+
+.. py:module:: converter.runner.dask
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   converter.runner.dask.DaskRunner
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   converter.runner.dask.read_pandas_chunk
+
+
+
+.. function:: read_pandas_chunk(c)
+
+
+.. class:: DaskRunner(config, **options)
+
+
+   Bases: :py:obj:`converter.runner.pandas.PandasRunner`
+
+   Default implementation for a pandas like runner
+
+   .. attribute:: dataframe_type
+      
+
+      
+
+   .. attribute:: series_type
+      
+
+      
+
+   .. method:: create_series(self, index, value)
+
+
+   .. method:: chunk(self, iterable)
+
+
+   .. method:: get_dataframe(self, extractor)
+
+      Builds a dataframe from the extractors data
+
+      :param extractor: The extractor providing the input data
+
+      :return: The created dataframe
+
+
+

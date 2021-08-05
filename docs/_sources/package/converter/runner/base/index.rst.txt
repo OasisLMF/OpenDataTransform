@@ -1,0 +1,140 @@
+:mod:`converter.runner.base`
+============================
+
+.. py:module:: converter.runner.base
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   converter.runner.base.Converters
+   converter.runner.base.BaseRunner
+   converter.runner.base.BaseAsyncRunner
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   converter.runner.base.build_converter
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   converter.runner.base.RowType
+
+
+.. data:: RowType
+   
+
+   
+
+.. class:: Converters
+
+
+   Bases: :py:obj:`TypedDict`
+
+   dict() -> new empty dictionary
+   dict(mapping) -> new dictionary initialized from a mapping object's
+       (key, value) pairs
+   dict(iterable) -> new dictionary initialized as if via:
+       d = {}
+       for k, v in iterable:
+           d[k] = v
+   dict(**kwargs) -> new dictionary initialized with the name=value pairs
+       in the keyword argument list.  For example:  dict(one=1, two=2)
+
+   .. attribute:: int
+      :annotation: :Callable[[Any, bool, List], Union[int, None]]
+
+      
+
+   .. attribute:: float
+      :annotation: :Callable[[Any, bool, List], Union[float, None]]
+
+      
+
+   .. attribute:: string
+      :annotation: :Callable[[Any, bool, List], Union[str, None]]
+
+      
+
+
+.. function:: build_converter(t) -> Callable[[Any, bool, List], Any]
+
+
+.. class:: BaseRunner(config: converter.config.Config, **options)
+
+
+   Bases: :py:obj:`_BaseRunner`
+
+   Runs the transformations on the extracted data and writes
+   it to the data loader
+
+   :param config: The global config for the system
+
+   .. method:: run(self, extractor: converter.connector.base.BaseConnector, mapping: converter.mapping.base.BaseMapping, loader: converter.connector.base.BaseConnector)
+
+      Runs the transformation process and swnds the data to the data loader
+
+      :param extractor: The data connection to extract data from
+      :param mapping: Mapping object describing the transformations to apply
+      :param loader: The data connection to load data to
+
+
+   .. method:: transform(self, extractor: converter.connector.base.BaseConnector, mapping: converter.mapping.base.BaseMapping) -> Iterable[Dict[str, Any]]
+      :abstractmethod:
+
+      Performs the transformation
+
+      :param extractor: The data connection to extract data from
+      :param mapping: Mapping object describing the transformations to apply
+
+      :return: An iterable containing the transformed data
+
+
+
+.. class:: BaseAsyncRunner(config: converter.config.Config, **options)
+
+
+   Bases: :py:obj:`_BaseRunner`
+
+   Runs the transformations on the extracted data and writes it to the data
+   loader. The connectors and transformation are all async objects allowing
+   for async data providers such as websockets or polled apis to be used as
+   a data connection.
+
+   The connectors and transformations should be done in an eager way so that
+   each row is processed and passed to the loader as it's received or cached
+   for processing later. After each row if processed the next should be
+   awaited so that new data can be extracted.
+
+   :param config: The global config for the system
+
+   .. method:: run(self, extractor: converter.connector.base.BaseConnector, mapping: converter.mapping.base.BaseMapping, loader: converter.connector.base.BaseConnector)
+
+
+   .. method:: transform(self, extractor: converter.connector.base.BaseConnector, mapping: converter.mapping.base.BaseMapping) -> AsyncIterable[Dict[str, Any]]
+      :abstractmethod:
+      :async:
+
+      Performs the transformation
+
+      :param extractor: The data connection to extract data from
+      :param mapping: Mapping object describing the transformations to apply
+
+      :return: An iterable containing the transformed data
+
+
+

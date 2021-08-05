@@ -1,0 +1,33 @@
+:mod:`converter.controller.base`
+================================
+
+.. py:module:: converter.controller.base
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   converter.controller.base.Controller
+
+
+
+
+.. class:: Controller(config: converter.config.Config)
+
+
+   Class controlling the transformation flow
+
+   :param config: The resolved normalised config
+
+   .. method:: run(self)
+
+      Generates the converter components from the config and runs the
+      transformation
+
+
+

@@ -3,7 +3,6 @@
 # This file only contains a selection of the most common options. For a full
 # list see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
-
 # -- Path setup --------------------------------------------------------------
 
 # If extensions (or modules to document with autodoc) are in another directory,
@@ -24,7 +23,7 @@ project = "Open Data Transformation"
 author = "Insurance Development Forum"
 html_title = "Open Data Transformation"
 html_short_title = "Open Data Transformation"
-logo_only = True
+
 
 
 # -- General configuration ---------------------------------------------------

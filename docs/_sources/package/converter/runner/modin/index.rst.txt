@@ -1,0 +1,50 @@
+:mod:`converter.runner.modin`
+=============================
+
+.. py:module:: converter.runner.modin
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   converter.runner.modin.ModinRunner
+
+
+
+
+.. class:: ModinRunner(config, **options)
+
+
+   Bases: :py:obj:`converter.runner.pandas.PandasRunner`
+
+   Default implementation for a pandas like runner
+
+   .. method:: get_dataframe(self, extractor)
+
+      Builds a dataframe from the extractors data
+
+      :param extractor: The extractor providing the input data
+
+      :return: The created dataframe
+
+
+   .. method:: combine_column(self, *args, **kwargs)
+
+      Combines the current column value with the result of the
+      transformation. If the current value is ``NotSet`` the value of the
+      current transformation will be calculated and applied.
+
+      :param row: The row loaded from the extractor
+      :param current_column_value: Series representing the current
+          transformed value
+      :param entry: The transformation to apply
+
+      :return: The combined column value
+
+
+

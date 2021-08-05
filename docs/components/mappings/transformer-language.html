@@ -1,0 +1,339 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Transformer Language &mdash; Open Data Transformation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/c" type="text/css" />
+  <link rel="stylesheet" href="../../_static/u" type="text/css" />
+  <link rel="stylesheet" href="../../_static/s" type="text/css" />
+  <link rel="stylesheet" href="../../_static/t" type="text/css" />
+  <link rel="stylesheet" href="../../_static/o" type="text/css" />
+  <link rel="stylesheet" href="../../_static/m" type="text/css" />
+  <link rel="stylesheet" href="../../_static/." type="text/css" />
+  <link rel="stylesheet" href="../../_static/c" type="text/css" />
+  <link rel="stylesheet" href="../../_static/s" type="text/css" />
+  <link rel="stylesheet" href="../../_static/s" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/idf_square.ico"/>
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Runners" href="../runners/index.html" />
+    <link rel="prev" title="Mapping Files" href="mapping-files.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Open Data Transformation
+          
+
+          
+            
+            <img src="../../_static/IDF_Original.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../config.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../config.html#debugging">Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data-connections/index.html">Data Connections</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Mappings</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="mapping-files.html">Mapping Files</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Transformer Language</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#primitive-types">Primitive Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#column-lookup">Column Lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#operations">Operations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#groupings">Groupings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#string-manipulations">String Manipulations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../runners/index.html">Runners</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli/index.html">CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../package/index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing/index.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../knownissues/index.html">Known Issues</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Open Data Transformation</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Mappings</a> &raquo;</li>
+        
+      <li>Transformer Language</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../_sources/components/mappings/transformer-language.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="transformer-language">
+<span id="transformerlanguage"></span><h1>Transformer Language<a class="headerlink" href="#transformer-language" title="Permalink to this headline">¶</a></h1>
+<p>The transformer language allows for complex data transformations to be defined
+in the mapping files by looking up values in the row and applying mathematical
+operations to them.</p>
+<div class="section" id="primitive-types">
+<h2>Primitive Types<a class="headerlink" href="#primitive-types" title="Permalink to this headline">¶</a></h2>
+<p>The transformer language supports the following primitive types:</p>
+<ul class="simple">
+<li><p>booleans - Either <code class="code docutils literal notranslate"><span class="pre">True</span></code> or <code class="code docutils literal notranslate"><span class="pre">False</span></code> to resolve to a true or false result
+respectively.</p></li>
+<li><p>null - <code class="code docutils literal notranslate"><span class="pre">Null</span></code> is used to specify that a result has no value but has been set by
+the transformation (this is treated as <code class="code docutils literal notranslate"><span class="pre">None</span></code> by the python code in the
+background).</p></li>
+<li><p>integers - Any number without a decimal point, can be positive or negative.
+Valid integers include <code class="code docutils literal notranslate"><span class="pre">123</span></code> and <code class="code docutils literal notranslate"><span class="pre">-45</span></code>.</p></li>
+<li><p>floats - Any number with a decimal point or written in e-notation format, can be
+positive or negative. Valid floats include <code class="code docutils literal notranslate"><span class="pre">12.3</span></code>, <code class="code docutils literal notranslate"><span class="pre">-45.6</span></code> and
+<code class="code docutils literal notranslate"><span class="pre">7.8e9</span></code>.</p></li>
+<li><p>strings - Any characters withing single quotes (<code class="code docutils literal notranslate"><span class="pre">'</span></code>). If a single quote
+character is needed in the string it must be escaped using a backtick (<code class="docutils literal notranslate"><span class="pre">`</span></code>)
+which must also be escaped with a backtick is required in a string. For example
+the string <code class="code docutils literal notranslate"><span class="pre">must</span> <span class="pre">escape</span> <span class="pre">'</span> <span class="pre">and</span> <span class="pre">`</span></code> would be represented as
+<code class="docutils literal notranslate"><span class="pre">'must</span> <span class="pre">escape</span> <span class="pre">`'</span> <span class="pre">and</span> <span class="pre">``'</span></code>. Valid strings include <code class="code docutils literal notranslate"><span class="pre">'foo</span> <span class="pre">bar'</span></code>,
+<code class="code docutils literal notranslate"><span class="pre">''</span></code> and <code class="docutils literal notranslate"><span class="pre">'baz`'s</span> <span class="pre">bar'</span></code>.</p></li>
+<li><p>regular expressions - Regular expressions are strings that are preceded by <code class="code docutils literal notranslate"><span class="pre">re</span></code>
+(or <cite>ire</cite> for case insensitive regular expressions). For example <code class="code docutils literal notranslate"><span class="pre">re'.*'</span></code> will
+create a regular expression that matches all characters. The regex rules follow the
+same rules as the python regex rules which can be found
+<a class="reference external" href="https://docs.python.org/3/howto/regex.html">here</a>.</p></li>
+</ul>
+</div>
+<div class="section" id="column-lookup">
+<h2>Column Lookup<a class="headerlink" href="#column-lookup" title="Permalink to this headline">¶</a></h2>
+<p>To act on columns you must lookup their value from the row, this can be done in 2
+ways:</p>
+<ol class="arabic simple">
+<li><p>If the name of the column only contains alphanumeric character and underscores
+(<code class="code docutils literal notranslate"><span class="pre">_</span></code>) then simply using the name of the column will get the lookup value. The
+name must start with an upper or lowecase letter. Valid column names include
+<code class="code docutils literal notranslate"><span class="pre">firstCol</span></code> and <code class="code docutils literal notranslate"><span class="pre">column_2</span></code>. <code class="code docutils literal notranslate"><span class="pre">column</span> <span class="pre">3</span></code> would be invalid as it
+contains a space and <code class="code docutils literal notranslate"><span class="pre">4thColumn</span></code> would be invalid as it doesn’t start with a
+letter.</p></li>
+<li><p>If your columns name is not a valid name then you can use the <code class="code docutils literal notranslate"><span class="pre">lookup</span></code> function
+which allows you to lookup any valid string. Using the <code class="code docutils literal notranslate"><span class="pre">lookup</span></code> function
+<code class="code docutils literal notranslate"><span class="pre">lookup('column</span> <span class="pre">3')</span></code> and <code class="code docutils literal notranslate"><span class="pre">lookup('4thColumn')</span></code> are both valid lookups.</p></li>
+</ol>
+</div>
+<div class="section" id="operations">
+<h2>Operations<a class="headerlink" href="#operations" title="Permalink to this headline">¶</a></h2>
+<p>The transformation language supports combining columns with other columns or
+primitive values by using mathematics operators (<code class="code docutils literal notranslate"><span class="pre">+-*/</span></code>). Operations are performed
+in the expected order, multiplication and division are applied before addition and
+subtraction unless operations are surrounded by brackets. For example
+<code class="code docutils literal notranslate"><span class="pre">1</span> <span class="pre">+</span> <span class="pre">foo</span> <span class="pre">*</span> <span class="pre">2</span></code> will multiple column <code class="code docutils literal notranslate"><span class="pre">foo</span></code> by 2 then add 1 to the result,
+whereas <code class="code docutils literal notranslate"><span class="pre">(1</span> <span class="pre">+</span> <span class="pre">foo)</span> <span class="pre">*</span> <span class="pre">2</span></code> will add 1 to column <cite>foo</cite> and then multiply the result
+by 2.</p>
+</div>
+<div class="section" id="groupings">
+<h2>Groupings<a class="headerlink" href="#groupings" title="Permalink to this headline">¶</a></h2>
+<p>Takes a group of values to perform checks against them. Each expression is made from
+the grouping type, a list and a boolean check eg. <code class="code docutils literal notranslate"><span class="pre">&lt;group&gt;</span> <span class="pre">[1,</span> <span class="pre">2,</span> <span class="pre">3]</span> <span class="pre">is</span> <span class="pre">4</span></code>.</p>
+<ul class="simple">
+<li><p>all - Allows to check if all values pass the check. For example
+<code class="code docutils literal notranslate"><span class="pre">all</span> <span class="pre">[a,</span> <span class="pre">b,</span> <span class="pre">c]</span> <span class="pre">is</span> <span class="pre">4</span></code> will return <code class="code docutils literal notranslate"><span class="pre">True</span></code> if columns <code class="code docutils literal notranslate"><span class="pre">a</span></code>, <code class="code docutils literal notranslate"><span class="pre">b</span></code>
+and <code class="code docutils literal notranslate"><span class="pre">c</span></code> are <strong>all</strong> <code class="code docutils literal notranslate"><span class="pre">4</span></code>.</p></li>
+<li><p>any - Allows to check if any values pass the check. For example
+<code class="code docutils literal notranslate"><span class="pre">any</span> <span class="pre">[a,</span> <span class="pre">b,</span> <span class="pre">c]</span> <span class="pre">is</span> <span class="pre">4</span></code> will return <code class="code docutils literal notranslate"><span class="pre">True</span></code> if columns <code class="code docutils literal notranslate"><span class="pre">a</span></code>, <code class="code docutils literal notranslate"><span class="pre">b</span></code>
+or <code class="code docutils literal notranslate"><span class="pre">c</span></code> is <code class="code docutils literal notranslate"><span class="pre">4</span></code>.</p></li>
+</ul>
+</div>
+<div class="section" id="string-manipulations">
+<h2>String Manipulations<a class="headerlink" href="#string-manipulations" title="Permalink to this headline">¶</a></h2>
+<p>A set of functions are supplied for manipulating string:</p>
+<ul class="simple">
+<li><p><code class="code docutils literal notranslate"><span class="pre">join(separator,</span> <span class="pre">string1,</span> <span class="pre">string2,</span> <span class="pre">strings...)</span></code> - joins all the provided
+strings with separated by the <code class="code docutils literal notranslate"><span class="pre">separator</span></code> string. If any non strings are passed
+into the the function they will be converted into strings first.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">replace(target,</span> <span class="pre">pattern,</span> <span class="pre">repl,</span> <span class="pre">[pattern,</span> <span class="pre">repl]...)</span></code> - replaces <code class="code docutils literal notranslate"><span class="pre">pattern</span></code>
+in <code class="code docutils literal notranslate"><span class="pre">target</span></code> with <code class="code docutils literal notranslate"><span class="pre">repl</span></code>. Multiple <code class="code docutils literal notranslate"><span class="pre">pattern</span></code> and <code class="code docutils literal notranslate"><span class="pre">repl</span></code>
+pairs can be supplied and each will be applied in the order they are given.
+<code class="code docutils literal notranslate"><span class="pre">pattern</span></code> can be either a regular expression or string. If it’s a regular
+expression groups can be used and they will be available for use in <code class="code docutils literal notranslate"><span class="pre">repl</span></code>.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">match(target,</span> <span class="pre">pattern)</span></code> - checks if the <code class="code docutils literal notranslate"><span class="pre">target</span></code> string matches the
+<code class="code docutils literal notranslate"><span class="pre">pattern</span></code>, if they match the result is <code class="code docutils literal notranslate"><span class="pre">True</span></code> otherwise <code class="code docutils literal notranslate"><span class="pre">False</span></code>.
+<code class="code docutils literal notranslate"><span class="pre">pattern</span></code> may be either a string or regular expression. If a regular expression
+is used it must match the full string, if a string is used it is the same as
+<code class="code docutils literal notranslate"><span class="pre">value</span> <span class="pre">is</span> <span class="pre">&lt;pattern&gt;</span></code>.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">search(target,</span> <span class="pre">pattern)</span></code> - checks if the <code class="code docutils literal notranslate"><span class="pre">pattern</span></code> string is in the
+<code class="code docutils literal notranslate"><span class="pre">target</span></code>, if they it is the result is <code class="code docutils literal notranslate"><span class="pre">True</span></code> otherwise <code class="code docutils literal notranslate"><span class="pre">False</span></code>.
+<code class="code docutils literal notranslate"><span class="pre">pattern</span></code> may be either a string or regular expression.</p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="../runners/index.html" class="btn btn-neutral float-right" title="Runners" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="mapping-files.html" class="btn btn-neutral float-left" title="Mapping Files" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

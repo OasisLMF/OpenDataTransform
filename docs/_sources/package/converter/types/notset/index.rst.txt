@@ -1,0 +1,46 @@
+:mod:`converter.types.notset`
+=============================
+
+.. py:module:: converter.types.notset
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   converter.types.notset.NotSetType
+
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   converter.types.notset.NotSet
+
+
+.. class:: NotSetType
+
+   Value used when a transformation has not been applied due to  fix
+   ambiguity with ``None`` being a valid value
+
+   .. method:: __bool__(self)
+
+
+   .. method:: __eq__(self, other)
+
+      Return self==value.
+
+
+
+.. data:: NotSet
+   
+
+   
+

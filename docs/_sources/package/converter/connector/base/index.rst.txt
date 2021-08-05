@@ -1,0 +1,65 @@
+:mod:`converter.connector.base`
+===============================
+
+.. py:module:: converter.connector.base
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   converter.connector.base.BaseConnector
+
+
+
+
+.. class:: BaseConnector(config: converter.config.Config, **options)
+
+
+   Connects to the the data source
+
+   :param config: The global config for the system
+
+   .. method:: extract(self) -> Iterable[Dict[str, Any]]
+      :abstractmethod:
+
+      Extracts the data from the connected source and returns
+      an iterable of dictionaries.
+
+      :return: An iterable of the extracted data
+
+
+   .. method:: aextract(self) -> AsyncIterable[Dict[str, Any]]
+      :abstractmethod:
+      :async:
+
+      Extracts the data from the connected source and returns
+      an asynchronous iterable of dictionaries.
+
+      :return: An iterable of the extracted data
+
+
+   .. method:: load(self, data: Iterable[Dict[str, Any]])
+      :abstractmethod:
+
+      Loads the data into the connected data object.
+
+      :param data: An iterable of dictionaries representing
+          the data to push to the connected source.
+
+
+   .. method:: aload(self, data: AsyncIterable[Dict[str, Any]])
+      :abstractmethod:
+      :async:
+
+      Loads the data into the connected data object.
+
+      :param data: An iterable of dictionaries representing
+          the data to push to the connected source.
+
+
+

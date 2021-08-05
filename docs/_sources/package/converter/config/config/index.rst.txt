@@ -1,0 +1,182 @@
+:mod:`converter.config.config`
+==============================
+
+.. py:module:: converter.config.config
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   converter.config.config.NotFoundType
+   converter.config.config.Config
+
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   converter.config.config.T
+   converter.config.config.ConfigSource
+   converter.config.config.NotFound
+
+
+.. data:: T
+   
+
+   
+
+.. data:: ConfigSource
+   
+
+   
+
+.. class:: NotFoundType
+
+   .. method:: get(self, *args, **kwargs)
+
+
+
+.. data:: NotFound
+   
+
+   
+
+.. class:: Config(argv: Dict[str, Any] = None, config_path: str = None, overrides: Dict[str, Any] = None, env: Dict[str, str] = None)
+
+
+   Configuration class that loads the config file, environment,
+   command line and overrides and merges them into a single map.
+
+   .. method:: __eq__(self, other)
+
+      Return self==value.
+
+
+   .. method:: get_config_sources(self, config_path: str = None, env: Dict[str, str] = None, argv: Dict[str, Any] = None, overrides: ConfigSource = None) -> Iterable[ConfigSource]
+
+      Returns all the provided config sources in order of increasing
+      precedence, the order is:
+
+      1. Config file
+      2. Environment
+      3. Command line
+      4. Hard coded overrides
+
+      :param config_path: The path to the config file
+      :param env: The systems environment dict
+      :param argv: Dict of config paths to values
+      :param overrides: hard coded override values for the config
+
+      :return: An iterable of normalised configs from the various sources
+
+
+   .. method:: process_cli_options(self, argv)
+
+
+   .. method:: process_env_options(self, env)
+
+
+   .. method:: merge_config_sources(self, first: ConfigSource = None, second: ConfigSource = None, *others: ConfigSource) -> ConfigSource
+
+      Merges any number of config sources the later sources taking precedence
+      over the former.
+
+      :param first: The first source
+      :param second: The second source
+      :param others: The other sources
+
+      :return: The merged config source
+
+
+   .. method:: deep_merge_dictionary_items(self, first: Any, second: Any) -> ConfigSource
+
+      Merges the 2 dictionary entries, the process is as follows:
+
+      1. If the element from the first dictionary is not found use the
+         element from the second independent from type
+      2. If the element in the second dictionary is not a dictionary and has
+         been found stop here and use it
+      3. If the second element isn't found and the first has use the first
+         value
+      4. If both elements have been found then use the merge of the 2
+
+      :param first: The first dict or the value from the first dict to try
+          to merge
+      :param second: The second dict or the value from the second dict to
+          try to merge
+
+      :return: The merged result
+
+
+   .. method:: normalise_property_names(self, d: ConfigSource) -> ConfigSource
+
+      Converts all names in all levels of the dictionary to lowercase
+
+      :param d: The dictionary to normalise
+
+      :return: The normalised dictionary
+
+
+   .. method:: normalise_property(self, key: str, value: Any) -> Tuple[str, Any]
+
+      Gets the normalised (lowercase) name with the normalised value.
+      If the value is a dictionary it is normalised otherwise the value
+      is returned unchanged.
+
+      :param key: The key name for the entry
+      :param value: The value for the entry
+
+      :return: A 2-tuple of the normalised key and value of the entry
+
+
+   .. method:: get(self, path: str, fallback: Any = NotFound) -> Any
+
+      Gets a property from the configuration from it's path in the config.
+      The path should be dotted path into the config. For example, with the
+      config::
+
+           {
+              "foo": {
+                  "bar": "baz"
+              }
+           }
+
+      The path `"foo.bar"` would return `"baz"` and the path `"foo"` would
+      return `{"bar": "baz"}`.
+
+      If the path isn't found in the config the `fallback` value is used if
+      one is provided, if no fallback is provided a `KeyError` is raised.
+
+      :param path: The path of the requested value into the config.
+      :param fallback: The value to use if the path isn't found.
+
+      :return: The found path ot fallback if provided
+
+
+   .. method:: to_yaml(self)
+
+      Generates a yaml string  representation of the normalised config
+
+      :return: The yaml representation
+
+
+   .. method:: absolute_path(self, p)
+
+      Gets the absolute path relative to the config files directory.
+
+      :param p: The path relative to the config file
+
+      :return: The absolute path if both the config path and `p` are set,
+          if `p` is `None`, `None` is returned. If the config path is `None`,
+          `p` is returned without modification
+
+
+

@@ -1,0 +1,169 @@
+:mod:`converter.mapping.base`
+=============================
+
+.. py:module:: converter.mapping.base
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   converter.mapping.base.TransformationEntry
+   converter.mapping.base.ColumnConversion
+   converter.mapping.base.DirectionalMapping
+   converter.mapping.base.MappingSpec
+   converter.mapping.base.BaseMapping
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   converter.mapping.base.get_logger
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   converter.mapping.base.TransformationSet
+   converter.mapping.base.ColumnConversions
+
+
+.. function:: get_logger()
+
+
+.. class:: TransformationEntry(transformation: str, transformation_tree: Union[lark.Tree, None] = None, when: str = 'True', when_tree: Union[lark.Tree, None] = None)
+
+
+   .. method:: __eq__(self, other)
+
+      Return self==value.
+
+
+   .. method:: parse(self)
+
+
+
+.. data:: TransformationSet
+   
+
+   
+
+.. class:: ColumnConversion
+
+   Bases: :py:obj:`NamedTuple`
+
+   .. attribute:: type
+      :annotation: :str
+
+      
+
+   .. attribute:: nullable
+      :annotation: :bool = True
+
+      
+
+   .. attribute:: null_values
+      :annotation: :Set
+
+      
+
+
+.. data:: ColumnConversions
+   
+
+   
+
+.. class:: DirectionalMapping
+
+   Bases: :py:obj:`NamedTuple`
+
+   .. attribute:: input_format
+      :annotation: :str
+
+      
+
+   .. attribute:: output_format
+      :annotation: :str
+
+      
+
+   .. attribute:: transformation_set
+      :annotation: :TransformationSet
+
+      
+
+   .. attribute:: types
+      :annotation: :Dict[str, ColumnConversion]
+
+      
+
+   .. attribute:: null_values
+      :annotation: :Set
+
+      
+
+
+.. class:: MappingSpec(input_format, output_format, forward: DirectionalMapping = None, reverse: DirectionalMapping = None)
+
+
+   Class holding information about a given mapping
+
+   .. method:: can_run_forwards(self)
+      :property:
+
+      Flag whether the mapping file can be applied forwards.
+
+      :return: True is the mapping can be applied forwards, False otherwise
+
+
+   .. method:: can_run_in_reverse(self)
+      :property:
+
+      Flag whether the mapping file can be applied in reverse.
+
+      :return: True is the mapping can be applied in reverse, False otherwise
+
+
+
+.. class:: BaseMapping(config: converter.config.Config, input_format: str = None, output_format: str = None, **options)
+
+
+   Class describing the mapping from the input to the
+   output formats.
+
+   :param config: The global config for the system
+   :param input_format: The start of the conversion path
+   :param output_format: The end of the conversion path
+
+   .. method:: mapping_specs(self) -> Reversible[MappingSpec]
+      :property:
+
+      Returns a list of ``MappingSpec`` objects described by the mapping
+
+
+   .. method:: mapping_graph(self) -> networkx.DiGraph
+      :property:
+
+      Creates the graph to represent the relationships between formats in
+      the system. It it has not already been generated it is generated here.
+
+
+   .. method:: get_transformations(self) -> List[DirectionalMapping]
+
+      Gets a column transformations and full transformation set for the
+      provided input and output paths.
+
+      :return: The mappings along the conversion path.
+
+
+

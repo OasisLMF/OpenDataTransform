@@ -1,0 +1,20 @@
+:mod:`converter.mapping.errors`
+===============================
+
+.. py:module:: converter.mapping.errors
+
+
+Module Contents
+---------------
+
+.. exception:: NoConversionPathError(input_format, output_format)
+
+
+   Bases: :py:obj:`converter.errors.ConverterError`
+
+   Error raised there is no valid format map between 2 formats
+
+   :param input_format: The start path in the requested path.
+   :param output_format: The end path in the requested path.
+
+

@@ -1,0 +1,693 @@
+:mod:`converter.transformers.transform`
+=======================================
+
+.. py:module:: converter.transformers.transform
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   converter.transformers.transform.TransformerMapping
+   converter.transformers.transform.GroupWrapper
+   converter.transformers.transform.AnyWrapper
+   converter.transformers.transform.AllWrapper
+   converter.transformers.transform.BaseTreeTransformer
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   converter.transformers.transform.default_in_transformer
+   converter.transformers.transform.default_not_in_transformer
+   converter.transformers.transform.default_replace
+   converter.transformers.transform.default_match
+   converter.transformers.transform.default_search
+   converter.transformers.transform.default_join
+   converter.transformers.transform.create_transformer_class
+   converter.transformers.transform.parse
+   converter.transformers.transform.transform
+   converter.transformers.transform.run
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   converter.transformers.transform.RowType
+
+
+.. data:: RowType
+   
+
+   
+
+.. class:: TransformerMapping
+
+
+   Bases: :py:obj:`TypedDict`
+
+   dict() -> new empty dictionary
+   dict(mapping) -> new dictionary initialized from a mapping object's
+       (key, value) pairs
+   dict(iterable) -> new dictionary initialized as if via:
+       d = {}
+       for k, v in iterable:
+           d[k] = v
+   dict(**kwargs) -> new dictionary initialized with the name=value pairs
+       in the keyword argument list.  For example:  dict(one=1, two=2)
+
+   .. attribute:: lookup
+      :annotation: :Callable[[RowType, str], Any]
+
+      
+
+   .. attribute:: add
+      :annotation: :Callable[[RowType, Any, Any], Any]
+
+      
+
+   .. attribute:: subtract
+      :annotation: :Callable[[RowType, Any, Any], Any]
+
+      
+
+   .. attribute:: multiply
+      :annotation: :Callable[[RowType, Any, Any], Any]
+
+      
+
+   .. attribute:: divide
+      :annotation: :Callable[[RowType, Any, Any], Any]
+
+      
+
+   .. attribute:: eq
+      :annotation: :Callable[[RowType, Any, Any], Any]
+
+      
+
+   .. attribute:: not_eq
+      :annotation: :Callable[[RowType, Any, Any], Any]
+
+      
+
+   .. attribute:: is_in
+      :annotation: :Callable[[RowType, Any, Any], Any]
+
+      
+
+   .. attribute:: not_in
+      :annotation: :Callable[[RowType, Any, Any], Any]
+
+      
+
+   .. attribute:: gt
+      :annotation: :Callable[[RowType, Any, Any], Any]
+
+      
+
+   .. attribute:: gte
+      :annotation: :Callable[[RowType, Any, Any], Any]
+
+      
+
+   .. attribute:: lt
+      :annotation: :Callable[[RowType, Any, Any], Any]
+
+      
+
+   .. attribute:: lte
+      :annotation: :Callable[[RowType, Any, Any], Any]
+
+      
+
+   .. attribute:: logical_and
+      :annotation: :Callable[[RowType, Any, Any], Any]
+
+      
+
+   .. attribute:: logical_or
+      :annotation: :Callable[[RowType, Any, Any], Any]
+
+      
+
+   .. attribute:: logical_not
+      :annotation: :Callable[[RowType, Any], Any]
+
+      
+
+   .. attribute:: all
+      :annotation: :Callable[[RowType, List[Any]], Any]
+
+      
+
+   .. attribute:: any
+      :annotation: :Callable[[RowType, List[Any]], Any]
+
+      
+
+   .. attribute:: str_join
+      :annotation: :Callable[Ellipsis, Any]
+
+      
+
+   .. attribute:: str_replace
+      :annotation: :Callable[[RowType, Any, Pattern, str], Any]
+
+      
+
+   .. attribute:: str_match
+      :annotation: :Callable[[RowType, Any, Pattern], Any]
+
+      
+
+   .. attribute:: str_search
+      :annotation: :Callable[[RowType, Any, Pattern], Any]
+
+      
+
+
+.. class:: GroupWrapper(values)
+
+
+   Group operations preformed on a list of elements
+
+   :param values: A list of the grouped values
+
+   .. method:: check_fn(self, checks: Iterable[Any])
+      :abstractmethod:
+
+      Checks the results of the operator. This should be a reduction of each
+      result in the values list into a single value.
+
+      :param checks: The results from the operator comparison
+
+      :return: The reduced result
+
+
+   .. method:: eq_operator(self, lhs, rhs)
+
+      Checks the equality of elements
+
+      :param lhs: The left hand side of the operator
+      :param rhs: The right hand side of the operator
+
+      :return: True if the elements are equal, False otherwise
+
+
+   .. method:: __eq__(self, other)
+
+      Checks if the group equals the other based on the `check_fn` and
+      `eq_operator`
+
+      :param other: The value to check each element against
+
+      :return: The reduced result
+
+
+   .. method:: __ne__(self, other)
+
+      Checks if the group does not equal the other based on the `check_fn`
+      and the inverse of the `eq_operator`
+
+      :param other: The value to check each element against
+
+      :return: The reduced result
+
+
+   .. method:: gt_operator(self, lhs, rhs)
+
+      Checks the left hand side of the operator is greater than the right
+      hand side
+
+      :param lhs: The left hand side of the operator
+      :param rhs: The right hand side of the operator
+
+      :return: True if lhs > rhs, False otherwise
+
+
+   .. method:: __gt__(self, other)
+
+      Checks if the group is greater than the other based on the `check_fn`
+      and the `gt_operator`
+
+      :param other: The value to check each element against
+
+      :return: The reduced result
+
+
+   .. method:: gte_operator(self, lhs, rhs)
+
+      Checks the left hand side of the operator is greater than or equal to
+      the right hand side
+
+      :param lhs: The left hand side of the operator
+      :param rhs: The right hand side of the operator
+
+      :return: True if lhs >= rhs, False otherwise
+
+
+   .. method:: __ge__(self, other)
+
+      Checks if the group is greater than or equal to the other based on the
+      `check_fn` and the `gte_operator`
+
+      :param other: The value to check each element against
+
+      :return: The reduced result
+
+
+   .. method:: lt_operator(self, lhs, rhs)
+
+      Checks the left hand side of the operator is less than the right
+      hand side
+
+      :param lhs: The left hand side of the operator
+      :param rhs: The right hand side of the operator
+
+      :return: True if lhs < rhs, False otherwise
+
+
+   .. method:: __lt__(self, other)
+
+      Checks if the group is less than the other based on the `check_fn`
+      and the `lt_operator`
+
+      :param other: The value to check each element against
+
+      :return: The reduced result
+
+
+   .. method:: lte_operator(self, lhs, rhs)
+
+      Checks the left hand side of the operator is less than or equal to the
+      right hand side
+
+      :param lhs: The left hand side of the operator
+      :param rhs: The right hand side of the operator
+
+      :return: True if lhs > rhs, False otherwise
+
+
+   .. method:: __le__(self, other)
+
+      Checks if the group is less than or equal to the other based on the `
+      check_fn` and the `le_operator`
+
+      :param other: The value to check each element against
+
+      :return: The reduced result
+
+
+   .. method:: in_operator(self, lhs, rhs)
+
+      Checks the left hand side of the operator is contained in the right
+      hand side
+
+      :param lhs: The left hand side of the operator
+      :param rhs: The right hand side of the operator
+
+      :return: True if lhs in rhs, False otherwise
+
+
+   .. method:: is_in(self, other)
+
+      Checks if the group is in the other based on the `check_fn` and the
+      `in_operator`
+
+      :param other: The value to check each element against
+
+      :return: The reduced result
+
+
+   .. method:: not_in_operator(self, lhs, rhs)
+
+      Checks the left hand side of the operator is not contained in the right
+      hand side
+
+      :param lhs: The left hand side of the operator
+      :param rhs: The right hand side of the operator
+
+      :return: True if lhs not in rhs, False otherwise
+
+
+   .. method:: is_not_in(self, other)
+
+      Checks if the group is not in the other based on the `check_fn` and the
+      `not_in_operator`
+
+      :param other: The value to check each element against
+
+      :return: The reduced result
+
+
+
+.. class:: AnyWrapper(values)
+
+
+   Bases: :py:obj:`GroupWrapper`
+
+   Wraps the values and checks if any of their values return true when tested
+
+   .. method:: check_fn(self, checks)
+
+      Checks the results of the operator. This should be a reduction of each
+      result in the values list into a single value.
+
+      :param checks: The results from the operator comparison
+
+      :return: The reduced result
+
+
+
+.. class:: AllWrapper(values)
+
+
+   Bases: :py:obj:`GroupWrapper`
+
+   Wraps the values and checks if all of their values return true when tested
+
+   .. method:: check_fn(self, checks)
+
+      Checks the results of the operator. This should be a reduction of each
+      result in the values list into a single value.
+
+      :param checks: The results from the operator comparison
+
+      :return: The reduced result
+
+
+
+.. function:: default_in_transformer(row, lhs, rhs)
+
+   Performs the in check of the lhs in in the rhs. If the lhs has an `is_in`
+   method this is used, if not the `in` operator is used.
+
+   :param row: The row being checked (not used)
+   :param lhs: The left hand side of the operator
+   :param rhs: The right hand side of the operator
+
+   :return: True if lhs is in right, False otherwise
+
+
+.. function:: default_not_in_transformer(row, lhs, rhs)
+
+   Performs the in check of the lhs is not in the rhs. If the lhs has an
+   `is_not_in` method this is used, if not the `not in` operator is used.
+
+   :param row: The row being checked (not used)
+   :param lhs: The left hand side of the operator
+   :param rhs: The right hand side of the operator
+
+   :return: True if lhs is not in right, False otherwise
+
+
+.. function:: default_replace(row, target, *pattern_repl)
+
+   Replaces the pattern in the target string with a given string. The pattern
+   can be either a string or regular expression, if a regular expression is
+   used groups can be used in the replacement string.
+
+   :param row: The row being transformed (not used)
+   :param target: The value to perform the replacement on
+   :param pattern_repl: Any number of parameters that have pattern and
+       replacement strings, there should be an even number of elements
+       with the 1st, 3rd, 5th etc representing the patterns and teh 2nd,
+       4th, 6th ets representing the corresponding replacements
+
+   :return: The transformed object
+
+
+.. function:: default_match(row, target, pattern: Pattern)
+
+   Checks if a pattern matches the target. The pattern can be either a string
+   or regular expression, if a string is used it is the same as
+   `pattern == target`.
+
+   :param row: The row being checked (not used)
+   :param target: The value to perform the check on
+   :param pattern: The pattern to find match the target
+
+   :return: True if the pattern matches the pattern, False otherwise
+
+
+.. function:: default_search(row, target, pattern: Pattern)
+
+   Checks if a pattern is in the target. The pattern can be either a string
+   or regular expression, if a string is used it is the same as
+   `pattern in target`.
+
+   :param row: The row being checked (not used)
+   :param target: The value to perform the check on
+   :param pattern: The pattern to find in the target
+
+   :return: True if the pattern matches the pattern, False otherwise
+
+
+.. function:: default_join(row, join, *elements)
+
+   Joins a set of objects as strings
+
+   :param row: The row being transformed (not used)
+   :param join: The string used to join the elements
+   :param elements: The elements to join
+
+   :return: The joined string
+
+
+.. class:: BaseTreeTransformer(visit_tokens=True)
+
+
+   Bases: :py:obj:`lark.Transformer`
+
+   Abstract implementation of the Tree transformer class
+
+   .. attribute:: lookup
+      :annotation: :Callable[[RowType, str], Any]
+
+      
+
+   .. attribute:: add
+      :annotation: :Callable[[RowType, Any, Any], Any]
+
+      
+
+   .. attribute:: subtract
+      :annotation: :Callable[[RowType, Any, Any], Any]
+
+      
+
+   .. attribute:: multiply
+      :annotation: :Callable[[RowType, Any, Any], Any]
+
+      
+
+   .. attribute:: divide
+      :annotation: :Callable[[RowType, Any, Any], Any]
+
+      
+
+   .. attribute:: eq
+      :annotation: :Callable[[RowType, Any, Any], Any]
+
+      
+
+   .. attribute:: not_eq
+      :annotation: :Callable[[RowType, Any, Any], Any]
+
+      
+
+   .. attribute:: is_in
+      :annotation: :Callable[[RowType, Any, Any], Any]
+
+      
+
+   .. attribute:: not_in
+      :annotation: :Callable[[RowType, Any, Any], Any]
+
+      
+
+   .. attribute:: gt
+      :annotation: :Callable[[RowType, Any, Any], Any]
+
+      
+
+   .. attribute:: gte
+      :annotation: :Callable[[RowType, Any, Any], Any]
+
+      
+
+   .. attribute:: lt
+      :annotation: :Callable[[RowType, Any, Any], Any]
+
+      
+
+   .. attribute:: lte
+      :annotation: :Callable[[RowType, Any, Any], Any]
+
+      
+
+   .. attribute:: logical_not
+      :annotation: :Callable[[RowType, Any, Any], Any]
+
+      
+
+   .. attribute:: logical_or
+      :annotation: :Callable[[RowType, Any, Any], Any]
+
+      
+
+   .. attribute:: logical_and
+      :annotation: :Callable[[RowType, Any, Any], Any]
+
+      
+
+   .. attribute:: any
+      :annotation: :Callable[[RowType, List[Any]], GroupWrapper]
+
+      
+
+   .. attribute:: all
+      :annotation: :Callable[[RowType, List[Any]], GroupWrapper]
+
+      
+
+   .. attribute:: str_join
+      :annotation: :Callable[Ellipsis, Any]
+
+      
+
+   .. attribute:: str_replace
+      :annotation: :Callable[[RowType, Any, Pattern, Any], Any]
+
+      
+
+   .. attribute:: str_match
+      :annotation: :Callable[[RowType, Any, Pattern, Any], Any]
+
+      
+
+   .. attribute:: str_search
+      :annotation: :Callable[[RowType, Any, Pattern, Any], Any]
+
+      
+
+   .. attribute:: array
+      
+
+      
+
+   .. attribute:: string_escape_re
+      
+
+      
+
+   .. method:: string(self, value='')
+
+      Parses a string from the transformer language and performs any
+      necessary escaping. `value` has a default value to account for the
+      empty string case.
+
+      :param value: The value to parse
+
+      :return: The parsed value
+
+
+   .. method:: regex(self, value='')
+
+      Generates a regex from teh provided string
+
+      :param value: The pattern
+
+      :return: The regex object
+
+
+   .. method:: iregex(self, value='')
+
+      Generates a case insensitive regex from teh provided string
+
+      :param value: The pattern
+
+      :return: The regex object
+
+
+   .. method:: boolean(self, value)
+
+      Pareses a boolean from the transformer language.
+
+      :param value: The value to parse
+
+      :return: True if the value is "True", False otherwise
+
+
+   .. method:: null(self, value)
+
+      Pareses a null from the transformer language.
+
+      :param value: The value to parse (ignored as its always Null)
+
+      :return: None
+
+
+   .. method:: number(self, value)
+
+      Parses a number from the transformer language. First tries to parse an
+      integer but on failure parses as a float.
+
+      :param value: The value to parse
+
+      :return: The parsed value
+
+
+
+.. function:: create_transformer_class(row, transformer_mapping)
+
+   Creates a transformer class from the provided mapping overrides.
+
+   :param row: The row to transform
+   :param transformer_mapping: The overrides for the transform functions
+
+   :return: The new transformer class
+
+
+.. function:: parse(expression: Union[str, lark.Tree]) -> lark.Tree
+
+   Parse an expression from the transformation language
+
+   :param expression: The expression to pass
+
+   :return: The parsd expression tree
+
+
+.. function:: transform(row, tree: lark.Tree, transformer_mapping: TransformerMapping = None)
+
+   Performs the transformation on the row
+
+   :param row: The row to transform
+   :param tree: The parsed tree for the expression
+   :param transformer_mapping: Overrides for the transformer operations
+
+   :return: The transformation result
+
+
+.. function:: run(row, expression: Union[str, lark.Tree], transformer_mapping: TransformerMapping = None)
+
+   Runs a transformation expression on a row
+
+   :param row: The row to transform
+   :param expression: The transformation to perform
+   :param transformer_mapping: Overrides for the transformer operations
+
+   :return: The transformed result
+
+

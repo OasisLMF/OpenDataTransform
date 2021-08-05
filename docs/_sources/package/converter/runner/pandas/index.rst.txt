@@ -1,0 +1,265 @@
+:mod:`converter.runner.pandas`
+==============================
+
+.. py:module:: converter.runner.pandas
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   converter.runner.pandas.PandasGroupWrapper
+   converter.runner.pandas.PandasAnyWrapper
+   converter.runner.pandas.PandasAllWrapper
+   converter.runner.pandas.StrReplace
+   converter.runner.pandas.StrMatch
+   converter.runner.pandas.StrSearch
+   converter.runner.pandas.StrJoin
+   converter.runner.pandas.ConversionError
+   converter.runner.pandas.PandasRunner
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   converter.runner.pandas.get_logger
+   converter.runner.pandas.logical_and_transformer
+   converter.runner.pandas.logical_or_transformer
+   converter.runner.pandas.logical_not_transformer
+   converter.runner.pandas.in_transformer
+   converter.runner.pandas.not_in_transformer
+   converter.runner.pandas.type_converter
+
+
+
+.. function:: get_logger()
+
+
+.. class:: PandasGroupWrapper(values)
+
+
+   Bases: :py:obj:`converter.transformers.transform.GroupWrapper`
+
+   Base class for the pandas implementation for any and all groups
+
+   .. method:: in_operator(self, x, y)
+
+      Checks the left hand side of the operator is contained in the right
+      hand side
+
+      :param lhs: The left hand side of the operator
+      :param rhs: The right hand side of the operator
+
+      :return: True if lhs in rhs, False otherwise
+
+
+   .. method:: not_in_operator(self, x, y)
+
+      Checks the left hand side of the operator is not contained in the right
+      hand side
+
+      :param lhs: The left hand side of the operator
+      :param rhs: The right hand side of the operator
+
+      :return: True if lhs not in rhs, False otherwise
+
+
+
+.. class:: PandasAnyWrapper(values)
+
+
+   Bases: :py:obj:`PandasGroupWrapper`
+
+   Pandas specific implementation of the ``any`` expression
+
+   .. method:: check_fn(self, values)
+
+      Checks the results of the operator. This should be a reduction of each
+      result in the values list into a single value.
+
+      :param checks: The results from the operator comparison
+
+      :return: The reduced result
+
+
+
+.. class:: PandasAllWrapper(values)
+
+
+   Bases: :py:obj:`PandasGroupWrapper`
+
+   Pandas specific implementation of the ``all`` expression
+
+   .. method:: check_fn(self, values)
+
+      Checks the results of the operator. This should be a reduction of each
+      result in the values list into a single value.
+
+      :param checks: The results from the operator comparison
+
+      :return: The reduced result
+
+
+
+.. function:: logical_and_transformer(row, lhs, rhs)
+
+
+.. function:: logical_or_transformer(row, lhs, rhs)
+
+
+.. function:: logical_not_transformer(row, value)
+
+
+.. function:: in_transformer(row, lhs, rhs)
+
+
+.. function:: not_in_transformer(row, lhs, rhs)
+
+
+.. class:: StrReplace(series_type)
+
+
+   .. method:: __call__(self, row: converter.transformers.transform.RowType, target, *pattern_repl)
+
+
+
+.. class:: StrMatch(series_type)
+
+
+   .. method:: __call__(self, row: converter.transformers.transform.RowType, target, pattern: re.Pattern)
+
+
+
+.. class:: StrSearch(series_type)
+
+
+   .. method:: __call__(self, row: converter.transformers.transform.RowType, target, pattern: re.Pattern)
+
+
+
+.. class:: StrJoin(series_type)
+
+
+   .. method:: to_str(self, obj)
+
+
+   .. method:: concat(self, left, right)
+
+
+   .. method:: join(self, left, join, right)
+
+
+   .. method:: __call__(self, row: converter.transformers.transform.RowType, join, *elements)
+
+
+
+.. class:: ConversionError(value=None, reason=None)
+
+
+
+.. function:: type_converter(to_type, nullable, null_values)
+
+
+.. class:: PandasRunner(config: converter.config.Config, **options)
+
+
+   Bases: :py:obj:`converter.runner.base.BaseRunner`
+
+   Default implementation for a pandas like runner
+
+   .. attribute:: row_value_conversions
+      
+
+      
+
+   .. attribute:: dataframe_type
+      
+
+      
+
+   .. attribute:: series_type
+      
+
+      
+
+   .. method:: coerce_row_types(self, row, conversions: converter.mapping.base.ColumnConversions)
+
+      Changes data types of each input column. If a cast fails a warning
+      will be written to the logs and the row will be ignored.
+
+      :param row: The input row.
+      :param conversions: The set of conversions to run
+
+      :return: The updated input row if there are no errors, ``None`` if
+          any updates fail.
+
+
+   .. method:: create_series(self, index, value)
+
+
+   .. method:: get_dataframe(self, extractor: converter.connector.base.BaseConnector) -> pandas.DataFrame
+
+      Builds a dataframe from the extractors data
+
+      :param extractor: The extractor providing the input data
+
+      :return: The created dataframe
+
+
+   .. method:: combine_column(self, row, current_column_value: Union[pandas.Series, converter.types.notset.NotSetType], entry: converter.mapping.base.TransformationEntry)
+
+      Combines the current column value with the result of the
+      transformation. If the current value is ``NotSet`` the value of the
+      current transformation will be calculated and applied.
+
+      :param row: The row loaded from the extractor
+      :param current_column_value: Series representing the current
+          transformed value
+      :param entry: The transformation to apply
+
+      :return: The combined column value
+
+
+   .. method:: assign(self, input_row: pandas.DataFrame, output_row: Union[pandas.DataFrame, converter.types.notset.NotSetType], **assignments)
+
+      Helper function for assigning a series to a dataframe. Some
+      implementations of pandas are less efficient if we start with an empty
+      dataframe so here we allow for `None` to be passed and create the
+      initial dataframe from the first assigned series.
+
+      :param input_row: The row loaded from the extractor
+      :param output_row: The data frame to assign to or None
+      :param assignments: The assignments to apply to the dataframe
+
+      :return: The updated dataframe
+
+
+   .. method:: apply_transformation_entry(self, input_df: pandas.DataFrame, entry: converter.mapping.base.TransformationEntry) -> Union[pandas.Series, converter.types.notset.NotSetType]
+
+      Applies a single transformation to the dataset returning the result
+      as a series.
+
+      :param input_df: The dataframe loaded from the extractor
+      :param entry: The transformation to apply
+
+      :return: The transformation result
+
+
+   .. method:: transform(self, extractor: converter.connector.base.BaseConnector, mapping: converter.mapping.base.BaseMapping) -> Iterable[Dict[str, Any]]
+
+      Performs the transformation
+
+      :param extractor: The data connection to extract data from
+      :param mapping: Mapping object describing the transformations to apply
+
+      :return: An iterable containing the transformed data
+
+
+
