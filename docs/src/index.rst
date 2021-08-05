@@ -3,7 +3,9 @@ The Open Data Transformation Framework
 
 The Open Data Transformation Framework provides an open-source, free, and model-agnostic framework to improve the efficiency and transparency of catastrophe modelling data transformations in the insurance market. 
 
-It is maintained through an industry collaboration coordinated by The Insurance Development Forum (IDF) `Risk Modelling Steering Group (RMSG) <https://www.insdevforum.org/working-groups/rmsg/>`_. Technical development has been led by OASIS in partnership with model vendors and users. The project is managed under the IDF RMSG Interoperability Technical Working Group (ITWG) whose members, drawn from over 30 organisations, have collaborated in the vision and design of this framework. 
+It is maintained through an industry collaboration coordinated by The Insurance Development Forum (IDF) `Risk Modelling Steering Group (RMSG) <https://www.insdevforum.org/working-groups/rmsg/>`_. Technical development has been led by OASIS in partnership with model vendors and users. The project is managed under the IDF RMSG Interoperability Technical Working Group (ITWG) whose members, represent over 30 organisations, have collaborated in the vision and design of this framework. 
+
+A steering committee comprising industry experts is responsible for the direction of the project and considers feedback made via the GitHub issues or RMSG and ITWG forums. The steering committee is chaired by IDF RMSG and has industry representation from AIR, AON, Chubb, the Catastrophe Resiliency Council, Guy Carpenter, RenaissanceRe, SCOR, and Oasis.
 
 There is currently an exposure data transformation available to convert data from AIR CEDE to OED and vice versa.
 
@@ -54,7 +56,7 @@ Validation and testing procedures are under development to assist in confirming 
 
 
 Further developer information
----------------------------
+-------------------------------
 
 The Open Data Transformation is designed to convert exposure data from one format to another as long as both formats can be expressed as an iterable of dictionaries. That is, the possible field values must be mapped to a key (field name) for each model format.
 
