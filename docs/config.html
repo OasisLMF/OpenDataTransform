@@ -1,0 +1,325 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Configuration &mdash; Open Data Transformation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+  <link rel="stylesheet" href="_static/c" type="text/css" />
+  <link rel="stylesheet" href="_static/u" type="text/css" />
+  <link rel="stylesheet" href="_static/s" type="text/css" />
+  <link rel="stylesheet" href="_static/t" type="text/css" />
+  <link rel="stylesheet" href="_static/o" type="text/css" />
+  <link rel="stylesheet" href="_static/m" type="text/css" />
+  <link rel="stylesheet" href="_static/." type="text/css" />
+  <link rel="stylesheet" href="_static/c" type="text/css" />
+  <link rel="stylesheet" href="_static/s" type="text/css" />
+  <link rel="stylesheet" href="_static/s" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="_static/idf_square.ico"/>
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Data Connections" href="components/data-connections/index.html" />
+    <link rel="prev" title="The Open Data Transformation Framework" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Open Data Transformation
+          
+
+          
+            
+            <img src="_static/IDF_Original.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#environment-configuration">Environment Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cli-configuration">CLI Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#debugging">Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components/data-connections/index.html">Data Connections</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components/mappings/index.html">Mappings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components/runners/index.html">Runners</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components/cli/index.html">CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="package/index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components/testing/index.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components/knownissues/index.html">Known Issues</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Open Data Transformation</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Configuration</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/config.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="configuration">
+<h1>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h1>
+<p>The converter tool is configurable by environment variable, on the
+command line and by configuration file.</p>
+<p>The configuration is taken from the configuration sources in the
+following order (in increasing precedence).</p>
+<ol class="arabic simple">
+<li><p>Command Line</p></li>
+<li><p>Environment</p></li>
+<li><p>Configuration file</p></li>
+</ol>
+<p>The configuration and file has the following schema:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">extractor</span><span class="p">:</span>
+    <span class="n">path</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">str</span><span class="o">&gt;</span>
+    <span class="n">options</span><span class="p">:</span>
+        <span class="o">&lt;</span><span class="nb">str</span><span class="o">&gt;</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">any</span><span class="o">&gt;</span>
+        <span class="o">...</span>
+<span class="n">runner</span><span class="p">:</span>
+    <span class="n">path</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">str</span><span class="o">&gt;</span>
+    <span class="n">options</span><span class="p">:</span>
+        <span class="o">&lt;</span><span class="nb">str</span><span class="o">&gt;</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">any</span><span class="o">&gt;</span>
+        <span class="o">...</span>
+<span class="n">mapping</span><span class="p">:</span>
+    <span class="n">path</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">str</span><span class="o">&gt;</span>
+    <span class="n">options</span><span class="p">:</span>
+        <span class="n">input_format</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">str</span><span class="o">&gt;</span>
+        <span class="n">output_format</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">str</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nb">str</span><span class="o">&gt;</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">any</span><span class="o">&gt;</span>
+        <span class="o">...</span>
+<span class="n">loader</span><span class="p">:</span>
+    <span class="n">path</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">str</span><span class="o">&gt;</span>
+    <span class="n">options</span><span class="p">:</span>
+        <span class="o">&lt;</span><span class="nb">str</span><span class="o">&gt;</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">any</span><span class="o">&gt;</span>
+        <span class="o">...</span>
+</pre></div>
+</div>
+<p>The only required configuration options are
+<code class="code docutils literal notranslate"><span class="pre">mapping.options.input_format</span></code> and
+<code class="code docutils literal notranslate"><span class="pre">mapping.options.output_format</span></code> although each <code class="code docutils literal notranslate"><span class="pre">extractor</span></code>,
+<code class="code docutils literal notranslate"><span class="pre">runner</span></code>, <code class="code docutils literal notranslate"><span class="pre">mapping</span></code> and <code class="code docutils literal notranslate"><span class="pre">loader</span></code> may require
+specific properties.</p>
+<p>For each element the <code class="code docutils literal notranslate"><span class="pre">path</span></code> property is a python path to a valid
+python class.</p>
+<p><a class="reference external" href="https://github.com/OasisLMF/OEDtransform/blob/master/examples/cede_test_v3/cede_test_acc.yml">An example config file for CEDE-OED account file transformation</a>.</p>
+<p><a class="reference external" href="https://github.com/OasisLMF/OEDtransform/blob/master/examples/cede_test_v3/cede_test_loc.yml">An example config file for CEDE-OED location file transformation</a>.</p>
+<div class="section" id="environment-configuration">
+<h2>Environment Configuration<a class="headerlink" href="#environment-configuration" title="Permalink to this headline">¶</a></h2>
+<p>To set a configuration option on the environment, create a variable
+that starts with <code class="code docutils literal notranslate"><span class="pre">CONVERTER_</span></code> and add the path to the option
+to be set.</p>
+<p>For example, to set the path to the extractor as an environment
+variable use:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">CONVERTER_EXTRACTOR_PATH</span><span class="o">=&lt;</span><span class="n">path</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>In the options configuration for a particular component you can nest
+further levels of configuration by adding <code class="code docutils literal notranslate"><span class="pre">_</span></code> between nested
+levels. For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">CONVERTER_EXTRACTOR_OPTIONS_FOO_BAR</span><span class="o">=</span><span class="n">bash</span>
+</pre></div>
+</div>
+<p>will resolve to the following configuration:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">extractor</span><span class="p">:</span>
+    <span class="n">options</span><span class="p">:</span>
+        <span class="n">foo</span><span class="p">:</span>
+            <span class="n">bar</span><span class="p">:</span> <span class="n">bash</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="cli-configuration">
+<h2>CLI Configuration<a class="headerlink" href="#cli-configuration" title="Permalink to this headline">¶</a></h2>
+<p>To set configuration variables on the command line use the <code class="code docutils literal notranslate"><span class="pre">-o</span></code>
+option on the command. This option takes 2 values, the option path
+and option value.</p>
+<p>The option path is specified in a similar way to the environment
+variables but each level of nesting is separated by <code class="code docutils literal notranslate"><span class="pre">.</span></code>
+rather than <code class="code docutils literal notranslate"><span class="pre">_</span></code>.</p>
+<p>To build the same configuration as in the environment example you
+would use:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">converter</span> <span class="o">-</span><span class="n">o</span> <span class="n">extractor</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">foo</span><span class="o">.</span><span class="n">bar</span> <span class="n">bash</span> <span class="n">run</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="debugging">
+<h1>Debugging<a class="headerlink" href="#debugging" title="Permalink to this headline">¶</a></h1>
+<p>To debug you r configuration you can use the <cite>show-config</cite> command.
+This will print the fully resolved config to the console.</p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="components/data-connections/index.html" class="btn btn-neutral float-right" title="Data Connections" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="The Open Data Transformation Framework" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

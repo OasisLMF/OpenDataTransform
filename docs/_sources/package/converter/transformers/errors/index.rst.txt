@@ -1,0 +1,25 @@
+:mod:`converter.transformers.errors`
+====================================
+
+.. py:module:: converter.transformers.errors
+
+
+Module Contents
+---------------
+
+.. exception:: ParserError
+
+
+   Bases: :py:obj:`converter.errors.ConverterError`
+
+   Error raised whenever there's an error in the transformation.
+
+
+.. exception:: UnexpectedCharacters(expression, char, position)
+
+
+   Bases: :py:obj:`ParserError`
+
+   Error raised when there's an unexpected character in the transformation.
+
+

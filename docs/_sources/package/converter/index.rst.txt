@@ -1,0 +1,33 @@
+:mod:`converter`
+================
+
+.. py:module:: converter
+
+
+Subpackages
+-----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 3
+
+   config/index.rst
+   connector/index.rst
+   controller/index.rst
+   files/index.rst
+   mapping/index.rst
+   runner/index.rst
+   transformers/index.rst
+   types/index.rst
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   __main__/index.rst
+   cli/index.rst
+   errors/index.rst
+
+

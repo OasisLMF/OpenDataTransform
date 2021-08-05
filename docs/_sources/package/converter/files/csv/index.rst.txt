@@ -1,0 +1,40 @@
+:mod:`converter.files.csv`
+==========================
+
+.. py:module:: converter.files.csv
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   converter.files.csv.BufferedCsvReader
+
+
+
+
+.. class:: BufferedCsvReader(source)
+
+
+   Bases: :py:obj:`io.TextIOBase`
+
+   Provides the source as a csv file like object. This helps some data
+   processors as they are happier reading files rather than working on
+   iterables.
+
+   :param source: The iterable to build the csv from
+   :param buffer: The current stored data
+
+   .. method:: read(self, size=None)
+
+      Read at most n characters from stream.
+
+      Read from underlying buffer until we have n characters or we hit EOF.
+      If n is negative or omitted, read until EOF.
+
+
+

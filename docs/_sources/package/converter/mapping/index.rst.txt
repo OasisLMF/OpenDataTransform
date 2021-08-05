@@ -1,0 +1,37 @@
+:mod:`converter.mapping`
+========================
+
+.. py:module:: converter.mapping
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   base/index.rst
+   errors/index.rst
+   file/index.rst
+
+
+Package Contents
+----------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   converter.mapping.BaseMapping
+   converter.mapping.MappingSpec
+   converter.mapping.FileMapping
+   converter.mapping.FileMappingSpec
+
+
+
+
+
+
+
+

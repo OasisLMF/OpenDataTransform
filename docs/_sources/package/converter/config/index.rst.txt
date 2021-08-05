@@ -1,0 +1,30 @@
+:mod:`converter.config`
+=======================
+
+.. py:module:: converter.config
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   config/index.rst
+   errors/index.rst
+
+
+Package Contents
+----------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   converter.config.Config
+
+
+
+
+

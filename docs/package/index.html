@@ -1,0 +1,297 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>API Reference &mdash; Open Data Transformation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/c" type="text/css" />
+  <link rel="stylesheet" href="../_static/u" type="text/css" />
+  <link rel="stylesheet" href="../_static/s" type="text/css" />
+  <link rel="stylesheet" href="../_static/t" type="text/css" />
+  <link rel="stylesheet" href="../_static/o" type="text/css" />
+  <link rel="stylesheet" href="../_static/m" type="text/css" />
+  <link rel="stylesheet" href="../_static/." type="text/css" />
+  <link rel="stylesheet" href="../_static/c" type="text/css" />
+  <link rel="stylesheet" href="../_static/s" type="text/css" />
+  <link rel="stylesheet" href="../_static/s" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../_static/idf_square.ico"/>
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="converter" href="converter/index.html" />
+    <link rel="prev" title="CLI" href="../components/cli/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Open Data Transformation
+          
+
+          
+            
+            <img src="../_static/IDF_Original.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../config.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config.html#debugging">Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components/data-connections/index.html">Data Connections</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components/mappings/index.html">Mappings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components/runners/index.html">Runners</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components/cli/index.html">CLI</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="converter/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../components/testing/index.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components/knownissues/index.html">Known Issues</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Open Data Transformation</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>API Reference</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/package/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="api-reference">
+<h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">¶</a></h1>
+<p>This page contains auto-generated API reference documentation <a class="footnote-reference brackets" href="#f1" id="id1">1</a>.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="converter/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="converter/config/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.config</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="converter/config/config/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.config.config</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="converter/config/errors/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.config.errors</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="converter/connector/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.connector</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="converter/connector/base/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.connector.base</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="converter/connector/csv/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.connector.csv</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="converter/controller/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.controller</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="converter/controller/base/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.controller.base</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="converter/files/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.files</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="converter/files/csv/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.files.csv</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="converter/files/yaml/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.files.yaml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="converter/mapping/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.mapping</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="converter/mapping/base/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.mapping.base</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="converter/mapping/errors/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.mapping.errors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="converter/mapping/file/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.mapping.file</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="converter/runner/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.runner</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="converter/runner/base/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.runner.base</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="converter/runner/dask/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.runner.dask</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="converter/runner/eager/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.runner.eager</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="converter/runner/modin/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.runner.modin</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="converter/runner/pandas/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.runner.pandas</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="converter/transformers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.transformers</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="converter/transformers/errors/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.transformers.errors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="converter/transformers/grammar/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.transformers.grammar</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="converter/transformers/transform/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.transformers.transform</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="converter/types/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.types</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="converter/types/notset/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.types.notset</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="converter/__main__/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.__main__</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="converter/cli/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.cli</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="converter/errors/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.errors</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+<dl class="footnote brackets">
+<dt class="label" id="f1"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>Created with <a class="reference external" href="https://github.com/readthedocs/sphinx-autoapi">sphinx-autoapi</a></p>
+</dd>
+</dl>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="converter/index.html" class="btn btn-neutral float-right" title="converter" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../components/cli/index.html" class="btn btn-neutral float-left" title="CLI" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

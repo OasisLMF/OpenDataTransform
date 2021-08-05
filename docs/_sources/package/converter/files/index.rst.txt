@@ -1,0 +1,16 @@
+:mod:`converter.files`
+======================
+
+.. py:module:: converter.files
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   csv/index.rst
+   yaml/index.rst
+
+

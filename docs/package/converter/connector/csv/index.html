@@ -1,0 +1,317 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>converter.connector.csv &mdash; Open Data Transformation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/c" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/u" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/s" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/t" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/o" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/m" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/." type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/c" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/s" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/s" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../../../../_static/idf_square.ico"/>
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="converter.controller" href="../../controller/index.html" />
+    <link rel="prev" title="converter.connector.base" href="../base/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Open Data Transformation
+          
+
+          
+            
+            <img src="../../../../_static/IDF_Original.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../config.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../config.html#debugging">Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../components/data-connections/index.html">Data Connections</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../components/mappings/index.html">Mappings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../components/runners/index.html">Runners</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../components/cli/index.html">CLI</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter</span></code></a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../../index.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../../config/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.config</span></code></a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.connector</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../controller/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.controller</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../files/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.files</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../mapping/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.mapping</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../runner/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.runner</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../transformers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.transformers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../types/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.types</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../index.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../components/testing/index.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../components/knownissues/index.html">Known Issues</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Open Data Transformation</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">API Reference</a> &raquo;</li>
+        
+          <li><a href="../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter</span></code></a> &raquo;</li>
+        
+          <li><a href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.connector</span></code></a> &raquo;</li>
+        
+      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.connector.csv</span></code></li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../../../_sources/package/converter/connector/csv/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-converter.connector.csv">
+<span id="converter-connector-csv"></span><h1><a class="reference internal" href="#module-converter.connector.csv" title="converter.connector.csv"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.connector.csv</span></code></a><a class="headerlink" href="#module-converter.connector.csv" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h3>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#converter.connector.csv.CsvConnector" title="converter.connector.csv.CsvConnector"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CsvConnector</span></code></a></p></td>
+<td><p>Connects to a csv file on the local machine for reading and writing data.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="converter.connector.csv.CsvConnector">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">converter.connector.csv.</span></span><span class="sig-name descname"><span class="pre">CsvConnector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">options</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#converter.connector.csv.CsvConnector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../base/index.html#converter.connector.base.BaseConnector" title="converter.connector.base.BaseConnector"><code class="xref py py-obj docutils literal notranslate"><span class="pre">converter.connector.base.BaseConnector</span></code></a></p>
+<p>Connects to a csv file on the local machine for reading and writing data.</p>
+<p><strong>Options:</strong></p>
+<ul class="simple">
+<li><p><cite>path</cite> - The path to the csv file to read/write</p></li>
+<li><p><cite>write_header</cite> - Flag whether the header row should be written to the
+target when loading data (default: <cite>True</cite>)</p></li>
+<li><p><cite>quoting</cite> - What type of quoting should be used when reading and writing
+data. Valid values are <cite>all</cite>, <cite>minimal</cite>, <cite>nonnumeric</cite> and <cite>none</cite>.
+Descriptions of these values are given in the
+<a class="reference external" href="https://docs.python.org/3/library/csv.html#csv.QUOTE_ALL">python csv module documentation</a>.
+(default: <cite>nonnumeric</cite>).</p></li>
+</ul>
+<dl class="py method">
+<dt class="sig sig-object py" id="converter.connector.csv.CsvConnector.load">
+<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#converter.connector.csv.CsvConnector.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads the data into the connected data object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> – An iterable of dictionaries representing
+the data to push to the connected source.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="converter.connector.csv.CsvConnector.extract">
+<span class="sig-name descname"><span class="pre">extract</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#converter.connector.csv.CsvConnector.extract" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracts the data from the connected source and returns
+an iterable of dictionaries.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>An iterable of the extracted data</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="../../controller/index.html" class="btn btn-neutral float-right" title="converter.controller" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../base/index.html" class="btn btn-neutral float-left" title="converter.connector.base" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

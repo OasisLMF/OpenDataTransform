@@ -1,0 +1,470 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>converter.mapping.base &mdash; Open Data Transformation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/c" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/u" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/s" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/t" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/o" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/m" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/." type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/c" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/s" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/s" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../../../../_static/idf_square.ico"/>
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="converter.mapping.errors" href="../errors/index.html" />
+    <link rel="prev" title="converter.mapping" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Open Data Transformation
+          
+
+          
+            
+            <img src="../../../../_static/IDF_Original.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../config.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../config.html#debugging">Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../components/data-connections/index.html">Data Connections</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../components/mappings/index.html">Mappings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../components/runners/index.html">Runners</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../components/cli/index.html">CLI</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter</span></code></a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../../index.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../../config/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../connector/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.connector</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../controller/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.controller</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../files/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.files</span></code></a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.mapping</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../runner/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.runner</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../transformers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.transformers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../types/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.types</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../index.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../components/testing/index.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../components/knownissues/index.html">Known Issues</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Open Data Transformation</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">API Reference</a> &raquo;</li>
+        
+          <li><a href="../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter</span></code></a> &raquo;</li>
+        
+          <li><a href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.mapping</span></code></a> &raquo;</li>
+        
+      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.mapping.base</span></code></li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../../../_sources/package/converter/mapping/base/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-converter.mapping.base">
+<span id="converter-mapping-base"></span><h1><a class="reference internal" href="#module-converter.mapping.base" title="converter.mapping.base"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter.mapping.base</span></code></a><a class="headerlink" href="#module-converter.mapping.base" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h3>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#converter.mapping.base.TransformationEntry" title="converter.mapping.base.TransformationEntry"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TransformationEntry</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#converter.mapping.base.ColumnConversion" title="converter.mapping.base.ColumnConversion"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ColumnConversion</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#converter.mapping.base.DirectionalMapping" title="converter.mapping.base.DirectionalMapping"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DirectionalMapping</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#converter.mapping.base.MappingSpec" title="converter.mapping.base.MappingSpec"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MappingSpec</span></code></a></p></td>
+<td><p>Class holding information about a given mapping</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#converter.mapping.base.BaseMapping" title="converter.mapping.base.BaseMapping"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseMapping</span></code></a></p></td>
+<td><p>Class describing the mapping from the input to the</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h3>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#converter.mapping.base.get_logger" title="converter.mapping.base.get_logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_logger</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="attributes">
+<h3>Attributes<a class="headerlink" href="#attributes" title="Permalink to this headline">¶</a></h3>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#converter.mapping.base.TransformationSet" title="converter.mapping.base.TransformationSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TransformationSet</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#converter.mapping.base.ColumnConversions" title="converter.mapping.base.ColumnConversions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ColumnConversions</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py function">
+<dt class="sig sig-object py" id="converter.mapping.base.get_logger">
+<span class="sig-prename descclassname"><span class="pre">converter.mapping.base.</span></span><span class="sig-name descname"><span class="pre">get_logger</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#converter.mapping.base.get_logger" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="converter.mapping.base.TransformationEntry">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">converter.mapping.base.</span></span><span class="sig-name descname"><span class="pre">TransformationEntry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transformation</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transformation_tree</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">lark.Tree</span><span class="p"><span class="pre">,</span> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">when</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'True'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">when_tree</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">lark.Tree</span><span class="p"><span class="pre">,</span> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#converter.mapping.base.TransformationEntry" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="converter.mapping.base.TransformationEntry.__eq__">
+<span class="sig-name descname"><span class="pre">__eq__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#converter.mapping.base.TransformationEntry.__eq__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self==value.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="converter.mapping.base.TransformationEntry.parse">
+<span class="sig-name descname"><span class="pre">parse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#converter.mapping.base.TransformationEntry.parse" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="converter.mapping.base.TransformationSet">
+<span class="sig-prename descclassname"><span class="pre">converter.mapping.base.</span></span><span class="sig-name descname"><span class="pre">TransformationSet</span></span><a class="headerlink" href="#converter.mapping.base.TransformationSet" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="converter.mapping.base.ColumnConversion">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">converter.mapping.base.</span></span><span class="sig-name descname"><span class="pre">ColumnConversion</span></span><a class="headerlink" href="#converter.mapping.base.ColumnConversion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">NamedTuple</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="converter.mapping.base.ColumnConversion.type">
+<span class="sig-name descname"><span class="pre">type</span></span><em class="property"> <span class="pre">:str</span></em><a class="headerlink" href="#converter.mapping.base.ColumnConversion.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="converter.mapping.base.ColumnConversion.nullable">
+<span class="sig-name descname"><span class="pre">nullable</span></span><em class="property"> <span class="pre">:bool</span> <span class="pre">=</span> <span class="pre">True</span></em><a class="headerlink" href="#converter.mapping.base.ColumnConversion.nullable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="converter.mapping.base.ColumnConversion.null_values">
+<span class="sig-name descname"><span class="pre">null_values</span></span><em class="property"> <span class="pre">:Set</span></em><a class="headerlink" href="#converter.mapping.base.ColumnConversion.null_values" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="converter.mapping.base.ColumnConversions">
+<span class="sig-prename descclassname"><span class="pre">converter.mapping.base.</span></span><span class="sig-name descname"><span class="pre">ColumnConversions</span></span><a class="headerlink" href="#converter.mapping.base.ColumnConversions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="converter.mapping.base.DirectionalMapping">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">converter.mapping.base.</span></span><span class="sig-name descname"><span class="pre">DirectionalMapping</span></span><a class="headerlink" href="#converter.mapping.base.DirectionalMapping" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">NamedTuple</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="converter.mapping.base.DirectionalMapping.input_format">
+<span class="sig-name descname"><span class="pre">input_format</span></span><em class="property"> <span class="pre">:str</span></em><a class="headerlink" href="#converter.mapping.base.DirectionalMapping.input_format" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="converter.mapping.base.DirectionalMapping.output_format">
+<span class="sig-name descname"><span class="pre">output_format</span></span><em class="property"> <span class="pre">:str</span></em><a class="headerlink" href="#converter.mapping.base.DirectionalMapping.output_format" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="converter.mapping.base.DirectionalMapping.transformation_set">
+<span class="sig-name descname"><span class="pre">transformation_set</span></span><em class="property"> <span class="pre">:TransformationSet</span></em><a class="headerlink" href="#converter.mapping.base.DirectionalMapping.transformation_set" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="converter.mapping.base.DirectionalMapping.types">
+<span class="sig-name descname"><span class="pre">types</span></span><em class="property"> <span class="pre">:Dict[str,</span> <span class="pre">ColumnConversion]</span></em><a class="headerlink" href="#converter.mapping.base.DirectionalMapping.types" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="converter.mapping.base.DirectionalMapping.null_values">
+<span class="sig-name descname"><span class="pre">null_values</span></span><em class="property"> <span class="pre">:Set</span></em><a class="headerlink" href="#converter.mapping.base.DirectionalMapping.null_values" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="converter.mapping.base.MappingSpec">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">converter.mapping.base.</span></span><span class="sig-name descname"><span class="pre">MappingSpec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_format</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_format</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">forward</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#converter.mapping.base.DirectionalMapping" title="converter.mapping.base.DirectionalMapping"><span class="pre">DirectionalMapping</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#converter.mapping.base.DirectionalMapping" title="converter.mapping.base.DirectionalMapping"><span class="pre">DirectionalMapping</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#converter.mapping.base.MappingSpec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class holding information about a given mapping</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="converter.mapping.base.MappingSpec.can_run_forwards">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">can_run_forwards</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#converter.mapping.base.MappingSpec.can_run_forwards" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flag whether the mapping file can be applied forwards.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>True is the mapping can be applied forwards, False otherwise</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="converter.mapping.base.MappingSpec.can_run_in_reverse">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">can_run_in_reverse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#converter.mapping.base.MappingSpec.can_run_in_reverse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flag whether the mapping file can be applied in reverse.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>True is the mapping can be applied in reverse, False otherwise</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="converter.mapping.base.BaseMapping">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">converter.mapping.base.</span></span><span class="sig-name descname"><span class="pre">BaseMapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">converter.config.Config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_format</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_format</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">options</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#converter.mapping.base.BaseMapping" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class describing the mapping from the input to the
+output formats.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> – The global config for the system</p></li>
+<li><p><strong>input_format</strong> – The start of the conversion path</p></li>
+<li><p><strong>output_format</strong> – The end of the conversion path</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="converter.mapping.base.BaseMapping.mapping_specs">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">mapping_specs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Reversible</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#converter.mapping.base.MappingSpec" title="converter.mapping.base.MappingSpec"><span class="pre">MappingSpec</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#converter.mapping.base.BaseMapping.mapping_specs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of <code class="docutils literal notranslate"><span class="pre">MappingSpec</span></code> objects described by the mapping</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="converter.mapping.base.BaseMapping.mapping_graph">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">mapping_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">networkx.DiGraph</span></span></span><a class="headerlink" href="#converter.mapping.base.BaseMapping.mapping_graph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the graph to represent the relationships between formats in
+the system. It it has not already been generated it is generated here.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="converter.mapping.base.BaseMapping.get_transformations">
+<span class="sig-name descname"><span class="pre">get_transformations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#converter.mapping.base.DirectionalMapping" title="converter.mapping.base.DirectionalMapping"><span class="pre">DirectionalMapping</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#converter.mapping.base.BaseMapping.get_transformations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a column transformations and full transformation set for the
+provided input and output paths.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The mappings along the conversion path.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="../errors/index.html" class="btn btn-neutral float-right" title="converter.mapping.errors" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../index.html" class="btn btn-neutral float-left" title="converter.mapping" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

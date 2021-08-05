@@ -1,0 +1,98 @@
+:mod:`converter.cli`
+====================
+
+.. py:module:: converter.cli
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   converter.cli.ColorFormatter
+   converter.cli.ClickEchoHandler
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   converter.cli.init_logging
+   converter.cli.cli
+   converter.cli.show_config
+   converter.cli.run
+
+
+
+.. class:: ColorFormatter(fmt=None, datefmt=None, style='%', validate=True)
+
+
+   Bases: :py:obj:`logging.Formatter`
+
+   Changes the color of the log message based on the log level. Errors are
+   red, warnings are yellow and debug messages are blue.
+
+   :param colors: Mapping of log level to colors
+
+   .. attribute:: colors
+      
+
+      
+
+   .. method:: format(self, record) -> str
+
+      Adds the color to the log message.
+
+      :param record: The record to format
+
+      :return: The formatted message
+
+
+
+.. class:: ClickEchoHandler(level=NOTSET)
+
+
+   Bases: :py:obj:`logging.Handler`
+
+   Sends the log message onto `click.echo`
+
+   .. method:: emit(self, record)
+
+      Do whatever it takes to actually log the specified logging record.
+
+      This version is intended to be implemented by subclasses and so
+      raises a NotImplementedError.
+
+
+
+.. function:: init_logging(verbosity, no_color)
+
+   Sets up the logging config for the console and files
+
+   :param verbosity: The verbosity level
+       0 - errors and warnings only
+       1 - info
+       2 - debug
+   :param no_color: Don't add the color to the output
+
+
+.. function:: cli(ctx, config, verbose, no_color, option)
+
+   Initialises the cli grouping with default options.
+
+
+.. function:: show_config(ctx)
+
+   Prints the resolved config to the console
+
+
+.. function:: run(ctx)
+
+   Runs the data conversion
+
+
