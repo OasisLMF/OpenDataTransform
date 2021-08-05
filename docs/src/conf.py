@@ -19,11 +19,12 @@ sys.path.insert(0, os.path.abspath(".."))
 
 # -- Project information -----------------------------------------------------
 
-project = "Open Exposure Data Transform"
+project = "Open Data Transformation"
 #copyright = ""
 author = "Insurance Development Forum"
-html_title = 'Open Exposure Data Transformation'
-html_short_title = 'OED Transform'
+html_title = "Open Data Transformation"
+html_short_title = "Open Data Transformation"
+logo_only = "True"
 
 
 # -- General configuration ---------------------------------------------------
@@ -46,15 +47,16 @@ templates_path = ["_templates"]
 #html_theme = "alabaster"
 html_theme = "sphinx_rtd_theme"
 
+
+html_show_copyright = "False"
+
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
 html_favicon = "idf_square.ico"
 html_logo = "IDF_Original.jpg"
-html_css_files = [
-    'css/custom.css',
-]
+html_css_files = "custom.css"
 
 
 autoapi_type = "python"
