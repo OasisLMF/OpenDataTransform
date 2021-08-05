@@ -1,0 +1,8 @@
+/** FOR ADJUSTMENTS TO STANDARD RTD THEME **/
+
+@import 'sphinx-rtd-theme.css';
+
+
+.wy-side-nav-search, .wy-nav-top {
+    background: ##666666;
+}
