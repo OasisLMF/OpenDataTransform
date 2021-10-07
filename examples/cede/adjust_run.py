@@ -5,7 +5,6 @@ import argparse
 import yaml
 import subprocess
 
-
 import pandas as pd
 
 #set assumed encoding
@@ -95,7 +94,7 @@ def check_peril(LocPerilsCovered):
             surge = True
 
     if wind and surge:
-        UpdatedLocPerilsCovered = 'WW1' 
+        UpdatedLocPerilsCovered = 'WTC;WSS' 
     elif wind and not surge:
         UpdatedLocPerilsCovered = 'WTC'
     elif surge and not wind:
@@ -118,14 +117,17 @@ def main():
         conf = yaml.safe_load(c)
         location_file = conf['config']['location_file']
         account_file = conf['config']['account_file']
+        reinsurance_file = conf['config']['reinsurance_file']
         location_config_file = conf['config']['location_config_file']
         account_config_file = conf['config']['account_config_file']
+        reinsurance_config_file = conf['config']['reinsurance_config_file']
         input_file_encoding = conf['config']['input_file_encoding']
         ara_adjustment = conf['config']['ara_locperilscovered_adjustment']
 
     #read input files
     df_location = pd.read_csv(location_file,encoding=input_file_encoding)
     df_account = pd.read_csv(account_file,encoding=input_file_encoding)
+    df_reinsurance = pd.read_csv(reinsurance_file,encoding=input_file_encoding)
 
     #factorize sub-limit ref
     df_location, df_account = factorize_sublimits(df_location,df_account)
@@ -136,16 +138,37 @@ def main():
     #write out updated files
     location_file_out = 'appended_{}'.format(location_file)
     account_file_out = 'appended_{}'.format(account_file)
+    reinsurance_file_out = 'appended_{}'.format(reinsurance_file)
+
     df_location.to_csv(location_file_out,index=False)
     df_account.to_csv(account_file_out,index=False)
+    df_reinsurance.to_csv(reinsurance_file_out,index=False)
 
     #create adjusted yml config file
     yml_loc_adj = adjust_yaml(location_config_file,'extractor')
     yml_acc_adj = adjust_yaml(account_config_file,'extractor')
+    yml_reins_adj = adjust_yaml(reinsurance_config_file,'extractor')
 
     #run transformation
     subprocess.run(['converter', '-c',yml_loc_adj,'run'])
     subprocess.run(['converter', '-c',yml_acc_adj,'run'])
+    subprocess.run(['converter', '-c',yml_reins_adj,'run'])
+
+    #reinsurance - split oed files
+    transformed_reins_file = get_filename(yml_reins_adj,'loader')
+    df_oed_reinsurance = pd.read_csv(transformed_reins_file)
+    ri_info_fields = ['ReinsNumber','ReinsLayerNumber','ReinsPeril','RiskLimit','RiskAttachment','ReinsName','ReinsCurrency','ReinsType']
+    ri_scope_fields = ['PortNumber','AccNumber','ReinsNumber','LocNumber','CedantName','CededPercent','RiskLevel']
+    df_ri_info = df_oed_reinsurance[ri_info_fields]
+    df_ri_scope = df_oed_reinsurance[ri_scope_fields]
+
+    ri_info_file_out = transformed_reins_file.replace('.csv','_info.csv')
+    ri_scope_file_out = transformed_reins_file.replace('.csv','_scope.csv')
+
+    df_ri_info.to_csv(ri_info_file_out,index=False)
+    df_ri_scope.to_csv(ri_scope_file_out,index=False)
+
+    os.remove(transformed_reins_file)
 
     #post adjust for ARA
     if ara_adjustment:
@@ -153,6 +176,9 @@ def main():
         df_location = pd.read_csv(transformed_loc_file)
         df_location['LocPerilsCovered'] = df_location['LocPerilsCovered'].apply(lambda x: check_peril(x))
         df_location.to_csv(transformed_loc_file,index=False)
+
+    
+
 
 
 

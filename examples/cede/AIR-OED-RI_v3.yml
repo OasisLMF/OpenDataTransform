@@ -1,0 +1,62 @@
+# Mapping to convert AIR CEDE location data to OED
+# update May 2021
+input_format: AIR_RI_v3
+output_format: OED_RI
+forward:
+  types:
+    ContractID:
+      type: string
+    ReinsuranceID:
+      type: string
+    ReinsuranceType:
+      type: string
+    ExposureID:
+      type: string
+    ExposureType:
+      type: string
+    CededPercentage:
+      type: float
+    ReinsuranceLimit:
+      type: float
+    AttachmentAmount:
+      type: float
+    ReinsurerName:
+      type: string
+    CedantName:
+      type: string
+    Currency:
+      type: string
+    ReinsurancePerils:
+      type: string
+  null_values:
+      - "''"
+  transform:
+    PortNumber:
+      - transformation: "1"
+    AccNumber:
+      - transformation: ContractID
+    ReinsNumber:
+      - transformation: ReinsuranceID
+    ReinsLayerNumber:
+      - transformation: "1"
+    ReinsPeril:
+      - transformation: ReinsurancePerils
+    CededPercent:
+      - transformation: CededPercentage
+    RiskLimit:
+      - transformation: ReinsuranceLimit
+    RiskAttachment:
+      - transformation: AttachmentAmount
+    ReinsName:
+      - transformation: ReinsurerName
+    CedantName:
+      - transformation: CedantName   
+    ReinsCurrency:
+      - transformation: Currency
+    ReinsType:
+      - transformation: ReinsuranceType
+    LocNumber:
+      - transformation: ExposureID
+        when: ExposureType is 'LOC'
+    RiskLevel:
+      - transformation: ExposureType
