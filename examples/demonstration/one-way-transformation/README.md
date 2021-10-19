@@ -40,9 +40,24 @@ d:
 Config files first describe the mapping to be used. 
 'Input_format' relates to the input_format value given in the mapping file. The config file reads any mapping files in the same folder to find the correct input_format.
 
-*forward.yaml* is the config file instructing the code to convert in a forward direction. In this case, the demonstration maps from data format A to data format C (via data format B).
+*forward.yaml* is the config file instructing the code to convert in a forward direction. In this case, the demonstration maps from data format A to data format C (via data format B), under the 'mapping:' section.
+```
+mapping:
+  options:
+    input_format: A
+    output_format: C
+```
+To convert to data format B, you would change this to 'output_format: B'
 
-
+Input file path is defined under 'extractor:' and output file path under 'loader:'. In this example, the input and outputs files are in the same folder as the config file, so only the file name is given:
+```
+extractor:
+  options:
+    path: A.csv
+loader:
+  options:
+    path: C.csv
+```
 
 
 ## Running
