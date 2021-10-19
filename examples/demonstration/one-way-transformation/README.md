@@ -9,14 +9,31 @@ Basic maths operations are used to demonstrate the structure and operation of th
 
 ## Mapping Files
 The field data types and desired transformation are described in the mapping files.
-*A-B.yaml* describes the transformation of data format A into data format B.
-This is denoted by 
+*A-B.yaml* describes the transformation of data format A into data format B, denoted by:
 ```
 input_format: A
 output_format: B
 ```
 
 *B-C.yaml* demonstrates transformation between data format B and data format C.
+
+
+Each mapping file contains a forward and reverse transformation, to enable bi-directional conversions to be stored in the same mapping file.
+File types are defined explicitly for each field using the field name (here, 'a' and 'b'):
+```
+a:
+  type: float
+b:
+  type: float
+ ```
+
+The data transformations are defined under 'transform:'. An operation is explicitly given for each destination field (here, 'c' and 'd', using the input field in the operation:
+```
+c:
+  - transformation: a * 2
+d:
+  - transformation: b + 3
+```
 
 
 ## Config Files
