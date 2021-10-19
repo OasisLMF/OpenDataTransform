@@ -4,7 +4,7 @@
 # MAP FILETYPE: SimpleDemo
 # LICENSE: BSD 3 clause license
 # SOURCE: https://github.com/OasisLMF/OpenDataTransform/
-# COMMENTS:Simple maths example for demonstration, contains forward and reverse.
+# COMMENTS: Simple maths example for demonstration, contains forward and reverse.
 
 input_format: A
 output_format: B

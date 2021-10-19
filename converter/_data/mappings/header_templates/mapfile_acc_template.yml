@@ -1,0 +1,9 @@
+# MAPPING VERSION: OED-AIR-acc-default-1.0
+# CREATOR: IDF Open Data Transformation steering committee
+# MODEL VERSIONS: OED 1.1.5 | AIR CEDE (flat file) v8
+# MAP FILETYPE: Account
+# LICENSE: BSD 3 clause license
+# SOURCE: https://github.com/OasisLMF/OpenDataTransform/
+# COMMENTS: Header for mapping file to transform account information.
+
+<mapping logic follows>

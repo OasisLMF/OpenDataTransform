@@ -1,4 +1,10 @@
-# Mapping to convert AIR CEDE location data to OED
+# MAPPING VERSION: OED-AIR-loc-public-1.0
+# CREATOR: IDF Open Data Transformation steering committee
+# MODEL VERSIONS: OED 1.1.5 | AIR CEDE (flat file) v8
+# MAP FILETYPE: Location
+# LICENSE: BSD 3 clause license
+# SOURCE: https://github.com/OasisLMF/OpenDataTransform/
+# COMMENTS: Mapping to convert AIR CEDE location data to OED.
 input_format: AIR_LOC
 output_format: OED_LOC
 forward:
