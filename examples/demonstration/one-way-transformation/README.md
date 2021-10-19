@@ -1,8 +1,6 @@
 # One Way Transformation
 
-This shows a transformation that runs though multiple stages using
-`A->B` followed by `B->C`. It is not reversible as `B-C.yaml` does
-not have a reverse transformation defined.
+This shows a transformation that can be used to run through one stage of transformation A -> B, or multiple stages using `A -> B` followed by `B -> C`.
 
 Basic maths operations are used to demonstrate the structure and operation of the files and program.
 
@@ -18,7 +16,7 @@ output_format: B
 *B-C.yaml* demonstrates transformation between data format B and data format C.
 
 
-Each mapping file contains a forward and reverse transformation, to enable bi-directional conversions to be stored in the same mapping file.
+
 File types are defined explicitly for each field using the field name (here, 'a' and 'b'):
 ```
 a:
@@ -47,9 +45,9 @@ mapping:
     input_format: A
     output_format: B
 ```
-To convert to data format C, you would change this to 'output_format: C', and the transformation will convert A -> B then B -> C in one run.
+To convert to data format C, you would change this to `output_format: C`, and the transformation will convert A -> B then B -> C in one run.
 
-Input file path is defined under 'extractor:' and output file path under 'loader:'. In this example, the input and outputs files are in the same folder as the config file, so only the file name is given:
+Input file path is defined under `extractor:` and output file path under `loader:`. In this example, the input and outputs files are in the same folder as the config file, so only the file name is given:
 ```
 extractor:
   options:
@@ -69,3 +67,14 @@ To convert A -> B (the result saved in `B.csv`) run:
 ```
 $> converter --config forward.yaml -v run
 ```
+
+
+## Reverse transformations
+
+Each mapping file can contain a forward and reverse transformation, to enable bi-directional conversions to be stored in the same mapping file.
+In this demo,`A-B.yaml` contains a `reverse:` set to enable B -> A transformation.
+To run this reverse transformation you would use:
+```
+$> converter --config reverse.yaml -v run
+```
+C -> A is not reversible because `B-C.yaml` does not have a reverse transformation defined.
