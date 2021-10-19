@@ -72,9 +72,11 @@ $> converter --config forward.yaml -v run
 ## Reverse transformations
 
 Each mapping file can contain a forward and reverse transformation, to enable bi-directional conversions to be stored in the same mapping file.
-In this demo,`A-B.yaml` contains a `reverse:` set to enable B -> A transformation.
-To run this reverse transformation you would use:
+In this demo, mapping file `A-B.yaml` contains a `reverse:` option set to enable B -> A transformation. The`reverse.yaml` config file uses `B.csv` as input to create a `REV.csv`file, the contents of which should match `A.csv`.
+
+To run this reverse transformation, use:
 ```
 $> converter --config reverse.yaml -v run
 ```
-C -> A is not reversible because `B-C.yaml` does not have a reverse transformation defined.
+
+C -> A and C->B are not reversible in this case because `B-C.yaml` does not have a reverse transformation defined.
