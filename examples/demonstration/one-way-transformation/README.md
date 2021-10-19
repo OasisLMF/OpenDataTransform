@@ -45,9 +45,9 @@ Config files first describe the mapping to be used.
 mapping:
   options:
     input_format: A
-    output_format: C
+    output_format: B
 ```
-To convert to data format B, you would change this to 'output_format: B'
+To convert to data format C, you would change this to 'output_format: C', and the transformation will convert A -> B then B -> C in one run.
 
 Input file path is defined under 'extractor:' and output file path under 'loader:'. In this example, the input and outputs files are in the same folder as the config file, so only the file name is given:
 ```
@@ -56,7 +56,7 @@ extractor:
     path: A.csv
 loader:
   options:
-    path: C.csv
+    path: B.csv
 ```
 
 
@@ -64,14 +64,8 @@ loader:
 
 Make a local installation of the Python package.
 
-To convert A -> C (the result saved in `C.csv`) run:
+To convert A -> B (the result saved in `B.csv`) run:
 
 ```
 $> converter --config forward.yaml -v run
-```
-
-To convert C -> A (resulting in an error) run:
-
-```
-$> converter --config reverse.yaml -v run
 ```
