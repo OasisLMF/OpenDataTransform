@@ -28,7 +28,7 @@ Risk Data Library Exposure Schema https://docs.riskdatalibrary.org/exposure.html
 * <a href="https://oasislmf.github.io/OpenDataTransform/">General documentation</a>
 * <a href="https://github.com/OasisLMF/OpenDataTransform/issues">Issues</a>
 * <a href="https://github.com/OasisLMF/OpenDataTransform/releases">Releases</a>
-* <a href="https://oasislmf.github.io/OasisDataConverter/package/converter/index.html">Modules</a>
+* <a href="https://oasislmf.github.io/OpenDataTransform/package/converter/index.html">Modules</a>
 
 
 ## Dependencies
