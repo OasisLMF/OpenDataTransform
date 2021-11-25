@@ -11,12 +11,17 @@ Status: 2nd phase of development. Following the development of a basic transform
 Model References: 
 AIR CEDE v8 https://unicede.air-worldwide.com/ts-tsre_all/help_ts_exposure-data_val-rules-exposure-data.html
 
+
+### RMS EDM <-> OED
+Status: Discovery phase. Investigating the potential for data transformation and IP considerations between EDM (proprietary) and OED.
+Model references: EDM Schema is proprietary, cannot be shared openly.
+
+
 ### GED4ALL <-> OED
 Status: Discovery phase. Investigating the potential for data transformation
 Model References 
 GED4ALL taxonomy https://docs.riskdatalibrary.org/exposure.html
 Risk Data Library Exposure Schema https://docs.riskdatalibrary.org/exposure.html
-
 
 
 ## Documentation

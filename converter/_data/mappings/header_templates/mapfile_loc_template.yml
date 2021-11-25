@@ -1,9 +1,10 @@
-# MAPPING VERSION: OED-AIR-acc-default-1.0
+# MAPPING VERSION: OED-AIR-loc-default-1.0
 # CREATOR: IDF Open Data Transformation steering committee
 # MODEL VERSIONS: OED 1.1.5 | AIR CEDE (flat file) v8
-# MAP FILETYPE: Account
+# MAP FILETYPE: Location
 # LICENSE: BSD 3 clause license
 # SOURCE: https://github.com/OasisLMF/OpenDataTransform/
-# COMMENTS:
+# COMMENTS: Header for mapping file to transform Location information.
 
-<mapping logic follows>
+
+<mapping logic to follow>

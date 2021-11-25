@@ -1,0 +1,31 @@
+# MAPPING VERSION: OED-AIR-demo-3
+# CREATOR: IDF Open Data Transformation steering committee
+# MODEL VERSIONS: OED 1.1.5 | AIR CEDE (flat file) v8
+# MAP FILETYPE: SimpleDemo
+# LICENSE: BSD 3 clause license
+# SOURCE: https://github.com/OasisLMF/OpenDataTransform/
+# COMMENTS:Simple maths example for demonstration, contains forward and reverse.
+input_format: B
+output_format: C
+forward:
+  types:
+    c:
+      type: float
+    d:
+      type: float
+  transform:
+    e:
+      - transformation: c * 4
+    f:
+      - transformation: d + 5
+reverse:
+  types:
+    e:
+      type: float
+    f:
+      type: float
+  transform:
+    c:
+      - transformation: e / 4
+    d:
+      - transformation: f - 5

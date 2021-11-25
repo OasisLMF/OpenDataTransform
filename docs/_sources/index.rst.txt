@@ -45,9 +45,10 @@ The user guide is under development.
 
 The Open  Data Transformation can be run locally via a Python Shell or command line. 
 
-1. Download and install the Python package from `the project GitHub pages <https://github.com/OasisLMF/OasisDataConverter/>`_. A web-based user interface is under development.
+1. Download and install the Python package from `the project GitHub pages <https://github.com/OasisLMF/OpenDataTransform/>`_. A web-based user interface is under development.
 
-2. Complete a configuration file to point to the source account, location, and reinsurance flat files (in OED or another model format). The configuration file should also point to the mapping files to be used in the transformation. Example config files and source files (AIR CEDE example) are available `here <https://github.com/OasisLMF/OEDtransform/tree/master/examples/cede_test>`_. Example mapping files for CEDE to OED conversion are `here for account files <https://github.com/OasisLMF/OEDtransform/blob/master/examples/cede_test_v3/AIR-OED-ACC_v3.yml>`_ and `here for location files <https://github.com/OasisLMF/OEDtransform/blob/master/examples/cede_test_v3/AIR-OED-LOC_v3.yml>`_.
+2. Complete a configuration file to point to the source account, location, and reinsurance flat files (in OED or another model format). The configuration file should also point to the mapping files to be used in the transformation. Example config files and source files (AIR CEDE example) are available `here <https://github.com/OasisLMF/OpenDataTransform/tree/master/examples>`_. 
+This contains `demonstration files using basic transformation operations <https://github.com/OasisLMF/OpenDataTransform/tree/master/examples/demonstration>`_ and `AIR to OED examples <https://github.com/OasisLMF/OpenDataTransform/tree/master/examples/cede>`_.
 
 3. Execute the python package in the command line to produce the converted output .csv files.
 
