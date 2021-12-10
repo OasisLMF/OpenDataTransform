@@ -6,6 +6,8 @@
 #
 alabaster==0.7.12
     # via sphinx
+altgraph==0.17.2
+    # via pyinstaller
 astroid==2.9.0
     # via sphinx-autoapi
 attrs==21.2.0
@@ -155,6 +157,10 @@ pygments==2.10.0
     # via
     #   ipython
     #   sphinx
+pyinstaller==4.7
+    # via -r requirements.in
+pyinstaller-hooks-contrib==2021.4
+    # via pyinstaller
 pyparsing==3.0.6
     # via packaging
 pytest==6.2.5

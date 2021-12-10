@@ -7,3 +7,7 @@ htmlcov
 docs/build
 
 *.log
+
+dask-worker-space
+dist
+build
