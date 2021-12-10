@@ -1,8 +1,9 @@
-import distutils
 import os
+from distutils import cmd
 
-from setuptools import find_packages, setup
 import PyInstaller.building.build_main
+from setuptools import find_packages, setup
+
 
 root_path = os.path.dirname(__file__)
 
@@ -22,11 +23,11 @@ def read_readme():
     return readfile(reqs_path)
 
 
-class BuildExeCommand(distutils.cmd.Command):
+class BuildExeCommand(cmd.Command):
     """A custom command to build the executable."""
 
-    description = 'run PyInstaller to generate the executable'
-    user_options = []
+    description = "run PyInstaller to generate the executable"
+    user_options = []  # type: ignore
 
     def initialize_options(self):
         pass
