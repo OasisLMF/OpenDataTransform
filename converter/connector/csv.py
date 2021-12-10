@@ -49,7 +49,7 @@ class CsvConnector(BaseConnector):
 
         with open(self.file_path, "w", newline="") as f:
             writer = csv.DictWriter(
-                f, fieldnames=first_row.keys(), quoting=self.quoting
+                f, fieldnames=list(first_row.keys()), quoting=self.quoting
             )
 
             if self.write_header:

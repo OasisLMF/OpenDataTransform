@@ -561,7 +561,9 @@ def parse(expression: Union[str, Tree]) -> Tree:
 
 
 def transform(
-    row, tree: Tree, transformer_mapping: TransformerMapping = None,
+    row,
+    tree: Tree,
+    transformer_mapping: TransformerMapping = None,
 ):
     """
     Performs the transformation on the row

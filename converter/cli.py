@@ -35,7 +35,8 @@ class ColorFormatter(logging.Formatter):
         :return: The formatted message
         """
         return click.style(
-            super().format(record), fg=self.colors.get(record.levelno),
+            super().format(record),
+            fg=self.colors.get(record.levelno),
         )
 
 
@@ -46,7 +47,8 @@ class ClickEchoHandler(logging.Handler):
 
     def emit(self, record):
         click.echo(
-            self.format(record), err=record.levelno >= logging.WARNING,
+            self.format(record),
+            err=record.levelno >= logging.WARNING,
         )
 
 
@@ -60,12 +62,12 @@ def init_logging(verbosity, no_color):
         2 - debug
     :param no_color: Don't add the color to the output
     """
-    
-    if not os.path.exists('log'):
-        os.mkdir('log')
+
+    if not os.path.exists("log"):
+        os.mkdir("log")
 
     time_string = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    filename_time = os.path.join('log',time_string)
+    filename_time = os.path.join("log", time_string)
 
     console_log_level = [logging.WARNING, logging.INFO, logging.DEBUG][
         min(2, verbosity)  # max verbosity level is 2

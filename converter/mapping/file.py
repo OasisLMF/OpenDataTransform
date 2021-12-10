@@ -127,7 +127,8 @@ class FileMappingSpec(MappingSpec):
 
         # get the input format from the bases if not set on the current config
         input_format: Union[str, None] = self._resolve_property(
-            *(b.input_format for b in self.bases), config.get("input_format"),
+            *(b.input_format for b in self.bases),
+            config.get("input_format"),
         )
 
         if not input_format:
@@ -339,7 +340,8 @@ class FileMappingSpec(MappingSpec):
 
         if not config:
             raise InvalidMappingFile(
-                f"Could not find base mapping file ({base_name})", self.path,
+                f"Could not find base mapping file ({base_name})",
+                self.path,
             )
 
         if not isinstance(config, FileMappingSpec):
@@ -440,7 +442,8 @@ class FileMapping(BaseMapping):
 
     @classmethod
     def _get_candidate_paths_from_search_path(
-        cls, search_path: str,
+        cls,
+        search_path: str,
     ) -> Iterable[str]:
         """
         Gets all the possible yaml files from the search path.

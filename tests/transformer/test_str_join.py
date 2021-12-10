@@ -36,7 +36,8 @@ def test_multiple_objects_are_provided___result_is_join_by_join_str(
 ):
     expected = join.join(map(str, elements))
     arg_elements = map(
-        lambda o: f"'{o}'" if isinstance(o, str) else str(o), elements,
+        lambda o: f"'{o}'" if isinstance(o, str) else str(o),
+        elements,
     )
 
     expr = f"join('{join}', {', '.join(arg_elements)})"

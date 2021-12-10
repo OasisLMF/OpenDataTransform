@@ -1,7 +1,7 @@
 __pycache__
 
 htmlcov
-.coverage
+.coverage*
 .hypothesis
 
 docs/build

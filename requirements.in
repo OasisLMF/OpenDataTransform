@@ -13,3 +13,4 @@ pytest-asyncio
 hypothesis
 sphinx
 sphinx-autoapi
+types-PyYAML

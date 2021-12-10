@@ -142,7 +142,9 @@ class _BaseRunner:
         }
 
     def apply_transformation_entry(
-        self, row: RowType, entry: TransformationEntry,
+        self,
+        row: RowType,
+        entry: TransformationEntry,
     ) -> RowType:
         """
         Applies a single transformation to the row returning the result
@@ -161,7 +163,9 @@ class _BaseRunner:
             return NotSet
 
     def apply_column_transformation(
-        self, row: RowType, entry_list: List[TransformationEntry],
+        self,
+        row: RowType,
+        entry_list: List[TransformationEntry],
     ):
         """
         Applies all the transformations for a single output column
@@ -174,7 +178,9 @@ class _BaseRunner:
         """
         result = reduce(
             lambda current_column_value, entry: self.combine_column(
-                row, current_column_value, entry,
+                row,
+                current_column_value,
+                entry,
             ),
             entry_list,
             NotSet,
@@ -182,7 +188,9 @@ class _BaseRunner:
         return result
 
     def apply_transformation_set(
-        self, row: RowType, transformations: DirectionalMapping,
+        self,
+        row: RowType,
+        transformations: DirectionalMapping,
     ) -> RowType:
         """
         Applies all the transformations to produce the output row
