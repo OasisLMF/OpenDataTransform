@@ -10,4 +10,5 @@ docs/build
 
 dask-worker-space
 dist
+dist-exe
 build

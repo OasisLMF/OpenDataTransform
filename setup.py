@@ -1,7 +1,8 @@
+import distutils
 import os
 
 from setuptools import find_packages, setup
-
+import PyInstaller.building.build_main
 
 root_path = os.path.dirname(__file__)
 
@@ -21,9 +22,35 @@ def read_readme():
     return readfile(reqs_path)
 
 
+class BuildExeCommand(distutils.cmd.Command):
+    """A custom command to build the executable."""
+
+    description = 'run PyInstaller to generate the executable'
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        PyInstaller.building.build_main.main(
+            None,
+            os.path.join(os.path.dirname(__file__), "exe.spec"),
+            noconfirm=True,
+            distpath=os.path.join(os.path.dirname(__file__), "dist-exe"),
+            workpath=os.path.dirname(__file__),
+            clean_build=True,
+        )
+
+
 setup(
     name="converter",
     version="0.0.1",
+    cmdclass={
+        "build_exe": BuildExeCommand,
+    },
     packages=find_packages(exclude=("tests", "tests.*")),
     package_data={"converter": ["_data/mappings/*"], "": ["README.rst"]},
     install_requires=read_reqs(),
