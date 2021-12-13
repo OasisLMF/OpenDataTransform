@@ -163,6 +163,8 @@ pyinstaller-hooks-contrib==2021.4
     # via pyinstaller
 pyparsing==3.0.6
     # via packaging
+pyside6==6.2.2.1
+    # via -r requirements.in
 pytest==6.2.5
     # via
     #   -r requirements.in
@@ -196,6 +198,8 @@ pyyaml==6.0
     #   sphinx-autoapi
 requests==2.26.0
     # via sphinx
+shiboken6==6.2.2.1
+    # via pyside6
 six==1.16.0
     # via python-dateutil
 snowballstemmer==2.2.0

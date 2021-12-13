@@ -6,9 +6,11 @@ from logging.config import dictConfig as loggingDictConfig
 
 import click
 import yaml
+from PySide6.QtWidgets import QApplication
 
 from converter.config import Config
 from converter.controller import Controller
+from converter.ui.main_window import MainWindow
 
 
 class ColorFormatter(logging.Formatter):
@@ -165,6 +167,20 @@ def show_config(ctx):
     Prints the resolved config to the console
     """
     click.echo(ctx.obj["config"].to_yaml())
+
+
+@cli.command()
+@click.pass_context
+def with_ui(ctx):
+    """
+    Starts the runner with a user interface
+    """
+    app = QApplication(sys.argv)
+
+    widget = MainWindow(ctx.obj["config"])
+    widget.show()
+
+    sys.exit(app.exec_())
 
 
 @cli.command()
