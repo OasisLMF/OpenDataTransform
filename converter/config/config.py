@@ -241,6 +241,15 @@ class Config:
 
         raise KeyError(path)
 
+    def set(self, path: str, value: Any):
+        block = self.config
+
+        path_parts = path.lower().split(".")
+        for path_part in path_parts[:-1]:
+            block = block.setdefault(path_part, {})
+
+        block[path_parts[-1]] = value
+
     def to_yaml(self):
         """
         Generates a yaml string  representation of the normalised config

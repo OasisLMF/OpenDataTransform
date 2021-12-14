@@ -55,3 +55,7 @@ class BaseConnector:
             the data to push to the connected source.
         """
         raise NotImplementedError()
+
+    @classmethod
+    def fully_qualified_name(cls):
+        return f"{cls.__module__}.{cls.__qualname__}"
