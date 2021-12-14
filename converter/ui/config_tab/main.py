@@ -57,6 +57,12 @@ class ConfigTab(QWidget):
         return layout
 
     def _create_extractor_config(self):
+        return self._create_connector_config("extractor")
+
+    def _create_loader_config(self):
+        return self._create_connector_config("loader")
+
+    def _create_connector_config(self, root_config_path):
         config = self.config
 
         layout = QFormLayout()
@@ -69,7 +75,7 @@ class ConfigTab(QWidget):
             current_index = [
                 f"{c.__module__}.{c.__qualname__}" for c in CONNECTOR_CLASSES
             ].index(config.get(
-                "extractor.path",
+                f"{root_config_path}.path",
                 fallback=f"{CONNECTOR_CLASSES[0].__module__}.{CONNECTOR_CLASSES[0].__qualname__}"
             ))
             selected_connector = CONNECTOR_CLASSES[current_index]
@@ -86,7 +92,7 @@ class ConfigTab(QWidget):
                 layout,
                 v.get("title", k),
                 v,
-                config.get(f"extractor.options.{k}", None)
+                config.get(f"{root_config_path}.options.{k}", None)
             )
 
         return layout
@@ -125,8 +131,3 @@ class ConfigTab(QWidget):
         field = QLineEdit()
         field.setText(value or "")
         return field
-
-    def _create_loader_config(self):
-        layout = QFormLayout()
-
-        return layout
