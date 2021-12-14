@@ -5,22 +5,24 @@ from PySide6.QtGui import QAction
 from PySide6.QtWidgets import QLabel, QPushButton, QVBoxLayout, QWidget, QTabWidget, QMainWindow
 from __feature__ import true_property
 
+from converter.ui.config import ConfigWidget
 from converter.ui.config_tab.main import ConfigTab
 from converter.ui.run_tab.main import RunTab
 
 
 class MainWindow(QMainWindow):
     def __init__(self, config):
-        self.config = config
-
         super().__init__()
+
+        # initialise the config
+        self.config = ConfigWidget(config)
 
         # setup the top menu
         self._create_actions()
         self._create_menu_bar()
 
         tabs = QTabWidget()
-        tabs.addTab(ConfigTab(), "Config")
+        tabs.addTab(ConfigTab(self), "Config")
         tabs.addTab(RunTab(), "Run")
         self.setCentralWidget(tabs)
 
