@@ -16,8 +16,11 @@ class ConfigTab(QWidget):
     def __init__(self, parent):
         super().__init__(parent=parent)
 
+        parent.config_changed.connect(self.clear_changes)
+
         self.layout = QVBoxLayout(self)
         self._working_config = Config()
+        self._default_working_config = Config()
 
         # setup mapping config
         mapping_group_box = QGroupBox("Mapping")
@@ -36,16 +39,32 @@ class ConfigTab(QWidget):
 
     @property
     def config(self):
-        return self.parentWidget().config.get()
+        return self.parentWidget().config
 
     @property
     def working_config(self):
         config = self.config
-        return config.merge_config_sources(config, self._working_config)
+        return Config(
+            overrides=config.merge_config_sources(config, self._default_working_config, self._working_config)
+        )
+
+    @property
+    def has_changes(self):
+        return bool(self._working_config)
 
     def set_working_value(self, path, v):
         self._working_config.set(path, v)
         print(self._working_config.to_yaml())
+        print("WORKING CONFIG CHANGED")
+
+    def set_default_working_value(self, path, v):
+        self._default_working_config.set(path, v)
+        print("DEFAULT WORKING CONFIG CHANGED")
+        print(self._default_working_config.to_yaml())
+
+    def clear_changes(self):
+        self._working_config = Config()
+        self._default_working_config = Config()
 
     def _create_mapping_form(self):
         config = self.working_config
@@ -68,8 +87,8 @@ class ConfigTab(QWidget):
         except ValueError:
             from_combo.setCurrentIndex(0)
 
-        from_combo.currentTextChanged.connect(lambda v: self.set_working_value("mapping.input_format", v))
         layout.addRow(QLabel("From:"), from_combo)
+        from_combo.currentTextChanged.connect(lambda v: self.set_working_value("mapping.input_format", v))
 
         to_combo = QComboBox()
         to_combo.addItems([""] + formats)
@@ -80,8 +99,8 @@ class ConfigTab(QWidget):
         except ValueError:
             to_combo.setCurrentIndex(0)
 
-        to_combo.currentTextChanged.connect(lambda v: self.set_working_value("mapping.output_format", v))
         layout.addRow(QLabel("To:"), to_combo)
+        to_combo.currentTextChanged.connect(lambda v: self.set_working_value("mapping.output_format", v))
 
         return layout
 
@@ -112,7 +131,7 @@ class ConfigTab(QWidget):
         except ValueError:
             selected_connector = CONNECTOR_CLASSES[0]
             class_combo.setCurrentIndex(0)
-            self.set_working_value(
+            self.set_default_working_value(
                 f"{root_config_path}.path", f"{CONNECTOR_CLASSES[0].fully_qualified_name()}"
             )
 
@@ -154,7 +173,7 @@ class ConfigTab(QWidget):
             combo.setCurrentIndex(selected_index)
         except ValueError:
             combo.setCurrentIndex(0)
-            self.set_working_value(config_path, schema["enum"][0])
+            self.set_default_working_value(config_path, schema["enum"][0])
 
         combo.currentIndexChanged.connect(lambda i: self.set_working_value(config_path, schema["enum"][i]))
         return combo
@@ -162,7 +181,7 @@ class ConfigTab(QWidget):
     def _create_boolean_field(self, field_name, schema, value, config_path):
         if value is None:
             value = schema.get("default", False)
-            self.set_working_value(config_path, value)
+            self.set_default_working_value(config_path, value)
 
         field = QCheckBox(field_name)
         field.setChecked(value)

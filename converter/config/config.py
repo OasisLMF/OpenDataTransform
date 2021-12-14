@@ -34,6 +34,9 @@ class Config:
         env: Dict[str, str] = None,
     ):
         self.path = os.path.abspath(config_path) if config_path else None
+        self.argv = argv
+        self.env = env
+        self.overrides = overrides
         self.config = self.merge_config_sources(
             *self.get_config_sources(
                 config_path=config_path,
@@ -45,6 +48,9 @@ class Config:
 
     def __eq__(self, other):
         return self.config in [other, getattr(other, "config", {})]
+
+    def __bool__(self):
+        return bool(self.config)
 
     def get_config_sources(
         self,
@@ -274,3 +280,6 @@ class Config:
             )
 
         return p
+
+    def keys(self):
+        return self.config.keys()
