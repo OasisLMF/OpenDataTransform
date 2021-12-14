@@ -22,6 +22,28 @@ class CsvConnector(BaseConnector):
       (default: `nonnumeric`).
     """
 
+    name = "CSV Connector"
+    options_schema = {
+        "type": "object",
+        "properties": {
+            "path": {
+                "type": "string",
+                "description": "The path to the file to load relative to the config file",
+            },
+            "write_header": {
+                "type": "boolean",
+                "description": "Should the header row be written?",
+                "default": True
+            },
+            "quoting": {
+                "type": "string",
+                "description": "The type of quoting to use when reading/writing entries (see https://docs.python.org/3/library/csv.html#csv.QUOTE_ALL for a description of the values)",
+                "enum": ["all", "minimal", "none", "nonnumeric"]
+            }
+        },
+        "required": ["path"],
+    }
+
     def __init__(self, config, **options):
         super().__init__(config, **options)
 

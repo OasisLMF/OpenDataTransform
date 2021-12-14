@@ -15,4 +15,3 @@ sphinx
 sphinx-autoapi
 types-PyYAML
 pyinstaller
-pyside6

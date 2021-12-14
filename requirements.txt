@@ -13,6 +13,7 @@ astroid==2.9.0
 attrs==21.2.0
     # via
     #   hypothesis
+    #   jsonschema
     #   pytest
     #   pytest-mypy
 babel==2.9.1
@@ -83,6 +84,8 @@ jinja2==3.0.3
     #   distributed
     #   sphinx
     #   sphinx-autoapi
+jsonschema==4.2.1
+    # via -r requirements-package.in
 lark-parser==0.8.9
     # via -r requirements-package.in
 lazy-object-proxy==1.6.0
@@ -163,8 +166,10 @@ pyinstaller-hooks-contrib==2021.4
     # via pyinstaller
 pyparsing==3.0.6
     # via packaging
+pyrsistent==0.18.0
+    # via jsonschema
 pyside6==6.2.2.1
-    # via -r requirements.in
+    # via -r requirements-package.in
 pytest==6.2.5
     # via
     #   -r requirements.in
