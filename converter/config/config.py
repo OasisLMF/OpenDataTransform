@@ -288,3 +288,6 @@ class Config:
 
     def keys(self):
         return self.config.keys()
+
+    def items(self):
+        return self.config.items()

@@ -5,7 +5,7 @@ from __feature__ import true_property
 from converter.config import Config
 from converter.connector import CsvConnector, BaseConnector
 from converter.mapping import FileMapping
-
+from converter.ui.config_tab.mapping import MappingGroupBox
 
 CONNECTOR_CLASSES: List[Type[BaseConnector]] = list(sorted([
     CsvConnector,
@@ -25,9 +25,7 @@ class ConfigTab(QWidget):
         self._default_working_config = Config()
 
         # setup mapping config
-        mapping_group_box = QGroupBox("Mapping")
-        mapping_group_box.setLayout(self._create_mapping_form())
-        self.layout.addWidget(mapping_group_box)
+        self.layout.addWidget(MappingGroupBox(self))
 
         # setup extractor config
         extractor_group_box = QGroupBox("Extractor")
@@ -46,8 +44,13 @@ class ConfigTab(QWidget):
     @property
     def working_config(self):
         config = self.config
+        print(config.config)
+        print(self._default_working_config.config)
+        print(self._working_config.config)
         return Config(
-            overrides=config.merge_config_sources(config, self._default_working_config, self._working_config)
+            overrides=config.merge_config_sources(
+                config.config, self._default_working_config.config, self._working_config.config
+            )
         )
 
     @property
@@ -55,14 +58,20 @@ class ConfigTab(QWidget):
         return bool(self._working_config)
 
     def set_working_value(self, path, v):
+        if self._working_config.get(path, None) != v:
+            return
         self._working_config.set(path, v)
-        print(self._working_config.to_yaml())
         print("WORKING CONFIG CHANGED")
+        print(self._working_config.to_yaml())
+        print("RESOLVED CONFIG")
+        print(self.working_config.to_yaml())
 
     def set_default_working_value(self, path, v):
         self._default_working_config.set(path, v)
         print("DEFAULT WORKING CONFIG CHANGED")
         print(self._default_working_config.to_yaml())
+        print("RESOLVED CONFIG")
+        print(self.working_config.to_yaml())
 
     def clear_changes(self):
         self._working_config = Config()
