@@ -16,6 +16,8 @@ class ConfigTab(QWidget):
     def __init__(self, parent):
         super().__init__(parent=parent)
 
+        self.main_window = parent
+
         parent.config_changed.connect(self.clear_changes)
 
         self.layout = QVBoxLayout(self)
@@ -39,7 +41,7 @@ class ConfigTab(QWidget):
 
     @property
     def config(self):
-        return self.parentWidget().config
+        return self.main_window.config
 
     @property
     def working_config(self):

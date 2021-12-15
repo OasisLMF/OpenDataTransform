@@ -33,7 +33,7 @@ class Config:
         overrides: Dict[str, Any] = None,
         env: Dict[str, str] = None,
     ):
-        self.path = os.path.abspath(config_path) if config_path else None
+        self.path = os.path.abspath(config_path) if config_path and os.path.exists(config_path) else None
         self.argv = argv
         self.env = env
         self.overrides = overrides
@@ -280,6 +280,11 @@ class Config:
             )
 
         return p
+
+    def save(self, new_filename=None):
+        print(self.config)
+        with open(new_filename or self.path, "w") as f:
+            f.write(self.to_yaml())
 
     def keys(self):
         return self.config.keys()

@@ -41,7 +41,9 @@ class MainWindow(QMainWindow):
         self.open_config = QAction("&Open")
         self.open_config.triggered.connect(self._handle_file_open)
         self.save_config = QAction("&Save")
-        self.save_config.triggered.connect(self._handle_file_save)
+        self.save_config.triggered.connect(lambda: self._handle_file_save(overwrite=True))
+        self.save_config_as = QAction("&Save As...")
+        self.save_config_as.triggered.connect(self._handle_file_save)
 
     def _handle_file_open(self):
         if self.config_tab.has_changes:
@@ -71,8 +73,28 @@ class MainWindow(QMainWindow):
             )
             self.config_changed.emit(self.config)
 
-    def _handle_file_save(self):
-        pass
+    def _handle_file_save(self, overwrite=False):
+        if not overwrite or not self.config.path:
+            file_path = QFileDialog.getSaveFileName(
+                self,
+                caption="Save the current config...",
+                dir=os.getcwd(),
+                filter="Config Files (*.yml *.yaml)",
+            )[0]
+        else:
+            file_path = self.config.path
+
+        if file_path:
+            print(file_path)
+            self.config_tab.working_config.save(file_path)
+
+            self.config = Config(
+                config_path=file_path,
+                overrides=self.config.overrides,
+                env=self.config.env,
+                argv=self.config.argv,
+            )
+            self.config_changed.emit(self.config)
 
     def _create_menu_bar(self):
         bar = self.menuBar()
@@ -81,3 +103,4 @@ class MainWindow(QMainWindow):
         file_menu = bar.addMenu("&File")
         file_menu.addAction(self.open_config)
         file_menu.addAction(self.save_config)
+        file_menu.addAction(self.save_config_as)
