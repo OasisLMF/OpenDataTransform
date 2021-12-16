@@ -14,7 +14,7 @@ class MappingCombo(QComboBox):
         self.addItems(self.options)
 
         self.update_selection_from_config(self.tab.working_config)
-        self.currentTextChanged.connect(lambda v: self.tab.set_working_value(f"mapping.{prop}", v))
+        self.currentTextChanged.connect(lambda v: self.tab.set_working_value(f"mapping.options.{prop}", v))
 
     def refresh_options(self, options):
         self.options = options
@@ -23,7 +23,7 @@ class MappingCombo(QComboBox):
 
     def update_selection_from_config(self, config):
         try:
-            current_index = self.options.index(config.get(f"mapping.{self.prop}", ""))
+            current_index = self.options.index(config.get(f"mapping.options.{self.prop}", ""))
             self.setCurrentIndex(current_index)
         except ValueError:
             self.setCurrentIndex(0)

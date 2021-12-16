@@ -33,6 +33,8 @@ class ConfigTab(QWidget):
         # setup loader config
         self.layout.addWidget(DynamicClassFormBlock(self, "Loader", "loader", CONNECTOR_CLASSES))
 
+        self.main_window.running_changed.connect(lambda b: self.setEnabled(not b))
+
     @property
     def config(self):
         return self.main_window.config
@@ -41,8 +43,9 @@ class ConfigTab(QWidget):
     def working_config(self):
         config = self.config
         return Config(
+            config_path=config.path,
             overrides=config.merge_config_sources(
-                config.config, self._default_working_config.config, self._working_config.config
+                self._default_working_config.config, self._working_config.config
             )
         )
 
@@ -54,17 +57,9 @@ class ConfigTab(QWidget):
         if self._working_config.get(path, None) == v:
             return
         self._working_config.set(path, v)
-        print("WORKING CONFIG CHANGED")
-        print(self._working_config.to_yaml())
-        print("RESOLVED CONFIG")
-        print(self.working_config.to_yaml())
 
     def set_default_working_value(self, path, v):
         self._default_working_config.set(path, v)
-        print("DEFAULT WORKING CONFIG CHANGED")
-        print(self._default_working_config.to_yaml())
-        print("RESOLVED CONFIG")
-        print(self.working_config.to_yaml())
 
     def clear_changes(self):
         self._working_config = Config()

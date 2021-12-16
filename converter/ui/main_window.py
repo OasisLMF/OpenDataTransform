@@ -14,6 +14,7 @@ from converter.ui.run_tab.main import RunTab
 
 class MainWindow(QMainWindow):
     config_changed = Signal(object)
+    running_changed = Signal(bool)
 
     def __init__(self, config):
         super().__init__()
@@ -31,10 +32,12 @@ class MainWindow(QMainWindow):
         self.config_tab = ConfigTab(self)
         tabs.addTab(self.config_tab, "Config")
 
-        self.run_tab = RunTab()
+        self.run_tab = RunTab(self)
         tabs.addTab(self.run_tab, "Run")
 
         self.setCentralWidget(tabs)
+
+        self.running_changed.connect(lambda b: self.menuBar().setEnabled(not b))
 
     def _create_actions(self):
         # create config actions
