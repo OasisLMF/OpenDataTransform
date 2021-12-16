@@ -282,7 +282,6 @@ class Config:
         return p
 
     def save(self, new_filename=None):
-        print(self.config)
         with open(new_filename or self.path, "w") as f:
             f.write(self.to_yaml())
 

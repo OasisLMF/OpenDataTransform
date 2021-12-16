@@ -1,4 +1,7 @@
 from PySide6.QtWidgets import QGroupBox, QFormLayout, QComboBox, QLabel, QCheckBox, QLineEdit
+from __feature__ import true_property
+
+from converter.ui.config_tab.file import FileField
 
 
 class DynamicClassFormBlock(QGroupBox):
@@ -74,6 +77,8 @@ class DynamicClassFormBlock(QGroupBox):
             field = self._create_enum_field(schema, value, config_path)
         elif schema["type"] == "boolean":
             field = self._create_boolean_field(schema, value, config_path)
+        elif schema["type"] == "string" and schema["subtype"] == "path":
+            field = self._create_file_field(schema, value, config_path)
         else:
             field = self._create_text_field(schema, value, config_path)
 
@@ -107,6 +112,16 @@ class DynamicClassFormBlock(QGroupBox):
         field = QCheckBox("")
         field.setChecked(value)
         field.stateChanged.connect(lambda v: self.tab.set_working_value(config_path, bool(v)))
+        return field
+
+    def _create_file_field(self, schema, value, config_path):
+        if value is None:
+            value = schema.get("default", "")
+            self.tab.set_default_working_value(config_path, value)
+
+        field = FileField(self.tab)
+        field.setValue(value or "")
+        field.value_changed.connect(lambda v: self.tab.set_working_value(config_path, v))
         return field
 
     def _create_text_field(self, schema, value, config_path):

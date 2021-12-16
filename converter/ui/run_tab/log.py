@@ -8,7 +8,7 @@ class LogPanel(logging.Handler):
     def __init__(self, parent):
         super().__init__()
         self.widget = QPlainTextEdit(parent)
-        # self.widget.setReadOnly(True)
+        self.widget.setEnabled(False)
 
         self.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
         logging.getLogger().addHandler(self)
