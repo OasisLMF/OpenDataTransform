@@ -29,6 +29,7 @@ class CsvConnector(BaseConnector):
             "path": {
                 "type": "string",
                 "description": "The path to the file to load relative to the config file",
+                "subtype": "path",
             },
             "write_header": {
                 "type": "boolean",
@@ -38,7 +39,8 @@ class CsvConnector(BaseConnector):
             "quoting": {
                 "type": "string",
                 "description": "The type of quoting to use when reading/writing entries (see https://docs.python.org/3/library/csv.html#csv.QUOTE_ALL for a description of the values)",
-                "enum": ["all", "minimal", "none", "nonnumeric"]
+                "enum": ["all", "minimal", "none", "nonnumeric"],
+                "default": "nonnumeric"
             }
         },
         "required": ["path"],

@@ -81,6 +81,10 @@ class DynamicClassFormBlock(QGroupBox):
         return field
 
     def _create_enum_field(self, schema, value, config_path):
+        if value is None:
+            value = schema.get("default", schema["enum"][0])
+            self.tab.set_default_working_value(config_path, value)
+
         combo = QComboBox()
         combo.addItems(schema["enum"])
 
