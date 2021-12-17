@@ -49,10 +49,8 @@ class _BaseRunner:
         "float": build_converter(float),
         "string": build_converter(str),
     }
-    options_schema = {
-        "type": "object",
-        "properties": {}
-    }
+    name = "Base Runner"
+    options_schema = {"type": "object", "properties": {}}
 
     def __init__(self, config: Config, **options):
         self.config = config

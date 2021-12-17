@@ -1,23 +1,34 @@
-from typing import Type, List
-from PySide6.QtWidgets import QWidget, QVBoxLayout
-from __feature__ import true_property
+from typing import List, Type
+
+from __feature__ import true_property  # noqa
+from PySide6.QtWidgets import QVBoxLayout, QWidget
 
 from converter.config import Config
-from converter.connector import CsvConnector, BaseConnector
-from converter.runner import PandasRunner, BaseRunner, DaskRunner, EagerRunner, ModinRunner
+from converter.connector import BaseConnector, CsvConnector
+from converter.runner import BaseRunner, DaskRunner, ModinRunner, PandasRunner
 from converter.ui.config_tab.dynamic import DynamicClassFormBlock
 from converter.ui.config_tab.mapping import MappingGroupBox
 
-CONNECTOR_CLASSES: List[Type[BaseConnector]] = list(sorted([
-    CsvConnector,
-], key=lambda c: c.name))
 
-RUNNER_CLASSES: List[Type[BaseRunner]] = list(sorted([
-    PandasRunner,
-    DaskRunner,
-    EagerRunner,
-    ModinRunner,
-], key=lambda c: c.name))
+CONNECTOR_CLASSES: List[Type[BaseConnector]] = list(
+    sorted(
+        [
+            CsvConnector,
+        ],
+        key=lambda c: c.name,
+    )
+)
+
+RUNNER_CLASSES: List[Type[BaseRunner]] = list(
+    sorted(
+        [
+            PandasRunner,
+            DaskRunner,
+            ModinRunner,
+        ],
+        key=lambda c: c.name,
+    )
+)
 
 
 class ConfigTab(QWidget):
@@ -36,17 +47,31 @@ class ConfigTab(QWidget):
         self.layout.addWidget(MappingGroupBox(self))
 
         # setup extractor config
-        self.layout.addWidget(DynamicClassFormBlock(self, "Extractor", "extractor", CONNECTOR_CLASSES))
+        self.layout.addWidget(
+            DynamicClassFormBlock(
+                self, "Extractor", "extractor", CONNECTOR_CLASSES
+            )
+        )
 
         # setup loader config
-        self.layout.addWidget(DynamicClassFormBlock(self, "Loader", "loader", CONNECTOR_CLASSES))
+        self.layout.addWidget(
+            DynamicClassFormBlock(self, "Loader", "loader", CONNECTOR_CLASSES)
+        )
 
         # add runner config
         self.layout.addWidget(
-            DynamicClassFormBlock(self, "Runner", "runner", RUNNER_CLASSES, default_class=PandasRunner)
+            DynamicClassFormBlock(
+                self,
+                "Runner",
+                "runner",
+                RUNNER_CLASSES,
+                default_class=PandasRunner,
+            )
         )
 
-        self.main_window.running_changed.connect(lambda b: self.setEnabled(not b))
+        self.main_window.running_changed.connect(
+            lambda b: self.setEnabled(not b)
+        )
 
     @property
     def config(self):
@@ -58,8 +83,9 @@ class ConfigTab(QWidget):
         return Config(
             config_path=config.path,
             overrides=config.merge_config_sources(
-                self._default_working_config.config, self._working_config.config
-            )
+                self._default_working_config.config,
+                self._working_config.config,
+            ),
         )
 
     @property

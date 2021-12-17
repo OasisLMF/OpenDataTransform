@@ -28,23 +28,30 @@ class CsvConnector(BaseConnector):
         "properties": {
             "path": {
                 "type": "string",
-                "description": "The path to the file to load relative to the config file",
+                "description": (
+                    "The path to the file to load relative to the config file"
+                ),
                 "subtype": "path",
-                "title": "Path"
+                "title": "Path",
             },
             "write_header": {
                 "type": "boolean",
                 "description": "Should the header row be written?",
                 "default": True,
-                "title": "Include Header"
+                "title": "Include Header",
             },
             "quoting": {
                 "type": "string",
-                "description": "The type of quoting to use when reading/writing entries (see https://docs.python.org/3/library/csv.html#csv.QUOTE_ALL for a description of the values)",
+                "description": (
+                    "The type of quoting to use when "
+                    "reading/writing entries (see "
+                    "https://docs.python.org/3/library/csv.html#csv.QUOTE_ALL "
+                    "for a description of the values)"
+                ),
                 "enum": ["all", "minimal", "none", "nonnumeric"],
                 "default": "nonnumeric",
                 "title": "Quoting",
-            }
+            },
         },
         "required": ["path"],
     }

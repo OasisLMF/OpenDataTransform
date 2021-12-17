@@ -33,7 +33,11 @@ class Config:
         overrides: Dict[str, Any] = None,
         env: Dict[str, str] = None,
     ):
-        self.path = os.path.abspath(config_path) if config_path and os.path.exists(config_path) else None
+        self.path = (
+            os.path.abspath(config_path)
+            if config_path and os.path.exists(config_path)
+            else None
+        )
         self.argv = argv
         self.env = env
         self.overrides = overrides

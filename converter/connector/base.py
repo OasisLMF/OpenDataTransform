@@ -1,4 +1,4 @@
-from typing import Any, AsyncIterable, Dict, Iterable, TypedDict, Literal
+from typing import Any, AsyncIterable, Dict, Iterable
 
 from converter.config import Config
 
@@ -8,15 +8,13 @@ class BaseConnector:
     Connects to the the data source
 
     :param config: The global config for the system
-    :param options_properties: A dictionary representing the schema of field connectors
-        options json schema property types (https://python-jsonschema.readthedocs.io/en/stable/)
+    :param options_properties: A dictionary representing the
+        schema of field connectors options json schema property
+        types (https://python-jsonschema.readthedocs.io/en/stable/)
     """
 
     name = "Base Connector"
-    options_schema = {
-        "type": "object",
-        "properties": {}
-    }
+    options_schema = {"type": "object", "properties": {}}
 
     def __init__(self, config: Config, **options):
         self._options = options

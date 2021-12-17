@@ -1,5 +1,5 @@
-from PySide6.QtWidgets import QGroupBox, QFormLayout, QComboBox, QLabel
-from __feature__ import true_property
+from __feature__ import true_property  # noqa
+from PySide6.QtWidgets import QComboBox, QFormLayout, QGroupBox, QLabel
 
 from converter.mapping import FileMapping
 
@@ -14,7 +14,9 @@ class MappingCombo(QComboBox):
         self.addItems(self.options)
 
         self.update_selection_from_config(self.tab.working_config)
-        self.currentTextChanged.connect(lambda v: self.tab.set_working_value(f"mapping.options.{prop}", v))
+        self.currentTextChanged.connect(
+            lambda v: self.tab.set_working_value(f"mapping.options.{prop}", v)
+        )
 
     def refresh_options(self, options):
         self.options = options
@@ -23,7 +25,9 @@ class MappingCombo(QComboBox):
 
     def update_selection_from_config(self, config):
         try:
-            current_index = self.options.index(config.get(f"mapping.options.{self.prop}", ""))
+            current_index = self.options.index(
+                config.get(f"mapping.options.{self.prop}", "")
+            )
             self.setCurrentIndex(current_index)
         except ValueError:
             self.setCurrentIndex(0)
@@ -47,17 +51,16 @@ class MappingGroupBox(QGroupBox):
         layout.addRow(QLabel("To:"), self.output_combo)
 
         # connect the combobox to be update when a config is loaded
-        self.tab.main_window.config_changed.connect(self.refresh_on_config_load)
+        self.tab.main_window.config_changed.connect(
+            self.refresh_on_config_load
+        )
 
         self.setLayout(layout)
 
     @classmethod
     def get_mapping_formats(cls, config):
         return [""] + list(
-            FileMapping(
-                config,
-                raise_errors=False
-            ).mapping_graph.nodes
+            FileMapping(config, raise_errors=False).mapping_graph.nodes
         )
 
     def refresh_on_config_load(self, new_config):

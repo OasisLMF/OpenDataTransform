@@ -1,7 +1,7 @@
 import logging
 
+from __feature__ import true_property  # noqa
 from PySide6.QtWidgets import QPlainTextEdit
-from __feature__ import true_property
 
 
 class LogPanel(logging.Handler):
@@ -10,7 +10,9 @@ class LogPanel(logging.Handler):
         self.widget = QPlainTextEdit(parent)
         self.widget.setEnabled(False)
 
-        self.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+        self.setFormatter(
+            logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+        )
         logging.getLogger().addHandler(self)
         logging.getLogger().setLevel(logging.DEBUG)
 

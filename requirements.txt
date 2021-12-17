@@ -55,7 +55,7 @@ docutils==0.17.1
     # via sphinx
 filelock==3.4.0
     # via pytest-mypy
-flake8==4.0.1
+flake8==3.9.2
     # via pytest-flake8
 fsspec==2021.11.1
     # via

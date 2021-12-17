@@ -26,7 +26,7 @@ class DaskRunner(PandasRunner):
                 "default": 10000,
                 "title": "Chunk Size",
             }
-        }
+        },
     }
 
     def __init__(self, config, **options):

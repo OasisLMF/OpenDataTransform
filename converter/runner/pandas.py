@@ -207,9 +207,6 @@ class PandasRunner(BaseRunner):
     """
 
     name = "Pandas"
-    options_schema = {
-
-    }
 
     row_value_conversions = {
         "int": lambda col, nullable, null_values: col.apply(

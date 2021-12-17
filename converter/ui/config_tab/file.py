@@ -1,7 +1,7 @@
 import os
 
-from PySide6.QtWidgets import QHBoxLayout, QLineEdit, QPushButton, QFileDialog
-from __feature__ import true_property
+from __feature__ import true_property  # noqa
+from PySide6.QtWidgets import QFileDialog, QHBoxLayout, QLineEdit, QPushButton
 
 
 class FileField(QHBoxLayout):

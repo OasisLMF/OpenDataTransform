@@ -1,7 +1,7 @@
 from threading import Thread
 
-from PySide6.QtWidgets import QVBoxLayout, QWidget, QPushButton
-from __feature__ import true_property
+from __feature__ import true_property  # noqa
+from PySide6.QtWidgets import QPushButton, QVBoxLayout, QWidget
 
 from converter.controller import Controller
 from converter.ui.run_tab.log import LogPanel
@@ -36,7 +36,9 @@ class RunTab(QWidget):
         self.run_button.clicked.connect(self.run)
         self.layout.addWidget(self.run_button)
 
-        self.main_window.running_changed.connect(lambda b: self.run_button.setEnabled(not b))
+        self.main_window.running_changed.connect(
+            lambda b: self.run_button.setEnabled(not b)
+        )
 
     def run(self):
         self.log_panel.clear()

@@ -1,11 +1,14 @@
 import os
-import random
 
-from PySide6.QtCore import Qt, Slot, Signal
+from __feature__ import true_property  # noqa
+from PySide6.QtCore import Signal
 from PySide6.QtGui import QAction
-from PySide6.QtWidgets import QLabel, QPushButton, QVBoxLayout, QWidget, QTabWidget, QMainWindow, QFileDialog, \
-    QMessageBox
-from __feature__ import true_property
+from PySide6.QtWidgets import (
+    QFileDialog,
+    QMainWindow,
+    QMessageBox,
+    QTabWidget,
+)
 
 from converter.config import Config
 from converter.ui.config_tab.main import ConfigTab
@@ -37,14 +40,18 @@ class MainWindow(QMainWindow):
 
         self.setCentralWidget(tabs)
 
-        self.running_changed.connect(lambda b: self.menuBar().setEnabled(not b))
+        self.running_changed.connect(
+            lambda b: self.menuBar().setEnabled(not b)
+        )
 
     def _create_actions(self):
         # create config actions
         self.open_config = QAction("&Open")
         self.open_config.triggered.connect(self._handle_file_open)
         self.save_config = QAction("&Save")
-        self.save_config.triggered.connect(lambda: self._handle_file_save(overwrite=True))
+        self.save_config.triggered.connect(
+            lambda: self._handle_file_save(overwrite=True)
+        )
         self.save_config_as = QAction("&Save As...")
         self.save_config_as.triggered.connect(self._handle_file_save)
 
@@ -53,7 +60,10 @@ class MainWindow(QMainWindow):
             msg = QMessageBox(
                 QMessageBox.Warning,
                 "Are you sure?",
-                "You have unsaved changes to your current config. If you continue all unsaved changes will be lost.",
+                (
+                    "You have unsaved changes to your current config. "
+                    "If you continue all unsaved changes will be lost."
+                ),
                 buttons=QMessageBox.Open | QMessageBox.Cancel,
             )
 

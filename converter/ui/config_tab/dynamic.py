@@ -1,11 +1,20 @@
-from PySide6.QtWidgets import QGroupBox, QFormLayout, QComboBox, QLabel, QCheckBox, QLineEdit
-from __feature__ import true_property
+from __feature__ import true_property  # noqa
+from PySide6.QtWidgets import (
+    QCheckBox,
+    QComboBox,
+    QFormLayout,
+    QGroupBox,
+    QLabel,
+    QLineEdit,
+)
 
 from converter.ui.config_tab.file import FileField
 
 
 class DynamicClassFormBlock(QGroupBox):
-    def __init__(self, tab, label, root_config_path, classes, default_class=None):
+    def __init__(
+        self, tab, label, root_config_path, classes, default_class=None
+    ):
         super().__init__(label)
         self.tab = tab
         self.classes = classes
@@ -15,12 +24,14 @@ class DynamicClassFormBlock(QGroupBox):
         self.dynamic_fields = []
 
         self.class_selector = QComboBox()
-        self.class_selector.addItems([
-            self.get_selectable_class_name(cls) for cls in self.classes
-        ])
+        self.class_selector.addItems(
+            [self.get_selectable_class_name(cls) for cls in self.classes]
+        )
         self.layout.addRow(QLabel("Class:"), self.class_selector)
 
-        self.class_selector.currentIndexChanged.connect(self.on_selection_changed)
+        self.class_selector.currentIndexChanged.connect(
+            self.on_selection_changed
+        )
         self.on_config_loaded(self.tab.working_config)
 
         self.tab.main_window.config_changed.connect(self.on_config_loaded)
@@ -38,17 +49,26 @@ class DynamicClassFormBlock(QGroupBox):
     def on_selection_changed(self, value):
         selected_class = self.classes[value]
         self.tab.set_working_value(
-            f"{self.root_config_path}.path", self.get_fully_qualified_classname(selected_class)
+            f"{self.root_config_path}.path",
+            self.get_fully_qualified_classname(selected_class),
         )
-        self.dynamic_fields = self.update_dynamic_fields_from_selection(selected_class, self.tab.working_config)
+        self.dynamic_fields = self.update_dynamic_fields_from_selection(
+            selected_class, self.tab.working_config
+        )
 
     def on_config_loaded(self, new_config):
         selection = self.update_selection_from_config(new_config)
-        self.dynamic_fields = self.update_dynamic_fields_from_selection(selection, new_config)
+        self.dynamic_fields = self.update_dynamic_fields_from_selection(
+            selection, new_config
+        )
 
     def update_selection_from_config(self, config):
-        class_paths = [self.get_fully_qualified_classname(c) for c in self.classes]
-        selected_in_config = config.get(f"{self.root_config_path}.path", fallback=None)
+        class_paths = [
+            self.get_fully_qualified_classname(c) for c in self.classes
+        ]
+        selected_in_config = config.get(
+            f"{self.root_config_path}.path", fallback=None
+        )
 
         try:
             current_index = class_paths.index(selected_in_config)
@@ -56,7 +76,9 @@ class DynamicClassFormBlock(QGroupBox):
             current_index = None
 
         try:
-            default_index = class_paths.index(self.get_fully_qualified_classname(self.default_class))
+            default_index = class_paths.index(
+                self.get_fully_qualified_classname(self.default_class)
+            )
         except ValueError:
             default_index = None
 
@@ -66,13 +88,15 @@ class DynamicClassFormBlock(QGroupBox):
         elif default_index is not None:
             self.class_selector.setCurrentIndex(default_index)
             self.tab.set_default_working_value(
-                f"{self.root_config_path}.path", self.get_fully_qualified_classname(self.default_class)
+                f"{self.root_config_path}.path",
+                self.get_fully_qualified_classname(self.default_class),
             )
             return self.default_class
         else:
             self.class_selector.setCurrentIndex(0)
             self.tab.set_default_working_value(
-                f"{self.root_config_path}.path", self.get_fully_qualified_classname(self.classes[0])
+                f"{self.root_config_path}.path",
+                self.get_fully_qualified_classname(self.classes[0]),
             )
             return self.classes[0]
 
@@ -82,7 +106,9 @@ class DynamicClassFormBlock(QGroupBox):
 
         return [
             self._create_dynamic_field(field_name, schema, config)
-            for field_name, schema in selection.options_schema.get("properties", {}).items()
+            for field_name, schema in selection.options_schema.get(
+                "properties", {}
+            ).items()
         ]
 
     def _create_dynamic_field(self, field_name, schema, config):
@@ -118,7 +144,11 @@ class DynamicClassFormBlock(QGroupBox):
             combo.setCurrentIndex(0)
             self.tab.set_default_working_value(config_path, schema["enum"][0])
 
-        combo.currentIndexChanged.connect(lambda i: self.tab.set_working_value(config_path, schema["enum"][i]))
+        combo.currentIndexChanged.connect(
+            lambda i: self.tab.set_working_value(
+                config_path, schema["enum"][i]
+            )
+        )
         return combo
 
     def _create_boolean_field(self, schema, value, config_path):
@@ -128,7 +158,9 @@ class DynamicClassFormBlock(QGroupBox):
 
         field = QCheckBox("")
         field.setChecked(value)
-        field.stateChanged.connect(lambda v: self.tab.set_working_value(config_path, bool(v)))
+        field.stateChanged.connect(
+            lambda v: self.tab.set_working_value(config_path, bool(v))
+        )
         return field
 
     def _create_file_field(self, schema, value, config_path):
@@ -138,7 +170,9 @@ class DynamicClassFormBlock(QGroupBox):
 
         field = FileField(self.tab)
         field.setValue(value or "")
-        field.value_changed.connect(lambda v: self.tab.set_working_value(config_path, v))
+        field.value_changed.connect(
+            lambda v: self.tab.set_working_value(config_path, v)
+        )
         return field
 
     def _create_text_field(self, schema, value, config_path):
@@ -148,5 +182,7 @@ class DynamicClassFormBlock(QGroupBox):
 
         field = QLineEdit()
         field.setText(value or "")
-        field.textChanged.connect(lambda v: self.tab.set_working_value(config_path, v))
+        field.textChanged.connect(
+            lambda v: self.tab.set_working_value(config_path, v)
+        )
         return field

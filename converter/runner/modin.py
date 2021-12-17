@@ -16,7 +16,7 @@ class ModinRunner(PandasRunner):
                 "default": "dask",
                 "title": "Engine",
             }
-        }
+        },
     }
 
     def __init__(self, config, **options):
