@@ -52,7 +52,9 @@ decorator==5.1.0
 distributed==2021.11.2
     # via modin
 docutils==0.17.1
-    # via sphinx
+    # via
+    #   sphinx
+    #   sphinx-rtd-theme
 filelock==3.4.0
     # via pytest-mypy
 flake8==3.9.2
@@ -152,9 +154,9 @@ ptyprocess==0.7.0
     # via pexpect
 py==1.11.0
     # via pytest
-pycodestyle==2.8.0
+pycodestyle==2.7.0
     # via flake8
-pyflakes==2.4.0
+pyflakes==2.3.1
     # via flake8
 pygments==2.10.0
     # via
@@ -217,7 +219,10 @@ sphinx==4.3.1
     # via
     #   -r requirements.in
     #   sphinx-autoapi
+    #   sphinx-rtd-theme
 sphinx-autoapi==1.8.4
+    # via -r requirements.in
+sphinx-rtd-theme==1.0.0
     # via -r requirements.in
 sphinxcontrib-applehelp==1.0.2
     # via sphinx

@@ -13,5 +13,6 @@ pytest-asyncio
 hypothesis
 sphinx
 sphinx-autoapi
+sphinx_rtd_theme
 types-PyYAML
 pyinstaller
