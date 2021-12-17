@@ -1,0 +1,14 @@
+mapping:
+  options:
+    input_format: A
+    output_format: B
+extractor:
+  path: converter.connector.SQLiteConnector
+  options:
+    path: sqlite.db
+    table: A
+loader:
+  path: converter.connector.SQLiteConnector
+  options:
+    path: sqlite.db
+    table: B

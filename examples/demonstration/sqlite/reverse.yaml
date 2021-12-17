@@ -1,0 +1,14 @@
+mapping:
+  options:
+    input_format: B
+    output_format: A
+extractor:
+  path: converter.connector.SQLiteConnector
+  options:
+    path: sqlite.db
+    table: B
+loader:
+  path: converter.connector.SQLiteConnector
+  options:
+    path: sqlite.db
+    table: Rev
