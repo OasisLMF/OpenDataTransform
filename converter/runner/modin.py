@@ -6,6 +6,19 @@ from .pandas import PandasRunner
 
 
 class ModinRunner(PandasRunner):
+    name = "Modin"
+    options_schema = {
+        "type": "object",
+        "properties": {
+            "engine": {
+                "type": "string",
+                "enum": ["dask", "ray"],
+                "default": "dask",
+                "title": "Engine",
+            }
+        }
+    }
+
     def __init__(self, config, **options):
         super().__init__(config, **options)
         self.engine = options.get("engine", "dask")

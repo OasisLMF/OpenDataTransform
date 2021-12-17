@@ -88,7 +88,6 @@ class MainWindow(QMainWindow):
             file_path = self.config.path
 
         if file_path:
-            print(file_path)
             self.config_tab.working_config.save(file_path)
 
             self.config = Config(

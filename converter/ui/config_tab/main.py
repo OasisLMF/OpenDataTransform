@@ -4,11 +4,19 @@ from __feature__ import true_property
 
 from converter.config import Config
 from converter.connector import CsvConnector, BaseConnector
+from converter.runner import PandasRunner, BaseRunner, DaskRunner, EagerRunner, ModinRunner
 from converter.ui.config_tab.dynamic import DynamicClassFormBlock
 from converter.ui.config_tab.mapping import MappingGroupBox
 
 CONNECTOR_CLASSES: List[Type[BaseConnector]] = list(sorted([
     CsvConnector,
+], key=lambda c: c.name))
+
+RUNNER_CLASSES: List[Type[BaseRunner]] = list(sorted([
+    PandasRunner,
+    DaskRunner,
+    EagerRunner,
+    ModinRunner,
 ], key=lambda c: c.name))
 
 
@@ -32,6 +40,11 @@ class ConfigTab(QWidget):
 
         # setup loader config
         self.layout.addWidget(DynamicClassFormBlock(self, "Loader", "loader", CONNECTOR_CLASSES))
+
+        # add runner config
+        self.layout.addWidget(
+            DynamicClassFormBlock(self, "Runner", "runner", RUNNER_CLASSES, default_class=PandasRunner)
+        )
 
         self.main_window.running_changed.connect(lambda b: self.setEnabled(not b))
 

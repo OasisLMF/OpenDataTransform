@@ -13,7 +13,10 @@ class BaseConnector:
     """
 
     name = "Base Connector"
-    options_schema: Dict = {}
+    options_schema = {
+        "type": "object",
+        "properties": {}
+    }
 
     def __init__(self, config: Config, **options):
         self._options = options

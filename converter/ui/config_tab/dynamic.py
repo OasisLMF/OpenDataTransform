@@ -5,10 +5,11 @@ from converter.ui.config_tab.file import FileField
 
 
 class DynamicClassFormBlock(QGroupBox):
-    def __init__(self, tab, label, root_config_path, classes):
+    def __init__(self, tab, label, root_config_path, classes, default_class=None):
         super().__init__(label)
         self.tab = tab
         self.classes = classes
+        self.default_class = default_class or classes[0]
         self.root_config_path = root_config_path
         self.layout = QFormLayout()
         self.dynamic_fields = []
@@ -46,13 +47,29 @@ class DynamicClassFormBlock(QGroupBox):
         self.dynamic_fields = self.update_dynamic_fields_from_selection(selection, new_config)
 
     def update_selection_from_config(self, config):
+        class_paths = [self.get_fully_qualified_classname(c) for c in self.classes]
+        selected_in_config = config.get(f"{self.root_config_path}.path", fallback=None)
+
         try:
-            current_index = [
-                self.get_fully_qualified_classname(c) for c in self.classes
-            ].index(config.get(f"{self.root_config_path}.path", fallback=None))
+            current_index = class_paths.index(selected_in_config)
+        except ValueError:
+            current_index = None
+
+        try:
+            default_index = class_paths.index(self.get_fully_qualified_classname(self.default_class))
+        except ValueError:
+            default_index = None
+
+        if current_index is not None:
             self.class_selector.setCurrentIndex(current_index)
             return self.classes[current_index]
-        except ValueError:
+        elif default_index is not None:
+            self.class_selector.setCurrentIndex(default_index)
+            self.tab.set_default_working_value(
+                f"{self.root_config_path}.path", self.get_fully_qualified_classname(self.default_class)
+            )
+            return self.default_class
+        else:
             self.class_selector.setCurrentIndex(0)
             self.tab.set_default_working_value(
                 f"{self.root_config_path}.path", self.get_fully_qualified_classname(self.classes[0])
