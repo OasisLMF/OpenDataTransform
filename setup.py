@@ -53,7 +53,7 @@ setup(
         "build_exe": BuildExeCommand,
     },
     packages=find_packages(exclude=("tests", "tests.*")),
-    package_data={"converter": ["_data/mappings/*"], "": ["README.rst"]},
+    package_data={"converter": ["data/mappings/*"], "": ["README.rst"]},
     install_requires=read_reqs(),
     entry_points="""
         [console_scripts]

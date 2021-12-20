@@ -303,8 +303,8 @@ class Config:
         """
         Writes the configuration to a yaml file.
 
-        :param new_filename: The filename to use. If not set the current filename
-            in the configuration is used.
+        :param new_filename: The filename to use. If not set the current
+            filename in the configuration is used.
         """
         with open(new_filename or self.path, "w") as f:
             f.write(self.to_yaml())

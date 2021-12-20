@@ -6,6 +6,7 @@ from functools import reduce
 from itertools import chain, product
 from typing import Dict, Iterable, List, Reversible, Set, TypedDict, Union
 
+from ..data import get_data_path
 from ..errors import ConverterError
 from ..files.yaml import read_yaml
 from ..transformers import run
@@ -366,9 +367,7 @@ class FileMapping(BaseMapping):
         self,
         config,
         search_paths: List[str] = None,
-        standard_search_path: str = os.path.join(
-            os.path.dirname(__file__), "..", "_data", "mappings"
-        ),
+        standard_search_path: str = get_data_path("mappings"),
         search_working_dir=True,
         **options,
     ):

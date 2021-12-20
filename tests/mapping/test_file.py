@@ -572,7 +572,7 @@ def test_standard_and_current_path_is_added_to_the_abs_search_paths(paths):
         os.path.join(
             package_root_dir,
             "converter",
-            "_data",
+            "data",
             "mappings",
         ),
     ]

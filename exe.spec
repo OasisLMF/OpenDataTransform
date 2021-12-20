@@ -7,7 +7,9 @@ block_cipher = None
 a = Analysis(['converter/__main__.py'],
              pathex=[],
              binaries=[],
-             datas=[],
+             datas=[
+                ("converter/data/mappings/", "./mappings"),
+             ],
              hiddenimports=[],
              hookspath=[],
              hooksconfig={},
