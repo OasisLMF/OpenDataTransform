@@ -1,4 +1,6 @@
 import logging
+import os
+
 import math
 import re
 from functools import reduce
@@ -21,6 +23,7 @@ from ..transformers.transform import (
 )
 from ..types.notset import NotSet, NotSetType
 from .base import BaseRunner
+from ..validator.pandas import PandasValidator
 
 
 def get_logger():
@@ -421,10 +424,15 @@ class PandasRunner(BaseRunner):
 
         df = self.get_dataframe(extractor)
 
+        validator = PandasValidator(mapping, search_paths=os.path.dirname(self.config.path))
+        validator.run(df, mapping.input_format)
+
         transformed = reduce(
             self.apply_transformation_set,
             transformations,
             df,
         )
+
+        validator.run(df, mapping.output_format)
 
         return (r.to_dict() for idx, r in transformed.iterrows())
