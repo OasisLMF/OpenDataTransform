@@ -3,7 +3,7 @@ import os
 from functools import reduce
 
 import yaml
-from typing import Union, List, TypeVar, Tuple, Any, Optional
+from typing import Union, List, TypeVar, Tuple, Any, Optional, Iterable
 
 from converter.data import get_data_path
 
@@ -96,6 +96,11 @@ class BaseValidator:
             return [(entry.validator_name, "Unknown operator")]
 
     def generate_result_name(self, entry: ValidatorConfigEntry, field_name=None, index_values: Optional[List[Any]] = None):
-        fmt_index = "" if index_values is None else f"({', '.join(map(str, index_values))})"
+        fmt_index = ""
+        if index_values is not None:
+            index_values = index_values if isinstance(index_values, Iterable) else [index_values]
+            fmt_index = f"({', '.join(map(str, index_values))})"
+
         fmt_field_name = "" if field_name is None else f" - {field_name}"
+
         return f"{entry.validator_name}{fmt_index}{fmt_field_name}"

@@ -1,5 +1,6 @@
 from itertools import product
 from typing import List, Union, Iterable
+from uuid import uuid4
 
 import pandas as pd
 from pandas.core.groupby.generic import DataFrameGroupBy
@@ -14,8 +15,12 @@ class PandasValidator(BaseValidator):
             (entry.group_by or [])
         )
 
-        if not fields:
-            fields = [data.columns[0]]
+        if not entry.fields:
+            # if no fields are selected copy the index into a temp column
+            # so that counts can still be performed
+            field_name = uuid4()
+            data[field_name] = 1
+            fields.add(field_name)
 
         return super().run_entry(data[fields], entry)
 
@@ -43,7 +48,9 @@ class PandasValidator(BaseValidator):
         return [
             (
                 self.generate_result_name(
-                    entry, field if len(entry.fields) > 1 else None, index_values=index if entry.group_by is not None else None
+                    entry,
+                    field if len(entry.fields) > 1 else None,
+                    index_values=index if entry.group_by is not None else None
                 ),
                 row[field],
             ) for (index, row), field in product(data.iterrows(), fields)
