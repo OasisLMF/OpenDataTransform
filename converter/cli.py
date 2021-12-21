@@ -105,7 +105,7 @@ def init_logging(verbosity, no_color):
                 },
                 "validation-log": {
                     "class": "logging.FileHandler",
-                    "formatter": "file",
+                    "formatter": "validation",
                     "filename": f"{filename_time}-validation.log",
                     "level": logging.INFO,
                     "mode": "w",

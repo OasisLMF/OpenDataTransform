@@ -424,7 +424,7 @@ class PandasRunner(BaseRunner):
 
         df = self.get_dataframe(extractor)
 
-        validator = PandasValidator(mapping, search_paths=os.path.dirname(self.config.path))
+        validator = PandasValidator(mapping, search_paths=[os.path.dirname(self.config.path)])
         validator.run(df, mapping.input_format)
 
         transformed = reduce(
@@ -433,6 +433,6 @@ class PandasRunner(BaseRunner):
             df,
         )
 
-        validator.run(df, mapping.output_format)
+        validator.run(transformed, mapping.output_format)
 
         return (r.to_dict() for idx, r in transformed.iterrows())

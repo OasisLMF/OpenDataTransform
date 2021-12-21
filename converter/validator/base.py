@@ -13,6 +13,10 @@ GroupedDataType = TypeVar("GroupedDataType")
 ValidationResult = Tuple[str, Union[str, int, float]]
 
 
+def get_logger():
+    return logging.getLogger(__name__)
+
+
 class ValidatorConfigEntry:
     def __init__(self, validator_name, config):
         self.validator_name = validator_name
@@ -27,7 +31,7 @@ class ValidatorConfig:
 
         with open(self.path) as f:
             self.raw_config = yaml.load(f, yaml.Loader)
-            self.entries = [ValidatorConfigEntry(k, v) for k, v in self.raw_config.items()]
+            self.entries = [ValidatorConfigEntry(k, v) for k, v in self.raw_config.get("entries", []).items()]
 
 
 class BaseValidator:
@@ -47,29 +51,29 @@ class BaseValidator:
 
     def load_config(self, fmt) -> Union[None, ValidatorConfig]:
         candidate_paths = [
-            os.path.join(p, f"validation_{fmt}.yml") for p in self.search_paths
+            os.path.join(p, f"validation_{fmt}.yaml") for p in self.search_paths
         ]
 
         # find the first validation config path that matches the format
         config_path = reduce(
-            lambda current, found: found or (current if os.path.exists(current) else None),
+            lambda found, current: found or (current if os.path.exists(current) else None),
             candidate_paths,
             None
         )
 
         if not config_path:
-            logging.warning(f"Could not find validator config for {fmt}. Tried paths {', '.join(candidate_paths)}")
+            get_logger().warning(f"Could not find validator config for {fmt}. Tried paths {', '.join(candidate_paths)}")
             return None
 
         return ValidatorConfig(config_path)
 
-    def run(self, data: DataType, fmt: str) -> List[ValidationResult]:
+    def run(self, data: DataType, fmt: str):
         config = self.load_config(fmt)
 
-        logging.info(f"Validation for {fmt}")
+        get_logger().info(f"Validation for {fmt}")
         for entry in config.entries:
-            result = self.run_entry(data, entry)
-            logging.info(f"{result[0]}: {result[1]}")
+            for result in self.run_entry(data, entry):
+                get_logger().info(f"{result[0]}: {result[1]}")
 
     def group_data(self, data: DataType, group_by: List[str], entry: ValidatorConfigEntry) -> GroupedDataType:
         raise NotImplementedError()
@@ -91,6 +95,7 @@ class BaseValidator:
         else:
             return [(entry.validator_name, "Unknown operator")]
 
-    def generate_result_name(self, entry: ValidatorConfigEntry, field_name, index_values: Optional[List[Any]] = None):
-        index_name = "" if index_values is None else f"({', '.join(map(str, index_values))})"
-        return f"{entry.validator_name}{index_name} - {field_name}"
+    def generate_result_name(self, entry: ValidatorConfigEntry, field_name=None, index_values: Optional[List[Any]] = None):
+        fmt_index = "" if index_values is None else f"({', '.join(map(str, index_values))})"
+        fmt_field_name = "" if field_name is None else f" - {field_name}"
+        return f"{entry.validator_name}{fmt_index}{fmt_field_name}"
