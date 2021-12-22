@@ -10,23 +10,27 @@ input_format: A
 output_format: B
 forward:
   types:
+    id:
+      type: int
     a:
       type: int
     b:
       type: int
   transform:
+    id:
+      - transformation: id
     c:
       - transformation: a * 2
     d:
       - transformation: b + 3
 reverse:
   types:
-    c:
-      type: int
     d:
+      type: int
+    f:
       type: int
   transform:
     a:
-      - transformation: c / 2
+      - transformation: d / 2
     b:
-      - transformation: d - 3
+      - transformation: f - 3
