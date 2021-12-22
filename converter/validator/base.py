@@ -3,18 +3,29 @@ import os
 from functools import reduce
 
 import yaml
-from typing import Union, List, TypeVar, Tuple, Any, Optional, Iterable
+from typing import Union, List, TypeVar, Tuple, Any, Optional, Iterable, TypedDict, Dict
 
 from converter.data import get_data_path
 
 
 DataType = TypeVar("DataType")
 GroupedDataType = TypeVar("GroupedDataType")
-ValidationResult = Tuple[str, Union[str, int, float]]
 
 
 def get_logger():
     return logging.getLogger(__name__)
+
+
+class ValidationResultEntry(TypedDict, total=False):
+    field: Optional[str]
+    groups: Optional[Dict[str, Any]]
+    value: Optional[Any]
+    error: Optional[str]
+
+
+class ValidationResult(TypedDict):
+    name: str
+    entries: List[ValidationResultEntry]
 
 
 class ValidatorConfigEntry:
@@ -70,37 +81,31 @@ class BaseValidator:
     def run(self, data: DataType, fmt: str):
         config = self.load_config(fmt)
 
-        get_logger().info(f"Validation for {fmt}")
+        result = {
+            "format": fmt,
+            "validations": []
+        }
         for entry in config.entries:
-            for result in self.run_entry(data, entry):
-                get_logger().info(f"{result[0]}: {result[1]}")
+            result["validations"].append(self.run_entry(data, entry))
+
+        get_logger().info(yaml.safe_dump([result]))
 
     def group_data(self, data: DataType, group_by: List[str], entry: ValidatorConfigEntry) -> GroupedDataType:
         raise NotImplementedError()
 
-    def sum(self, data: Union[DataType, GroupedDataType], entry: ValidatorConfigEntry) -> List[ValidationResult]:
+    def sum(self, data: Union[DataType, GroupedDataType], entry: ValidatorConfigEntry) -> List[ValidationResultEntry]:
         raise NotImplementedError()
 
-    def count(self, data: Union[DataType, GroupedDataType], entry: ValidatorConfigEntry) -> List[ValidationResult]:
+    def count(self, data: Union[DataType, GroupedDataType], entry: ValidatorConfigEntry) -> List[ValidationResultEntry]:
         raise NotImplementedError()
 
-    def run_entry(self, data: DataType, entry: ValidatorConfigEntry) -> List[ValidationResult]:
+    def run_entry(self, data: DataType, entry: ValidatorConfigEntry) -> ValidationResult:
         if entry.group_by is not None:
             data = self.group_data(data, entry.group_by, entry)
 
         if entry.operator == "sum":
-            return self.sum(data, entry)
+            return ValidationResult(name=entry.validator_name, entries=self.sum(data, entry))
         elif entry.operator == "count":
-            return self.count(data, entry)
+            return ValidationResult(name=entry.validator_name, entries=self.count(data, entry))
         else:
-            return [(entry.validator_name, "Unknown operator")]
-
-    def generate_result_name(self, entry: ValidatorConfigEntry, field_name=None, index_values: Optional[List[Any]] = None):
-        fmt_index = ""
-        if index_values is not None:
-            index_values = index_values if isinstance(index_values, Iterable) else [index_values]
-            fmt_index = f"({', '.join(map(str, index_values))})"
-
-        fmt_field_name = "" if field_name is None else f" - {field_name}"
-
-        return f"{entry.validator_name}{fmt_index}{fmt_field_name}"
+            return ValidationResult(name=entry.validator_name, entries=[{"error": "Unknown operator"}])
