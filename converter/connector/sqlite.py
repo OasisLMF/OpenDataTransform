@@ -1,9 +1,10 @@
+import re
 import sqlite3
 from sqlite3 import Error
 from typing import Any, Dict, Iterable, List
 
 from converter.connector.base import BaseConnector
-from converter.connector.errors import SQLiteConnectionError
+from converter.connector.errors import SQLiteConnectionError, SQLiteQueryError, SQLiteInsertDataError
 from converter.types.notset import NotSetType
 
 
@@ -14,13 +15,9 @@ class SQLiteConnector(BaseConnector):
     **Options:**
 
     * `path` - The path to the sqlite file to read/write
-    * `table` - table to read the data from
+    * `select_statement` - sql query to read the data from
+    * `insert_statement` - sql query to insert the data from
     """
-    CREATE_STATEMENT = "CREATE TABLE IF NOT EXISTS {} ({});"
-    SELECT_STATEMENT = "SELECT * FROM {};"
-    INSERT_STATEMENT = "INSERT INTO {} ({}) VALUES ({});"
-    DELETE_STATEMENT = "DELETE FROM {};"
-
     name = "SQLite Connector"
     options_schema = {
         "type": "object",
@@ -33,27 +30,28 @@ class SQLiteConnector(BaseConnector):
                 "subtype": "path",
                 "title": "Path",
             },
-            "table": {
+            "select_statement": {
                 "type": "string",
-                "description": "The table to read the data from",
-                "title": "Table",
+                "description": "The path to the file which contains the select sql",
+                "subtype": "path",
+                "title": "Select Statement File",
             },
-            "truncate_table": {
-                "type": "boolean",
-                "description": "Should the loader table be truncated first?",
-                "default": True,
-                "title": "Include Header",
+            "insert_statement": {
+                "type": "string",
+                "description": "The path to the file which contains the insert sql",
+                "subtype": "path",
+                "title": "Insert Statement File",
             },
         },
-        "required": ["path", "table"],
+        "required": ["path", "select_statement", "insert_statement"],
     }
 
     def __init__(self, config, **options):
         super().__init__(config, **options)
 
         self.file_path = config.absolute_path(options["path"])
-        self.truncate = options.get("truncate_table", True)
-        self.table = options["table"]
+        self.select_statement_path = config.absolute_path(options["select_statement"])
+        self.insert_statement_path = config.absolute_path(options["insert_statement"])
 
     def _create_connection(self, database: str):
         """
@@ -75,57 +73,53 @@ class SQLiteConnector(BaseConnector):
 
         :return: string
         """
-        return self.SELECT_STATEMENT.format(self.table)
+        with open(self.select_statement_path) as f:
+            select_statement = f.read()
 
-    def _get_delete_statement(self) -> str:
-        """
-        SQL string to truncate the data from the specified table
+        return select_statement
 
-        :return: string
-        """
-        return self.DELETE_STATEMENT.format(self.table)
-
-    def _get_insert_statement(self, fields: List[str]) -> str:
+    def _get_insert_statements(self) -> List[str]:
         """
         SQL string to insert the data into the specified table
         :param fields: List of field names
 
-        :return: string
+        :return: List of sql statements
         """
-        columns = ', '.join(fields)
-        values = ', '.join(['?'] * len(fields))
-        return self.INSERT_STATEMENT.format(self.table, columns, values)
+        with open(self.insert_statement_path) as f:
+            insert_statements = f.readlines()
 
-    def _get_create_table_statement(self, fields: List[str]) -> str:
-        """
-        SQL string to create the table if it doesn't already exist
-        :param fields: List of field names
-
-        :return: string
-        """
-        field_string = ', '.join(['%s integer' % f for f in fields])
-        return self.CREATE_STATEMENT.format(self.table, field_string)
+        return list(insert_statements)
 
     def load(self, data: Iterable[Dict[str, Any]]):
-        try:
-            data = iter(data)
-            first_row = next(data)
-        except StopIteration:
-            return
 
         conn = self._create_connection(self.file_path)
-        create_table_sql = self._get_create_table_statement(list(first_row.keys()))
-        insert_sql = self._get_insert_statement(list(first_row.keys()))
+        insert_sql = self._get_insert_statements()
+        data = list(data)  # convert iterable to list as we reuse it based on number of queries
 
         with conn:
             cur = conn.cursor()
-            cur.execute(create_table_sql)
-            if self.truncate:
-                delete_sql = self._get_delete_statement()
-                cur.execute(delete_sql)
 
-            cur.execute(insert_sql, tuple(first_row.values()))
-            cur.executemany(insert_sql, [tuple(row.values()) for row in data])
+            # insert query can contain more than 1 insert statement
+            for sql in insert_sql:
+                sql = sql.strip()  # remove any white spacing from beginning and end
+                if sql:
+                    # assume the insert string contains VALUES (:<param>, :<param>) so we
+                    # can extract named parameters and get from data dict
+                    keys = re.findall(":\w+", sql)
+                    if len(keys) == 0:
+                        raise SQLiteInsertDataError(f"Cannot find keys in sql string {sql}")
+
+                    # extract out only the keys we want to insert from data
+                    extracted_data = [tuple([row.get(key[1:]) for key in keys]) for row in data]
+                    # check number of parameters extracted is correct
+                    if len(keys) != len(extracted_data[0]):
+                        raise SQLiteInsertDataError(
+                            f"Number of keys ({len(keys)}) does not match extracted fields ({len(extracted_data[0])})")
+
+                    try:
+                        cur.executemany(sql, extracted_data)
+                    except Error:
+                        raise SQLiteQueryError(sql, data=extracted_data)
 
     def extract(self) -> Iterable[Dict[str, Any]]:
         conn = self._create_connection(self.file_path)
@@ -133,11 +127,11 @@ class SQLiteConnector(BaseConnector):
 
         with conn:
             conn.row_factory = sqlite3.Row
+            cur = conn.cursor()
             try:
-                cur = conn.cursor()
                 cur.execute(select_sql)
             except Error:
-                raise SQLiteConnectionError()
+                raise SQLiteQueryError(select_sql)
 
             rows = cur.fetchall()
             for row in rows:

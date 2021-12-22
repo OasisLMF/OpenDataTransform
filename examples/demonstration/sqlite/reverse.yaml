@@ -6,9 +6,11 @@ extractor:
   path: converter.connector.SQLiteConnector
   options:
     path: sqlite.db
-    table: B
+    select_statement: select_rev.txt
+    insert_statement: insert_rev.txt
 loader:
   path: converter.connector.SQLiteConnector
   options:
     path: sqlite.db
-    table: Rev
+    select_statement: select_rev.txt
+    insert_statement: insert_rev.txt
