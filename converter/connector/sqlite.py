@@ -86,9 +86,9 @@ class SQLiteConnector(BaseConnector):
         :return: List of sql statements
         """
         with open(self.insert_statement_path) as f:
-            insert_statements = f.readlines()
+            insert_statements = f.read()
 
-        return list(insert_statements)
+        return list(insert_statements.split(';'))
 
     def load(self, data: Iterable[Dict[str, Any]]):
 
@@ -99,27 +99,14 @@ class SQLiteConnector(BaseConnector):
         with conn:
             cur = conn.cursor()
 
-            # insert query can contain more than 1 insert statement
+            # insert query can contain more than 1 statement
             for sql in insert_sql:
                 sql = sql.strip()  # remove any white spacing from beginning and end
                 if sql:
-                    # assume the insert string contains VALUES (:<param>, :<param>) so we
-                    # can extract named parameters and get from data dict
-                    keys = re.findall(":\w+", sql)
-                    if len(keys) == 0:
-                        raise SQLiteInsertDataError(f"Cannot find keys in sql string {sql}")
-
-                    # extract out only the keys we want to insert from data
-                    extracted_data = [tuple([row.get(key[1:]) for key in keys]) for row in data]
-                    # check number of parameters extracted is correct
-                    if len(keys) != len(extracted_data[0]):
-                        raise SQLiteInsertDataError(
-                            f"Number of keys ({len(keys)}) does not match extracted fields ({len(extracted_data[0])})")
-
                     try:
-                        cur.executemany(sql, extracted_data)
+                        cur.executemany(sql, data)
                     except Error:
-                        raise SQLiteQueryError(sql, data=extracted_data)
+                        raise SQLiteQueryError(sql, data=data)
 
     def extract(self) -> Iterable[Dict[str, Any]]:
         conn = self._create_connection(self.file_path)
