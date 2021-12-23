@@ -15,6 +15,7 @@ class SQLiteConnector(BaseConnector):
     **Options:**
 
     * `path` - The path to the sqlite file to read/write
+    * `delimiter` - What you close each SQL statement with
     * `select_statement` - sql query to read the data from
     * `insert_statement` - sql query to insert the data from
     """
@@ -42,6 +43,14 @@ class SQLiteConnector(BaseConnector):
                 "subtype": "path",
                 "title": "Insert Statement File",
             },
+            "delimiter": {
+                "type": "string",
+                "description": (
+                    "What you close each SQL statement with"
+                ),
+                "default": ";",
+                "title": "Delimiter",
+            },
         },
         "required": ["path", "select_statement", "insert_statement"],
     }
@@ -50,6 +59,7 @@ class SQLiteConnector(BaseConnector):
         super().__init__(config, **options)
 
         self.file_path = config.absolute_path(options["path"])
+        self.delimiter = options.get("delimiter", ";")
         self.select_statement_path = config.absolute_path(options["select_statement"])
         self.insert_statement_path = config.absolute_path(options["insert_statement"])
 
@@ -69,7 +79,7 @@ class SQLiteConnector(BaseConnector):
 
     def _get_select_statement(self) -> str:
         """
-        SQL string to select the data from the specified table
+        SQL string to select the data from the DB
 
         :return: string
         """
@@ -80,15 +90,14 @@ class SQLiteConnector(BaseConnector):
 
     def _get_insert_statements(self) -> List[str]:
         """
-        SQL string to insert the data into the specified table
-        :param fields: List of field names
+        SQL string(s) to insert the data into the DB
 
         :return: List of sql statements
         """
         with open(self.insert_statement_path) as f:
             insert_statements = f.read()
 
-        return list(insert_statements.split(';'))
+        return insert_statements.split(self.delimiter)
 
     def load(self, data: Iterable[Dict[str, Any]]):
 
