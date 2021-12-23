@@ -11,7 +11,7 @@ class LogPanel(logging.Handler):
         self.widget.setEnabled(False)
 
         self.setFormatter(
-            logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+            logging.Formatter("%(levelname)s - %(message)s")
         )
         logging.getLogger().addHandler(self)
         logging.getLogger().setLevel(logging.DEBUG)

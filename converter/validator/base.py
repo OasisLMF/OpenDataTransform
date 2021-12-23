@@ -25,6 +25,7 @@ class ValidationResultEntry(TypedDict, total=False):
 
 class ValidationResult(TypedDict):
     name: str
+    operator: str
     entries: List[ValidationResultEntry]
 
 
@@ -104,8 +105,8 @@ class BaseValidator:
             data = self.group_data(data, entry.group_by, entry)
 
         if entry.operator == "sum":
-            return ValidationResult(name=entry.validator_name, entries=self.sum(data, entry))
+            return ValidationResult(name=entry.validator_name, operator=entry.operator, entries=self.sum(data, entry))
         elif entry.operator == "count":
-            return ValidationResult(name=entry.validator_name, entries=self.count(data, entry))
+            return ValidationResult(name=entry.validator_name, operator=entry.operator, entries=self.count(data, entry))
         else:
-            return ValidationResult(name=entry.validator_name, entries=[{"error": "Unknown operator"}])
+            return ValidationResult(name=entry.validator_name, operator=entry.operator, entries=[{"error": "Unknown operator"}])

@@ -5,6 +5,7 @@ from PySide6.QtWidgets import QPushButton, QVBoxLayout, QWidget
 
 from converter.controller import Controller
 from converter.ui.run_tab.log import LogPanel
+from converter.ui.run_tab.validation import ValidationPanel
 
 
 class RunThread(Thread):
@@ -29,6 +30,9 @@ class RunTab(QWidget):
 
         self.layout = QVBoxLayout(self)
 
+        self.validation_panel = ValidationPanel(self)
+        self.layout.addLayout(self.validation_panel.layout)
+
         self.log_panel = LogPanel(self)
         self.layout.addWidget(self.log_panel.widget)
 
@@ -41,7 +45,8 @@ class RunTab(QWidget):
         )
 
     def run(self):
-        self.log_panel.clear()
+        self.validation_panel.clear()
+        # self.log_panel.clear()
         RunThread(
             self.main_window.config_tab.working_config,
             lambda: self.main_window.running_changed.emit(True),
