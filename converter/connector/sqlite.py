@@ -1,5 +1,6 @@
 import re
 import sqlite3
+import sqlparse
 from sqlite3 import Error
 from typing import Any, Dict, Iterable, List
 
@@ -15,7 +16,6 @@ class SQLiteConnector(BaseConnector):
     **Options:**
 
     * `path` - The path to the sqlite file to read/write
-    * `delimiter` - What you close each SQL statement with
     * `select_statement` - sql query to read the data from
     * `insert_statement` - sql query to insert the data from
     """
@@ -43,14 +43,6 @@ class SQLiteConnector(BaseConnector):
                 "subtype": "path",
                 "title": "Insert Statement File",
             },
-            "delimiter": {
-                "type": "string",
-                "description": (
-                    "What you close each SQL statement with"
-                ),
-                "default": ";",
-                "title": "Delimiter",
-            },
         },
         "required": ["path", "select_statement", "insert_statement"],
     }
@@ -59,7 +51,6 @@ class SQLiteConnector(BaseConnector):
         super().__init__(config, **options)
 
         self.file_path = config.absolute_path(options["path"])
-        self.delimiter = options.get("delimiter", ";")
         self.select_statement_path = config.absolute_path(options["select_statement"])
         self.insert_statement_path = config.absolute_path(options["insert_statement"])
 
@@ -95,9 +86,9 @@ class SQLiteConnector(BaseConnector):
         :return: List of sql statements
         """
         with open(self.insert_statement_path) as f:
-            insert_statements = f.read()
+            sql = f.read()
 
-        return insert_statements.split(self.delimiter)
+        return sqlparse.split(sql)
 
     def load(self, data: Iterable[Dict[str, Any]]):
 
@@ -110,12 +101,10 @@ class SQLiteConnector(BaseConnector):
 
             # insert query can contain more than 1 statement
             for sql in insert_sql:
-                sql = sql.strip()  # remove any white spacing from beginning and end
-                if sql:
-                    try:
-                        cur.executemany(sql, data)
-                    except Error:
-                        raise SQLiteQueryError(sql, data=data)
+                try:
+                    cur.executemany(sql, data)
+                except Error:
+                    raise SQLiteQueryError(sql, data=data)
 
     def extract(self) -> Iterable[Dict[str, Any]]:
         conn = self._create_connection(self.file_path)
