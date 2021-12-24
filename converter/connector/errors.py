@@ -1,19 +1,20 @@
 from converter.errors import ConverterError
 
 
-class SQLiteConnectionError(ConverterError):
+class DBConnectionError(ConverterError):
     pass
 
 
-class SQLiteQueryError(ConverterError):
-    def __init__(self, query, data=None):
+class DBQueryError(ConverterError):
+    def __init__(self, query, error, data=None):
         self.query = query
         self.data = data
+        self.error = error
 
         super().__init__(
-            f"Error running query: {query} with {data}."
+            f"Error running query: {query} with {data} - {error}"
         )
 
 
-class SQLiteInsertDataError(ConverterError):
+class DBInsertDataError(ConverterError):
     pass

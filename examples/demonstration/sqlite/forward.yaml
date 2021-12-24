@@ -5,12 +5,12 @@ mapping:
 extractor:
   path: converter.connector.SQLiteConnector
   options:
-    path: sqlite.db
-    select_statement: select.txt
-    insert_statement: insert.txt
+    database: sqlite.db
+    select_statement: select.sql
+    insert_statement: insert.sql
 loader:
   path: converter.connector.SQLiteConnector
   options:
-    path: sqlite.db
-    select_statement: select.txt
-    insert_statement: insert.txt
+    database: sqlite.db
+    select_statement: select.sql
+    insert_statement: insert.sql
