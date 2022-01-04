@@ -18,11 +18,16 @@ class PandasValidator(BaseValidator):
         if not entry.fields:
             # if no fields are selected copy the index into a temp column
             # so that counts can still be performed
-            field_name = uuid4()
+            field_name = uuid4().hex
             data[field_name] = 1
             fields.add(field_name)
 
-        return super().run_entry(data[fields], entry)
+            res = super().run_entry(data[fields], entry)
+
+            data.drop(columns=[field_name], inplace=True)
+            return res
+        else:
+            return super().run_entry(data[fields], entry)
 
     def group_data(self, data: pd.DataFrame, group_by: List[str], entry: ValidatorConfigEntry) -> DataFrameGroupBy:
         return data.groupby(group_by)

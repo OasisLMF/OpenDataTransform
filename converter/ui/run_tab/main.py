@@ -1,5 +1,6 @@
 from threading import Thread
 
+from PySide6.QtCore import QThread, QObject, Signal
 from __feature__ import true_property  # noqa
 from PySide6.QtWidgets import QPushButton, QVBoxLayout, QWidget
 
@@ -8,19 +9,46 @@ from converter.ui.run_tab.log import LogPanel
 from converter.ui.run_tab.validation import ValidationPanel
 
 
-class RunThread(Thread):
-    def __init__(self, config, on_start, on_finish):
+class ControllerRunner(QObject):
+    finished = Signal()
+
+    def __init__(self, config):
         super().__init__()
         self.config = config
-        self.on_start = on_start
-        self.on_finish = on_finish
 
     def run(self):
         try:
-            self.on_start()
             Controller(self.config).run()
         finally:
-            self.on_finish()
+            self.finished.emit()
+
+
+class RunThread:
+    def __init__(self, on_start, on_finish):
+        self.on_start = on_start
+        self.on_finish = on_finish
+
+        self.worker = None
+        self.thread = None
+
+    def start(self, config, moveObjects):
+        self.on_start()
+
+        self.thread = QThread()
+        self.worker = ControllerRunner(config)
+        self.worker.moveToThread(self.thread)
+
+        for obj in moveObjects:
+            obj.moveToThread(self.thread)
+
+        self.worker.finished.connect(self.on_finish)
+        self.worker.finished.connect(self.thread.quit)
+        self.worker.finished.connect(self.worker.deleteLater)
+
+        self.thread.started.connect(self.worker.run)
+        self.thread.finished.connect(self.thread.deleteLater)
+
+        self.thread.start()
 
 
 class RunTab(QWidget):
@@ -44,11 +72,15 @@ class RunTab(QWidget):
             lambda b: self.run_button.setEnabled(not b)
         )
 
-    def run(self):
-        self.validation_panel.clear()
-        # self.log_panel.clear()
-        RunThread(
-            self.main_window.config_tab.working_config,
+        self.thread = RunThread(
             lambda: self.main_window.running_changed.emit(True),
             lambda: self.main_window.running_changed.emit(False),
-        ).start()
+        )
+
+    def run(self):
+        self.validation_panel.clear()
+        self.log_panel.clear()
+        self.thread.start(
+            self.main_window.config_tab.working_config,
+            [self.log_panel.widget, self.validation_panel.layout],
+        )
