@@ -1,14 +1,9 @@
-import re
-import sqlite3
-import psycopg2
-import psycopg2.extras
 import sqlparse
-from sqlite3 import Error
 from typing import Any, Dict, Iterable, List
 
 from converter.connector.base import BaseConnector
-from converter.connector.errors import DBConnectionError, DBQueryError, DBInsertDataError
 from converter.types.notset import NotSetType
+from .errors import DBQueryError
 
 
 class BaseDBConnector(BaseConnector):
@@ -156,51 +151,3 @@ class BaseDBConnector(BaseConnector):
             rows = cur.fetchall()
             for row in rows:
                 yield dict(row)
-
-
-class SQLiteConnector(BaseDBConnector):
-    """
-    Connects to an sqlite file on the local machine for reading and writing data.
-    """
-    name = "SQLite Connector"
-
-    def _create_connection(self, database: Dict[str, str]):
-        """
-        Create database connection to the SQLite database specified in database
-        :param database: Dict object with connection info
-
-        :return: Connection object
-        """
-
-        try:
-            conn = sqlite3.connect(self.config.absolute_path(database["database"]))
-        except Error as e:
-            raise DBConnectionError()
-
-        conn.row_factory = sqlite3.Row
-        return conn
-
-
-class PostgresConnector(BaseDBConnector):
-    """
-    Connects to a Postgres database for reading and writing data.
-    """
-    name = "Postgres Connector"
-
-    def _create_connection(self, database: Dict[str, str]):
-        """
-        Create database connection to the Postgres database
-        :param database: Dict with database connection settings
-
-        :return: Connection object
-        """
-        try:
-            conn = psycopg2.connect(**database)
-        except Error as e:
-            raise DBConnectionError()
-
-        return conn
-
-    def _get_cursor(self, conn):
-        cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        return cur
