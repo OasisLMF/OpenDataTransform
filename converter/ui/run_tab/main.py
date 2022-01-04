@@ -1,5 +1,3 @@
-from threading import Thread
-
 from PySide6.QtCore import QThread, QObject, Signal
 from __feature__ import true_property  # noqa
 from PySide6.QtWidgets import QPushButton, QVBoxLayout, QWidget
