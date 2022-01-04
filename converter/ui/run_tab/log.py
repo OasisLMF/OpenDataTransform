@@ -10,14 +10,8 @@ class LogPanel(logging.Handler):
         self.widget = QPlainTextEdit(parent)
         self.widget.readOnly = True
 
-        self.setFormatter(
-            logging.Formatter("%(levelname)s - %(message)s")
-        )
-        logging.getLogger().addHandler(self)
-        logging.getLogger().setLevel(logging.DEBUG)
-
     def emit(self, record):
-        msg = self.format(record)
+        msg = f"{record.levelname}: {record.msg}"
         self.widget.appendPlainText(msg)
 
     def clear(self):
