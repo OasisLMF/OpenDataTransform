@@ -154,6 +154,8 @@ prompt-toolkit==3.0.24
     # via ipython
 psutil==5.8.0
     # via distributed
+psycopg2==2.9.3
+    # via -r requirements.in
 ptyprocess==0.7.0
     # via pexpect
 py==1.11.0
@@ -170,6 +172,8 @@ pyinstaller==4.7
     # via -r requirements.in
 pyinstaller-hooks-contrib==2021.4
     # via pyinstaller
+pyodbc==4.0.32
+    # via -r requirements.in
 pyparsing==3.0.6
     # via packaging
 pyrsistent==0.18.0
@@ -237,6 +241,8 @@ sphinxcontrib-qthelp==1.0.3
     # via sphinx
 sphinxcontrib-serializinghtml==1.1.5
     # via sphinx
+sqlparams==3.0.0
+    # via -r requirements.in
 sqlparse==0.4.2
     # via -r requirements.in
 tblib==1.7.0

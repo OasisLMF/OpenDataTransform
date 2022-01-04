@@ -16,3 +16,6 @@ sphinx-autoapi
 types-PyYAML
 pyinstaller
 sqlparse
+sqlparams
+pyodbc
+psycopg2
