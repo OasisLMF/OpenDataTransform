@@ -1,0 +1,24 @@
+mapping:
+  options:
+    input_format: B
+    output_format: A
+extractor:
+  path: converter.connector.SQLServerConnector
+  options:
+    host: localhost
+    port: 1433
+    database: TestDb
+    user: sa
+    password: someThingComplicated1234
+    select_statement: select_rev.sql
+    insert_statement: insert_rev.sql
+loader:
+  path: converter.connector.SQLServerConnector
+  options:
+    host: localhost
+    port: 1433
+    database: TestDb
+    user: sa
+    password: someThingComplicated1234
+    select_statement: select_rev.sql
+    insert_statement: insert_rev.sql

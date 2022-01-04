@@ -1,4 +1,5 @@
 import sqlparse
+import sqlparams
 from typing import Any, Dict, Iterable, List
 
 from converter.connector.base import BaseConnector
@@ -78,6 +79,7 @@ class BaseDBConnector(BaseConnector):
         },
         "required": ["database", "select_statement", "insert_statement"],
     }
+    sql_params_output = "qmark"
 
     def __init__(self, config, **options):
         super().__init__(config, **options)
@@ -122,32 +124,41 @@ class BaseDBConnector(BaseConnector):
         return sqlparse.split(sql)
 
     def load(self, data: Iterable[Dict[str, Any]]):
-
-        conn = self._create_connection(self.database)
         insert_sql = self._get_insert_statements()
         data = list(data)  # convert iterable to list as we reuse it based on number of queries
+        conn = self._create_connection(self.database)
 
         with conn:
             cur = self._get_cursor(conn)
+            query = sqlparams.SQLParams('named', self.sql_params_output)
 
             # insert query can contain more than 1 statement
-            for sql in insert_sql:
+            for line in insert_sql:
+                sql, params = query.formatmany(line, data)
                 try:
-                    cur.executemany(sql, data)
-                except Error as e:
+                    cur.executemany(sql, params)
+                except Exception as e:
                     raise DBQueryError(sql, e, data=data)
 
+    def row_to_dict(self, row):
+        """
+        Convert the row returned from the cursor into a dictionary
+
+        :return: Dict
+        """
+        return dict(row)
+
     def extract(self) -> Iterable[Dict[str, Any]]:
-        conn = self._create_connection(self.database)
         select_sql = self._get_select_statement()
+        conn = self._create_connection(self.database)
 
         with conn:
             cur = self._get_cursor(conn)
             try:
                 cur.execute(select_sql)
-            except Error as e:
+            except Exception as e:
                 raise DBQueryError(select_sql, e)
 
             rows = cur.fetchall()
             for row in rows:
-                yield dict(row)
+                yield self.row_to_dict(row)

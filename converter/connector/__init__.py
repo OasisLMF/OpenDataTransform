@@ -1,6 +1,6 @@
 from .base import BaseConnector
 from .csv import CsvConnector
-from .db import SQLiteConnector, PostgresConnector
+from .db import SQLiteConnector, PostgresConnector, SQLServerConnector
 
 
 __all__ = [
@@ -8,4 +8,5 @@ __all__ = [
     "CsvConnector",
     "SQLiteConnector",
     "PostgresConnector",
+    "SQLServerConnector",
 ]

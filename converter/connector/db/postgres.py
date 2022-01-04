@@ -14,6 +14,7 @@ class PostgresConnector(BaseDBConnector):
     Connects to a Postgres database for reading and writing data.
     """
     name = "Postgres Connector"
+    sql_params_output = "pyformat"
 
     def _create_connection(self, database: Dict[str, str]):
         """
