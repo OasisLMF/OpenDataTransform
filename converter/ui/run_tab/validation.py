@@ -3,7 +3,12 @@ import logging
 import yaml
 from __feature__ import true_property  # noqa
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QHBoxLayout, QGroupBox, QTableWidget, QTableWidgetItem
+from PySide6.QtWidgets import (
+    QGroupBox,
+    QHBoxLayout,
+    QTableWidget,
+    QTableWidgetItem,
+)
 
 from converter.validator.base import ValidationResult
 
@@ -23,7 +28,9 @@ class ValidationPanel(logging.Handler):
         self.output_table = self.create_table("Output Validation")
 
     def emit(self, record):
-        validations: ValidationResult = yaml.safe_load(record.msg)[0]["validations"]
+        validations: ValidationResult = yaml.safe_load(record.msg)[0][
+            "validations"
+        ]
         table = self.input_table if self.input else self.output_table
         self.input = not self.input
 
@@ -34,7 +41,9 @@ class ValidationPanel(logging.Handler):
 
             for entry in validation["entries"]:
                 groups = validation.get("groups", None) or {}
-                row[1] = ", ".join(map(lambda g: f"{g[0]}={g[1]}", groups.items()))
+                row[1] = ", ".join(
+                    map(lambda g: f"{g[0]}={g[1]}", groups.items())
+                )
                 row[2] = entry.get("field") or ""
                 row[3] = entry.get("error") or entry.get("value") or ""
                 row[4] = str(validation.get("operator"))
@@ -62,8 +71,8 @@ class ValidationPanel(logging.Handler):
     def redraw_table(self, table: QTableWidget, data):
         # clear the table and resize
         table.clearContents()
-        table.rowCount = len(data)
-        table.columnCount = len(self.table_headers)
+        table.rowCount = len(data)  # type: ignore
+        table.columnCount = len(self.table_headers)  # type: ignore
 
         # set the values of each entry
         for row_id, row in enumerate(data):

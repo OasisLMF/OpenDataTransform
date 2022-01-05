@@ -29,7 +29,7 @@ def strings():
     """
     return text(
         alphabet=characters(
-            blacklist_categories=("Cs",),
+            whitelist_categories=("Nd", "Lu", "Ll"),
             blacklist_characters=("'", "`"),
         )
     )

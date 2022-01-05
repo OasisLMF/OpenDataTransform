@@ -1,15 +1,25 @@
 import logging
 import os
 from functools import reduce
+from typing import (
+    Any,
+    Dict,
+    Generic,
+    List,
+    Optional,
+    TypedDict,
+    TypeVar,
+    Union,
+)
 
 import yaml
-from typing import Union, List, TypeVar, Tuple, Any, Optional, Iterable, TypedDict, Dict
 
 from converter.data import get_data_path
 
 
 DataType = TypeVar("DataType")
 GroupedDataType = TypeVar("GroupedDataType")
+GroupedDataType_cov = TypeVar("GroupedDataType_cov", covariant=True)
 
 
 def get_logger():
@@ -29,6 +39,11 @@ class ValidationResult(TypedDict):
     entries: List[ValidationResultEntry]
 
 
+class ValidationLogEntry(TypedDict):
+    format: str
+    validations: List[ValidationResult]
+
+
 class ValidatorConfigEntry:
     def __init__(self, validator_name, config):
         self.validator_name = validator_name
@@ -36,25 +51,43 @@ class ValidatorConfigEntry:
         self.operator = config.get("operator", "sum")
         self.group_by = config.get("group_by", None)
 
+    def __eq__(self, other):
+        return all(
+            [
+                self.validator_name == other.validator_name,
+                self.fields == other.fields,
+                self.operator == other.operator,
+                self.group_by == other.group_by,
+            ]
+        )
+
 
 class ValidatorConfig:
-    def __init__(self, path):
-        self.path = path
+    def __init__(self, path=None, raw_config=None):
+        if raw_config:
+            self.raw_config = raw_config
+        else:
+            self.path = path
 
-        with open(self.path) as f:
-            self.raw_config = yaml.load(f, yaml.Loader)
-            self.entries = [ValidatorConfigEntry(k, v) for k, v in self.raw_config.get("entries", []).items()]
+            with open(self.path) as f:
+                self.raw_config = yaml.load(f, yaml.Loader)
+
+        self.entries = [
+            ValidatorConfigEntry(k, v)
+            for k, v in self.raw_config.get("entries", {}).items()
+        ]
+
+    def __eq__(self, other):
+        return self.entries == other.entries
 
 
-class BaseValidator:
+class BaseValidator(Generic[DataType, GroupedDataType]):
     def __init__(
         self,
-        mapping,
         search_paths: List[str] = None,
         standard_search_path: str = get_data_path("validators"),
         search_working_dir=True,
     ):
-        self.mapping = mapping
         self.search_paths = [
             *(search_paths or []),
             *([os.getcwd()] if search_working_dir else []),
@@ -63,18 +96,23 @@ class BaseValidator:
 
     def load_config(self, fmt) -> Union[None, ValidatorConfig]:
         candidate_paths = [
-            os.path.join(p, f"validation_{fmt}.yaml") for p in self.search_paths
+            os.path.join(p, f"validation_{fmt}.yaml")
+            for p in self.search_paths
         ]
 
         # find the first validation config path that matches the format
         config_path = reduce(
-            lambda found, current: found or (current if os.path.exists(current) else None),
+            lambda found, current: found
+            or (current if os.path.exists(current) else None),
             candidate_paths,
-            None
+            None,
         )
 
         if not config_path:
-            get_logger().warning(f"Could not find validator config for {fmt}. Tried paths {', '.join(candidate_paths)}")
+            get_logger().warning(
+                f"Could not find validator config for {fmt}. "
+                f"Tried paths {', '.join(candidate_paths)}"
+            )
             return None
 
         return ValidatorConfig(config_path)
@@ -82,31 +120,54 @@ class BaseValidator:
     def run(self, data: DataType, fmt: str):
         config = self.load_config(fmt)
 
-        result = {
-            "format": fmt,
-            "validations": []
-        }
-        for entry in config.entries:
-            result["validations"].append(self.run_entry(data, entry))
+        result: ValidationLogEntry = {"format": fmt, "validations": []}
+        if config:
+            for entry in config.entries:
+                result["validations"].append(self.run_entry(data, entry))
 
         get_logger().info(yaml.safe_dump([result]))
+        return result
 
-    def group_data(self, data: DataType, group_by: List[str], entry: ValidatorConfigEntry) -> GroupedDataType:
+    def group_data(
+        self, data: DataType, group_by: List[str], entry: ValidatorConfigEntry
+    ) -> GroupedDataType_cov:  # pragma: no cover
         raise NotImplementedError()
 
-    def sum(self, data: Union[DataType, GroupedDataType], entry: ValidatorConfigEntry) -> List[ValidationResultEntry]:
+    def sum(
+        self,
+        data: Union[DataType, GroupedDataType],
+        entry: ValidatorConfigEntry,
+    ) -> List[ValidationResultEntry]:  # pragma: no cover
         raise NotImplementedError()
 
-    def count(self, data: Union[DataType, GroupedDataType], entry: ValidatorConfigEntry) -> List[ValidationResultEntry]:
+    def count(
+        self,
+        data: Union[DataType, GroupedDataType],
+        entry: ValidatorConfigEntry,
+    ) -> List[ValidationResultEntry]:  # pragma: no cover
         raise NotImplementedError()
 
-    def run_entry(self, data: DataType, entry: ValidatorConfigEntry) -> ValidationResult:
+    def run_entry(
+        self, data: DataType, entry: ValidatorConfigEntry
+    ) -> ValidationResult:
         if entry.group_by is not None:
             data = self.group_data(data, entry.group_by, entry)
 
         if entry.operator == "sum":
-            return ValidationResult(name=entry.validator_name, operator=entry.operator, entries=self.sum(data, entry))
+            return ValidationResult(
+                name=entry.validator_name,
+                operator=entry.operator,
+                entries=self.sum(data, entry),  # types: ignore
+            )
         elif entry.operator == "count":
-            return ValidationResult(name=entry.validator_name, operator=entry.operator, entries=self.count(data, entry))
+            return ValidationResult(
+                name=entry.validator_name,
+                operator=entry.operator,
+                entries=self.count(data, entry),  # types: ignore
+            )
         else:
-            return ValidationResult(name=entry.validator_name, operator=entry.operator, entries=[{"error": "Unknown operator"}])
+            return ValidationResult(
+                name=entry.validator_name,
+                operator=entry.operator,
+                entries=[{"error": "Unknown operator"}],
+            )

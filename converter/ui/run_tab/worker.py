@@ -1,7 +1,7 @@
 import logging
 
-from PySide6.QtCore import QThread, QObject, Signal
 from __feature__ import true_property  # noqa
+from PySide6.QtCore import QObject, QThread, Signal
 
 from converter.controller import Controller
 
@@ -13,6 +13,7 @@ class LogHandler(logging.Handler):
 
     :param signal: The signal the logger should be hooked up to
     """
+
     def __init__(self, signal):
         super().__init__()
         self.signal = signal
@@ -31,6 +32,7 @@ class ControllerRunner(QObject):
 
     :param config: The config of the transformation to perform
     """
+
     finished = Signal()
     """Signal that is emitted when the transformation ends"""
 
@@ -102,6 +104,7 @@ class RunThread:
     :param on_start: Method to call before the transformation begins
     :param on_finish: Method to call after the transformation ends
     """
+
     def __init__(self, on_start, on_finish):
         self.on_start = on_start
         self.on_finish = on_finish

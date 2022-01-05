@@ -1,7 +1,6 @@
 import logging
-import os
-
 import math
+import os
 import re
 from functools import reduce
 from operator import and_, or_
@@ -22,8 +21,8 @@ from ..transformers.transform import (
     default_search,
 )
 from ..types.notset import NotSet, NotSetType
-from .base import BaseRunner
 from ..validator.pandas import PandasValidator
+from .base import BaseRunner
 
 
 def get_logger():
@@ -424,8 +423,12 @@ class PandasRunner(BaseRunner):
 
         df = self.get_dataframe(extractor)
 
-        validator = PandasValidator(mapping, search_paths=[os.path.dirname(self.config.path)])
-        validator.run(df, mapping.input_format)
+        validator = PandasValidator(
+            search_paths=(
+                [os.path.dirname(self.config.path)] if self.config.path else []
+            ),
+        )
+        validator.run(df, mapping.input_format or "")
 
         transformed = reduce(
             self.apply_transformation_set,
@@ -433,6 +436,6 @@ class PandasRunner(BaseRunner):
             df,
         )
 
-        validator.run(transformed, mapping.output_format)
+        validator.run(transformed, mapping.output_format or "")
 
         return (r.to_dict() for idx, r in transformed.iterrows())
