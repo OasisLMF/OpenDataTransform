@@ -65,6 +65,18 @@ class PandasValidator(BaseValidator):
 
         return self._generate_result(count_res, entry)
 
+    def count_unique(
+        self,
+        data: Union[pd.DataFrame, DataFrameGroupBy],
+        entry: ValidatorConfigEntry,
+    ) -> List[ValidationResultEntry]:
+        count_res = data.nunique()
+
+        if hasattr(count_res, "to_frame"):
+            count_res = count_res.to_frame().transpose()
+
+        return self._generate_result(count_res, entry)
+
     def _generate_result(
         self,
         data: Union[pd.DataFrame, DataFrameGroupBy],
