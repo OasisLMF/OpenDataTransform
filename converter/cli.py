@@ -127,7 +127,7 @@ def init_logging(verbosity, no_color, config):
     logging.captureWarnings(True)
 
 
-@click.group()
+@click.group(invoke_without_command=True)
 @click.option(
     "--option",
     "-o",
@@ -177,6 +177,14 @@ def cli(ctx, config, verbose, no_color, option):
         env=os.environ,
     )
 
+    if ctx.invoked_subcommand is None:
+        app = QApplication(sys.argv)
+
+        widget = MainWindow(ctx.obj["config"])
+        widget.show()
+
+        sys.exit(app.exec_())
+
 
 @cli.command()
 @click.pass_context
@@ -185,20 +193,6 @@ def show_config(ctx):
     Prints the resolved config to the console
     """
     click.echo(ctx.obj["config"].to_yaml())
-
-
-@cli.command()
-@click.pass_context
-def with_ui(ctx):
-    """
-    Starts the runner with a user interface
-    """
-    app = QApplication(sys.argv)
-
-    widget = MainWindow(ctx.obj["config"])
-    widget.show()
-
-    sys.exit(app.exec_())
 
 
 @cli.command()
