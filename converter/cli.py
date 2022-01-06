@@ -106,10 +106,10 @@ def init_logging(verbosity, no_color, config):
                     "level": logging.DEBUG,
                     "mode": "w",
                 },
-                "validation-log": {
+                "validation-log-yml": {
                     "class": "logging.FileHandler",
                     "formatter": "validation",
-                    "filename": f"{filename_time}-validation.log",
+                    "filename": f"{filename_time}-validation.yaml",
                     "level": logging.INFO,
                     "mode": "w",
                 },
@@ -117,7 +117,7 @@ def init_logging(verbosity, no_color, config):
             "loggers": {
                 "converter.validator": {
                     "level": logging.INFO,
-                    "handlers": ["validation-log"],
+                    "handlers": ["validation-log-yml"],
                     "propagate": True,
                 }
             },
@@ -180,7 +180,7 @@ def cli(ctx, config, verbose, no_color, option):
     if ctx.invoked_subcommand is None:
         app = QApplication(sys.argv)
 
-        widget = MainWindow(ctx.obj["config"])
+        widget = MainWindow(ctx.obj["config"], lambda p: init_logging(verbose, no_color, p))
         widget.show()
 
         sys.exit(app.exec_())
