@@ -54,7 +54,7 @@ class ClickEchoHandler(logging.Handler):
         )
 
 
-def init_logging(verbosity, no_color):
+def init_logging(verbosity, no_color, config):
     """
     Sets up the logging config for the console and files
 
@@ -63,13 +63,16 @@ def init_logging(verbosity, no_color):
         1 - info
         2 - debug
     :param no_color: Don't add the color to the output
+    :param config: The path to the config file
     """
+    config_dir = os.path.abspath(os.path.dirname(config))
+    log_dir = os.path.join(config_dir, "log")
 
-    if not os.path.exists("log"):
-        os.mkdir("log")
+    if not os.path.exists(log_dir):
+        os.mkdir(log_dir)
 
     time_string = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    filename_time = os.path.join("log", time_string)
+    filename_time = os.path.join(log_dir, time_string)
 
     console_log_level = [logging.WARNING, logging.INFO, logging.DEBUG][
         min(2, verbosity)  # max verbosity level is 2
@@ -164,7 +167,7 @@ def cli(ctx, config, verbose, no_color, option):
     """
     ctx.ensure_object(dict)
 
-    init_logging(verbose, no_color)
+    init_logging(verbose, no_color, config)
 
     options = dict(option)
 
