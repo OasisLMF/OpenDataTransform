@@ -14,3 +14,4 @@ hypothesis
 sphinx
 sphinx-autoapi
 types-PyYAML
+pyinstaller
