@@ -115,6 +115,7 @@ class BaseMapping:
         config: Config,
         input_format: str = None,
         output_format: str = None,
+        raise_errors=True,
         **options,
     ):
         self._mapping_graph = None
@@ -127,11 +128,11 @@ class BaseMapping:
         }
 
         self.input_format = input_format
-        if not self.input_format:
+        if not self.input_format and raise_errors:
             raise ConfigurationError("input_format not set for the mapping.")
 
         self.output_format = output_format
-        if not self.output_format:
+        if not self.output_format and raise_errors:
             raise ConfigurationError("output_format not set for the mapping.")
 
     @property

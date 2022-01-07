@@ -4,3 +4,5 @@ dask[dataframe]
 lark-parser
 networkx
 click
+jsonschema
+pyside6

@@ -206,6 +206,8 @@ class PandasRunner(BaseRunner):
     Default implementation for a pandas like runner
     """
 
+    name = "Pandas"
+
     row_value_conversions = {
         "int": lambda col, nullable, null_values: col.apply(
             type_converter((lambda v: int(float(v))), nullable, null_values),

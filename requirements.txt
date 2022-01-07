@@ -13,6 +13,7 @@ astroid==2.9.0
 attrs==21.2.0
     # via
     #   hypothesis
+    #   jsonschema
     #   pytest
     #   pytest-mypy
 babel==2.9.1
@@ -51,10 +52,12 @@ decorator==5.1.0
 distributed==2021.11.2
     # via modin
 docutils==0.17.1
-    # via sphinx
+    # via
+    #   sphinx
+    #   sphinx-rtd-theme
 filelock==3.4.0
     # via pytest-mypy
-flake8==4.0.1
+flake8==3.9.2
     # via pytest-flake8
 fsspec==2021.11.1
     # via
@@ -83,6 +86,8 @@ jinja2==3.0.3
     #   distributed
     #   sphinx
     #   sphinx-autoapi
+jsonschema==4.2.1
+    # via -r requirements-package.in
 lark-parser==0.8.9
     # via -r requirements-package.in
 lazy-object-proxy==1.6.0
@@ -149,9 +154,9 @@ ptyprocess==0.7.0
     # via pexpect
 py==1.11.0
     # via pytest
-pycodestyle==2.8.0
+pycodestyle==2.7.0
     # via flake8
-pyflakes==2.4.0
+pyflakes==2.3.1
     # via flake8
 pygments==2.10.0
     # via
@@ -163,6 +168,10 @@ pyinstaller-hooks-contrib==2021.4
     # via pyinstaller
 pyparsing==3.0.6
     # via packaging
+pyrsistent==0.18.0
+    # via jsonschema
+pyside6==6.2.2.1
+    # via -r requirements-package.in
 pytest==6.2.5
     # via
     #   -r requirements.in
@@ -196,6 +205,8 @@ pyyaml==6.0
     #   sphinx-autoapi
 requests==2.26.0
     # via sphinx
+shiboken6==6.2.2.1
+    # via pyside6
 six==1.16.0
     # via python-dateutil
 snowballstemmer==2.2.0
@@ -208,7 +219,10 @@ sphinx==4.3.1
     # via
     #   -r requirements.in
     #   sphinx-autoapi
+    #   sphinx-rtd-theme
 sphinx-autoapi==1.8.4
+    # via -r requirements.in
+sphinx-rtd-theme==1.0.0
     # via -r requirements.in
 sphinxcontrib-applehelp==1.0.2
     # via sphinx

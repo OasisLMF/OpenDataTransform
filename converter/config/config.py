@@ -33,7 +33,14 @@ class Config:
         overrides: Dict[str, Any] = None,
         env: Dict[str, str] = None,
     ):
-        self.path = os.path.abspath(config_path) if config_path else None
+        self.path = (
+            os.path.abspath(config_path)
+            if config_path and os.path.exists(config_path)
+            else None
+        )
+        self.argv = argv
+        self.env = env
+        self.overrides = overrides
         self.config = self.merge_config_sources(
             *self.get_config_sources(
                 config_path=config_path,
@@ -45,6 +52,9 @@ class Config:
 
     def __eq__(self, other):
         return self.config in [other, getattr(other, "config", {})]
+
+    def __bool__(self):
+        return bool(self.config)
 
     def get_config_sources(
         self,
@@ -241,6 +251,29 @@ class Config:
 
         raise KeyError(path)
 
+    def set(self, path: str, value: Any):
+        """
+        Sets a property in the configuration by it's path in the config.
+        The path should be dotted path into the config. For example, setting
+        the path `"foo.bar"` to `"baz"` the following config will be created::
+
+             {
+                "foo": {
+                    "bar": "baz"
+                }
+             }
+
+        :param path: The path of the value to set.
+        :param value: The value to set.
+        """
+        block = self.config
+
+        path_parts = path.lower().split(".")
+        for path_part in path_parts[:-1]:
+            block = block.setdefault(path_part, {})
+
+        block[path_parts[-1]] = value
+
     def to_yaml(self):
         """
         Generates a yaml string  representation of the normalised config
@@ -265,3 +298,25 @@ class Config:
             )
 
         return p
+
+    def save(self, new_filename=None):
+        """
+        Writes the configuration to a yaml file.
+
+        :param new_filename: The filename to use. If not set the current filename
+            in the configuration is used.
+        """
+        with open(new_filename or self.path, "w") as f:
+            f.write(self.to_yaml())
+
+    def keys(self):
+        """
+        Gets an iterable keys.
+        """
+        return self.config.keys()
+
+    def items(self):
+        """
+        Gets an iterable of (key, value) tuples.
+        """
+        return self.config.items()

@@ -373,11 +373,18 @@ class FileMapping(BaseMapping):
         **options,
     ):
         """
-        :param search_paths: All the paths in the system to check for configs
+        :param search_paths: All the paths in the system to check for
+            mapping configs. If set the path of the conversion config is
+            prepended to this list.
         :param standard_search_path: The path to the standard library of
             mappings
         :param options: Ignored options
         """
+        if config.path:
+            search_paths = [os.path.dirname(config.path)] + (
+                search_paths or []
+            )
+
         super().__init__(
             config,
             search_paths=search_paths,

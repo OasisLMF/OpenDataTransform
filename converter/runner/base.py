@@ -49,6 +49,8 @@ class _BaseRunner:
         "float": build_converter(float),
         "string": build_converter(str),
     }
+    name = "Base Runner"
+    options_schema = {"type": "object", "properties": {}}
 
     def __init__(self, config: Config, **options):
         self.config = config
@@ -231,6 +233,8 @@ class BaseRunner(_BaseRunner):
 
     :param config: The global config for the system
     """
+
+    name = "Base"
 
     def run(
         self,

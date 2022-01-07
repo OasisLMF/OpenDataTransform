@@ -17,6 +17,17 @@ def read_pandas_chunk(c):
 class DaskRunner(PandasRunner):
     dataframe_type = dd.DataFrame
     series_type = dd.Series
+    name = "Dask"
+    options_schema = {
+        "type": "object",
+        "properties": {
+            "chunk_size": {
+                "type": "int",
+                "default": 10000,
+                "title": "Chunk Size",
+            }
+        },
+    }
 
     def __init__(self, config, **options):
         super().__init__(config, **options)
