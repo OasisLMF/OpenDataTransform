@@ -147,6 +147,13 @@ class BaseValidator(Generic[DataType, GroupedDataType]):
     ) -> List[ValidationResultEntry]:  # pragma: no cover
         raise NotImplementedError()
 
+    def count_unique(
+        self,
+        data: Union[DataType, GroupedDataType],
+        entry: ValidatorConfigEntry,
+    ) -> List[ValidationResultEntry]:  # pragma: no cover
+        raise NotImplementedError()
+
     def run_entry(
         self, data: DataType, entry: ValidatorConfigEntry
     ) -> ValidationResult:
@@ -164,6 +171,12 @@ class BaseValidator(Generic[DataType, GroupedDataType]):
                 name=entry.validator_name,
                 operator=entry.operator,
                 entries=self.count(data, entry),  # types: ignore
+            )
+        elif entry.operator == "count-unique":
+            return ValidationResult(
+                name=entry.validator_name,
+                operator=entry.operator,
+                entries=self.count_unique(data, entry),  # types: ignore
             )
         else:
             return ValidationResult(
