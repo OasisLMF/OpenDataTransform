@@ -3,12 +3,7 @@ import os
 from __feature__ import true_property  # noqa
 from PySide6.QtCore import Signal
 from PySide6.QtGui import QAction
-from PySide6.QtWidgets import (
-    QFileDialog,
-    QMainWindow,
-    QMessageBox,
-    QTabWidget,
-)
+from PySide6.QtWidgets import QFileDialog, QMainWindow, QMessageBox, QTabWidget
 
 from converter.config import Config
 from converter.ui.config_tab.main import ConfigTab
