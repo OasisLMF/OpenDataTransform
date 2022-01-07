@@ -87,6 +87,7 @@ def init_logging(verbosity, no_color):
                     ),
                 },
                 "file": {"format": "%(asctime)s %(levelname)-7s: %(message)s"},
+                "validation": {"format": "%(message)s"},
             },
             "filters": {"info_only": {"class": "converter.cli.InfoFilter"}},
             "handlers": {
@@ -102,6 +103,20 @@ def init_logging(verbosity, no_color):
                     "level": logging.DEBUG,
                     "mode": "w",
                 },
+                "validation-log": {
+                    "class": "logging.FileHandler",
+                    "formatter": "validation",
+                    "filename": f"{filename_time}-validation.log",
+                    "level": logging.INFO,
+                    "mode": "w",
+                },
+            },
+            "loggers": {
+                "converter.validator": {
+                    "level": logging.INFO,
+                    "handlers": ["validation-log"],
+                    "propagate": True,
+                }
             },
             "root": {"level": "DEBUG", "handlers": ["console", "log-file"]},
         }

@@ -1,25 +1,9 @@
-from threading import Thread
-
 from __feature__ import true_property  # noqa
 from PySide6.QtWidgets import QPushButton, QVBoxLayout, QWidget
 
-from converter.controller import Controller
 from converter.ui.run_tab.log import LogPanel
-
-
-class RunThread(Thread):
-    def __init__(self, config, on_start, on_finish):
-        super().__init__()
-        self.config = config
-        self.on_start = on_start
-        self.on_finish = on_finish
-
-    def run(self):
-        try:
-            self.on_start()
-            Controller(self.config).run()
-        finally:
-            self.on_finish()
+from converter.ui.run_tab.validation import ValidationPanel
+from converter.ui.run_tab.worker import RunThread
 
 
 class RunTab(QWidget):
@@ -28,6 +12,9 @@ class RunTab(QWidget):
         self.main_window = main_window
 
         self.layout = QVBoxLayout(self)
+
+        self.validation_panel = ValidationPanel(self)
+        self.layout.addLayout(self.validation_panel.layout)
 
         self.log_panel = LogPanel(self)
         self.layout.addWidget(self.log_panel.widget)
@@ -40,10 +27,16 @@ class RunTab(QWidget):
             lambda b: self.run_button.setEnabled(not b)
         )
 
-    def run(self):
-        self.log_panel.clear()
-        RunThread(
-            self.main_window.config_tab.working_config,
+        self.thread = RunThread(
             lambda: self.main_window.running_changed.emit(True),
             lambda: self.main_window.running_changed.emit(False),
-        ).start()
+        )
+
+    def run(self):
+        self.validation_panel.clear()
+        self.log_panel.clear()
+        self.thread.start(
+            self.main_window.config_tab.working_config,
+            self.log_panel,
+            self.validation_panel,
+        )

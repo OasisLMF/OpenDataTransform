@@ -8,16 +8,10 @@ class LogPanel(logging.Handler):
     def __init__(self, parent):
         super().__init__()
         self.widget = QPlainTextEdit(parent)
-        self.widget.setEnabled(False)
-
-        self.setFormatter(
-            logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
-        )
-        logging.getLogger().addHandler(self)
-        logging.getLogger().setLevel(logging.DEBUG)
+        self.widget.readOnly = True
 
     def emit(self, record):
-        msg = self.format(record)
+        msg = f"{record.levelname}: {record.msg}"
         self.widget.appendPlainText(msg)
 
     def clear(self):

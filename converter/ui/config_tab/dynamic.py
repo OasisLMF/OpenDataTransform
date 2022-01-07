@@ -29,10 +29,10 @@ class DynamicClassFormBlock(QGroupBox):
         )
         self.layout.addRow(QLabel("Class:"), self.class_selector)
 
+        self.on_config_loaded(self.tab.working_config)
         self.class_selector.currentIndexChanged.connect(
             self.on_selection_changed
         )
-        self.on_config_loaded(self.tab.working_config)
 
         self.tab.main_window.config_changed.connect(self.on_config_loaded)
 
