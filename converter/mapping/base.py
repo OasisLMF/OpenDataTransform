@@ -190,7 +190,9 @@ class BaseMapping:
         """
         try:
             path = nx.shortest_path(
-                self.mapping_graph, self.input_format, self.output_format,
+                self.mapping_graph,
+                self.input_format,
+                self.output_format,
             )
         except (nx.NetworkXNoPath, nx.NodeNotFound):
             raise NoConversionPathError(self.input_format, self.output_format)

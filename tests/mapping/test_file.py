@@ -552,17 +552,29 @@ def test_mapping_file_has_no_reverse_transform___can_run_in_reverse_is_false():
 @given(paths=lists(text()))
 def test_standard_and_current_path_is_added_to_the_abs_search_paths(paths):
     package_root_dir = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "..", "..",)
+        os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "..",
+        )
     )
 
     mapping = FileMapping(
-        Config(), input_format="A", output_format="B", search_paths=paths,
+        Config(),
+        input_format="A",
+        output_format="B",
+        search_paths=paths,
     )
 
     assert mapping.search_paths == [
         os.path.abspath("."),
         *(os.path.abspath(p) for p in paths),
-        os.path.join(package_root_dir, "converter", "_data", "mappings",),
+        os.path.join(
+            package_root_dir,
+            "converter",
+            "_data",
+            "mappings",
+        ),
     ]
 
 
@@ -963,7 +975,9 @@ def test_types_have_null_values_set___processed_null_values_are_loaded():
 
         assert transformation.types == {
             "a": ColumnConversion(
-                type="int", nullable=True, null_values={0, None, "NULL"},
+                type="int",
+                nullable=True,
+                null_values={0, None, "NULL"},
             ),
         }
 
@@ -999,7 +1013,9 @@ def test_nullable_is_set___nullable_on_field_is_correct(nullable):
 
         assert transformation.types == {
             "a": ColumnConversion(
-                type="int", nullable=nullable, null_values={0, None, "NULL"},
+                type="int",
+                nullable=nullable,
+                null_values={0, None, "NULL"},
             ),
         }
 
@@ -1029,6 +1045,8 @@ def test_null_values_are_set_on_forward___forward_values_are_loaded_into_col():
 
         assert transformation.types == {
             "a": ColumnConversion(
-                type="int", nullable=True, null_values={0, None, "NULL"},
+                type="int",
+                nullable=True,
+                null_values={0, None, "NULL"},
             ),
         }

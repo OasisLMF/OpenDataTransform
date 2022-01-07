@@ -26,7 +26,8 @@ def options():
     return tuples(
         one_of(fixed_dictionaries({"foo": just({"file": "bizz"})}), just({})),
         one_of(
-            fixed_dictionaries({"converter_foo_env": just("fizz")}), just({}),
+            fixed_dictionaries({"converter_foo_env": just("fizz")}),
+            just({}),
         ),
         one_of(tuples(just("foo.args"), just("fuzz")), just(())),
         just(
@@ -51,7 +52,10 @@ def test_show_config(opts):
 
     with config_file({**conf, **ovr}) as f, mock.patch("os.environ", env):
         expected_conf = Config(
-            config_path=f, env=env, argv=argv_dict, overrides=ovr,
+            config_path=f,
+            env=env,
+            argv=argv_dict,
+            overrides=ovr,
         )
 
         runner = CliRunner()
@@ -72,7 +76,10 @@ def test_run(opts):
         "converter.cli.Controller"
     ) as mock_controller, mock.patch("os.environ", env):
         expected_conf = Config(
-            config_path=f, env=env, argv=argv_dict, overrides=ovr,
+            config_path=f,
+            env=env,
+            argv=argv_dict,
+            overrides=ovr,
         )
 
         runner = CliRunner()

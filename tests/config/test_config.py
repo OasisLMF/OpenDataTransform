@@ -30,7 +30,9 @@ def test_config_has_mixture_of_cases___values_are_getable_by_lowercase_path():
 
 def test_config_file_exists___normalised_from_file_are_used():
     with config_file({"foo": {"BAR": "BAz", "boo": "Fizz"}}) as p:
-        config = Config(config_path=p,)
+        config = Config(
+            config_path=p,
+        )
 
         assert config.get("foo.bar") == "BAz"
         assert config.get("foo.boo") == "Fizz"

@@ -30,13 +30,17 @@ def test_component_class_paths_are_set___specific_component_classes_are_used():
     mapping = Mock()
 
     with patch(
-        "tests.controller.test_base.FakeRunner", return_value=runner,
+        "tests.controller.test_base.FakeRunner",
+        return_value=runner,
     ) as runner_ctor_mock, patch(
-        "tests.controller.test_base.FakeExtractor", return_value=extractor,
+        "tests.controller.test_base.FakeExtractor",
+        return_value=extractor,
     ) as extractor_ctor_mock, patch(
-        "tests.controller.test_base.FakeLoader", return_value=loader,
+        "tests.controller.test_base.FakeLoader",
+        return_value=loader,
     ) as loader_ctor_mock, patch(
-        "tests.controller.test_base.FakeMapping", return_value=mapping,
+        "tests.controller.test_base.FakeMapping",
+        return_value=mapping,
     ) as mapping_ctor_mock:
         config = Config(
             overrides={
@@ -64,7 +68,8 @@ def test_component_class_paths_are_set___specific_component_classes_are_used():
         controller.run()
 
         extractor_ctor_mock.assert_called_once_with(
-            config, first="Some Extractor Param",
+            config,
+            first="Some Extractor Param",
         )
         loader_ctor_mock.assert_called_once_with(
             config, first="Some Loader Param"
@@ -85,11 +90,14 @@ def test_component_class_paths_default___default_component_classes_are_used():
     mapping = Mock()
 
     with patch(
-        "converter.runner.PandasRunner", return_value=runner,
+        "converter.runner.PandasRunner",
+        return_value=runner,
     ) as runner_ctor_mock, patch(
-        "converter.connector.CsvConnector", side_effect=[extractor, loader],
+        "converter.connector.CsvConnector",
+        side_effect=[extractor, loader],
     ) as connector_ctor_mock, patch(
-        "converter.mapping.FileMapping", return_value=mapping,
+        "converter.mapping.FileMapping",
+        return_value=mapping,
     ) as mapping_ctor_mock:
         config = Config(
             overrides={

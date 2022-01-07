@@ -22,5 +22,5 @@ def read_yaml(path):
 
     :return: The loaded data
     """
-    with open(path,encoding='utf8') as f:
+    with open(path, encoding="utf8") as f:
         return yaml.load(f, yaml.SafeLoader)

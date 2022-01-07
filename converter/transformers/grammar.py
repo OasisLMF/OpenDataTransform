@@ -48,7 +48,7 @@ array: "[" [expression ("," expression)*] "]"
        | IDENT -> lookup
 
 ?string_manip: "join(" string [("," expression)*] ")" -> str_join
-             | "replace(" expression [("," pattern "," string)+] ")" -> str_replace
+             | "replace(" expression [("," pattern "," expression)+] ")" -> str_replace
              | "match(" expression "," pattern ")" -> str_match
              | "search(" expression "," pattern ")" -> str_search
 

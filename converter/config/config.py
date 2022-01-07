@@ -82,7 +82,9 @@ class Config:
             yield self.normalise_property_names(overrides)
 
     def _get_config_dict_from_path_value_pairs(
-        self, paths_and_values, separator,
+        self,
+        paths_and_values,
+        separator,
     ):
         conf = {}
         for path, value in paths_and_values:

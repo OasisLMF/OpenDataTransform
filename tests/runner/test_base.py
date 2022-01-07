@@ -181,7 +181,9 @@ def test_multiple_mapping_steps___forward_and_reverse_gets_to_the_input(
 
 @given(runner_class=runners())
 @settings(deadline=None)
-def test_multiple_transforms_could_apply___first_is_applied(runner_class,):
+def test_multiple_transforms_could_apply___first_is_applied(
+    runner_class,
+):
     input_data = [
         {"a": 1, "b": 2},
         {"a": 3, "b": 4},
@@ -255,7 +257,9 @@ def test_multiple_transforms_could_apply___first_is_applied(runner_class,):
 
 @given(runner_class=runners())
 @settings(deadline=None)
-def test_row_is_value___value_is_set_on_all_columns(runner_class,):
+def test_row_is_value___value_is_set_on_all_columns(
+    runner_class,
+):
     input_data = [
         {"a": 1, "b": 2},
         {"a": 3, "b": 4},

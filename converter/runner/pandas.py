@@ -212,10 +212,12 @@ class PandasRunner(BaseRunner):
             convert_dtype=False,
         ),
         "float": lambda col, nullable, null_values: col.apply(
-            type_converter(float, nullable, null_values), convert_dtype=False,
+            type_converter(float, nullable, null_values),
+            convert_dtype=False,
         ),
         "string": lambda col, nullable, null_values: col.apply(
-            type_converter(str, nullable, null_values), convert_dtype=False,
+            type_converter(str, nullable, null_values),
+            convert_dtype=False,
         ),
     }
 
@@ -232,7 +234,9 @@ class PandasRunner(BaseRunner):
                 bad_rows = None
             else:
                 coerced_column = self.row_value_conversions[conversion.type](
-                    row[column], conversion.nullable, conversion.null_values,
+                    row[column],
+                    conversion.nullable,
+                    conversion.null_values,
                 )
                 bad_rows = coerced_column.apply(
                     lambda v: isinstance(v, ConversionError),
@@ -297,9 +301,11 @@ class PandasRunner(BaseRunner):
         :return: The combined column value
         """
         if not isinstance(current_column_value, NotSetType):
+            # remove any entries that have already been processed
             row = row[
-                self.create_series(current_column_value.index, False)
-                & self.create_series(row.index, True)
+                self.create_series(
+                    current_column_value.index, False
+                ).combine_first(self.create_series(row.index, True))
             ]
 
         if isinstance(row, NotSetType) or len(row) == 0:
@@ -348,7 +354,9 @@ class PandasRunner(BaseRunner):
         return output_row
 
     def apply_transformation_entry(
-        self, input_df: pd.DataFrame, entry: TransformationEntry,
+        self,
+        input_df: pd.DataFrame,
+        entry: TransformationEntry,
     ) -> Union[pd.Series, NotSetType]:
         """
         Applies a single transformation to the dataset returning the result
@@ -379,7 +387,7 @@ class PandasRunner(BaseRunner):
         )
 
         if isinstance(filter_series, self.series_type):
-            # if we have a series it treat it as a row mapping
+            # if we have a series treat it as a row mapping
             filtered_input = input_df[filter_series]
         elif filter_series:
             # if the filter series is normal value that resolves to true
@@ -412,7 +420,9 @@ class PandasRunner(BaseRunner):
         df = self.get_dataframe(extractor)
 
         transformed = reduce(
-            self.apply_transformation_set, transformations, df,
+            self.apply_transformation_set,
+            transformations,
+            df,
         )
 
         return (r.to_dict() for idx, r in transformed.iterrows())
