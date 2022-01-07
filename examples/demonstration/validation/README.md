@@ -44,17 +44,36 @@ $> converter --config forward.yaml -v run
 ```
 
 After running the transformation there will be a validation log in the log directory (named like 
-`<run-timestamp>-validation.log`). It will have the following content:
+`<run-timestamp>-validation.yaml`). It will have the following content:
 
 ```
-Validation for A
-Total - a: 25.0
-Total - b: 30.0
-NumRows: 5
-Validation for B
-Total - c: 25.0
-Total - d: 30.0
-NumRows: 5
+- format: A
+  validations:
+  - entries:
+    - field: a
+      value: '25.0'
+    - field: b
+      value: '30.0'
+    name: Total
+    operator: sum
+  - entries:
+    - value: '5'
+    name: NumRows
+    operator: count
+
+- format: B
+  validations:
+  - entries:
+    - field: c
+      value: '25.0'
+    - field: d
+      value: '30.0'
+    name: Total
+    operator: sum
+  - entries:
+    - value: '5'
+    name: NumRows
+    operator: count
 ```
 
 Here the validation for `A` shows a total in the `a` column of `25.0` which matches the total in the output file `c`.

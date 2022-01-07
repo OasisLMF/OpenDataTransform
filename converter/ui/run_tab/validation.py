@@ -40,7 +40,7 @@ class ValidationPanel(logging.Handler):
             row[0] = validation["name"]
 
             for entry in validation["entries"]:
-                groups = validation.get("groups", None) or {}
+                groups = entry.get("groups", None) or {}
                 row[1] = ", ".join(
                     map(lambda g: f"{g[0]}={g[1]}", groups.items())
                 )

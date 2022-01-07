@@ -14,7 +14,7 @@ class MainWindow(QMainWindow):
     config_changed = Signal(object)
     running_changed = Signal(bool)
 
-    def __init__(self, config):
+    def __init__(self, config, update_log_paths):
         super().__init__()
 
         # initialise the config
@@ -38,6 +38,8 @@ class MainWindow(QMainWindow):
         self.running_changed.connect(
             lambda b: self.menuBar().setEnabled(not b)
         )
+
+        self.update_log_paths = update_log_paths
 
     def _create_actions(self):
         # create config actions
@@ -80,6 +82,9 @@ class MainWindow(QMainWindow):
                 argv=self.config.argv,
             )
             self.config_changed.emit(self.config)
+
+            # update the new log location
+            self.update_log_paths(file_path)
 
     def _handle_file_save(self, overwrite=False):
         if not overwrite or not self.config.path:
