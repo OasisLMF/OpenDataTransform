@@ -36,7 +36,7 @@ class RunTab(QWidget):
         self.validation_panel.clear()
         self.log_panel.clear()
         self.thread.start(
-            self.main_window.config_tab.working_config,
+            self.main_window.config,
             self.log_panel,
             self.validation_panel,
         )

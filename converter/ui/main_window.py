@@ -18,7 +18,9 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         # initialise the config
-        self.config = config
+        self._loaded_config = config
+        self._working_config = Config()
+        self._default_working_config = Config()
 
         # setup the top menu
         self._create_actions()
@@ -53,7 +55,7 @@ class MainWindow(QMainWindow):
         self.save_config_as.triggered.connect(self._handle_file_save)
 
     def _handle_file_open(self):
-        if self.config_tab.has_changes:
+        if self.config_has_changes:
             msg = QMessageBox(
                 QMessageBox.Warning,
                 "Are you sure?",
@@ -75,19 +77,13 @@ class MainWindow(QMainWindow):
         )[0]
 
         if file_path:
-            self.config = Config(
-                config_path=file_path,
-                overrides=self.config.overrides,
-                env=self.config.env,
-                argv=self.config.argv,
-            )
-            self.config_changed.emit(self.config)
+            self.reset_changes(file_path)
 
             # update the new log location
             self.update_log_paths(file_path)
 
     def _handle_file_save(self, overwrite=False):
-        if not overwrite or not self.config.path:
+        if not overwrite or not self._loaded_config.path:
             file_path = QFileDialog.getSaveFileName(
                 self,
                 caption="Save the current config...",
@@ -95,18 +91,45 @@ class MainWindow(QMainWindow):
                 filter="Config Files (*.yml *.yaml)",
             )[0]
         else:
-            file_path = self.config.path
+            file_path = self._loaded_config.path
 
         if file_path:
-            self.config_tab.working_config.save(file_path)
+            self.config.save(file_path)
+            self.reset_changes(file_path)
 
-            self.config = Config(
-                config_path=file_path,
-                overrides=self.config.overrides,
-                env=self.config.env,
-                argv=self.config.argv,
-            )
-            self.config_changed.emit(self.config)
+    def reset_changes(self, file_path):
+        self._loaded_config = Config(
+            config_path=file_path,
+            overrides=self._loaded_config.overrides,
+            env=self._loaded_config.env,
+            argv=self._loaded_config.argv,
+        )
+        self._working_config = Config()
+        self._default_working_config = Config()
+        self.config_changed.emit(self._loaded_config)
+
+    @property
+    def config_has_changes(self):
+        return bool(self._working_config)
+
+    def set_working_value(self, path, v):
+        if self._working_config.get(path, None) == v:
+            return
+        self._working_config.set(path, v)
+
+    def set_default_working_value(self, path, v):
+        self._default_working_config.set(path, v)
+
+    @property
+    def config(self):
+        config = self._loaded_config
+        return Config(
+            config_path=config.path,
+            overrides=config.merge_config_sources(
+                self._default_working_config.config,
+                self._working_config.config,
+            ),
+        )
 
     def _create_menu_bar(self):
         bar = self.menuBar()

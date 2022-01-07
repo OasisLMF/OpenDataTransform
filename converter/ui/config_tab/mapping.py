@@ -13,9 +13,9 @@ class MappingCombo(QComboBox):
 
         self.addItems(self.options)
 
-        self.update_selection_from_config(self.tab.working_config)
+        self.update_selection_from_config(self.tab.main_window.config)
         self.currentTextChanged.connect(
-            lambda v: self.tab.set_working_value(f"mapping.options.{prop}", v)
+            lambda v: self.tab.main_window.set_working_value(f"mapping.options.{prop}", v)
         )
 
     def refresh_options(self, options):
@@ -41,7 +41,7 @@ class MappingGroupBox(QGroupBox):
 
         layout = QFormLayout()
 
-        config = self.tab.working_config
+        config = self.tab.main_window.config
         formats = self.get_mapping_formats(config)
 
         self.input_combo = MappingCombo(self.tab, "input_format", formats)

@@ -17,6 +17,7 @@ class DynamicClassFormBlock(QGroupBox):
     ):
         super().__init__(label)
         self.tab = tab
+        self.main_window = tab.main_window
         self.classes = classes
         self.default_class = default_class or classes[0]
         self.root_config_path = root_config_path
@@ -29,12 +30,12 @@ class DynamicClassFormBlock(QGroupBox):
         )
         self.layout.addRow(QLabel("Class:"), self.class_selector)
 
-        self.on_config_loaded(self.tab.working_config)
+        self.on_config_loaded(self.main_window.config)
         self.class_selector.currentIndexChanged.connect(
             self.on_selection_changed
         )
 
-        self.tab.main_window.config_changed.connect(self.on_config_loaded)
+        self.main_window.config_changed.connect(self.on_config_loaded)
 
         self.setLayout(self.layout)
 
@@ -48,12 +49,12 @@ class DynamicClassFormBlock(QGroupBox):
 
     def on_selection_changed(self, value):
         selected_class = self.classes[value]
-        self.tab.set_working_value(
+        self.main_window.set_working_value(
             f"{self.root_config_path}.path",
             self.get_fully_qualified_classname(selected_class),
         )
         self.dynamic_fields = self.update_dynamic_fields_from_selection(
-            selected_class, self.tab.working_config
+            selected_class, self.main_window.config
         )
 
     def on_config_loaded(self, new_config):
@@ -87,14 +88,14 @@ class DynamicClassFormBlock(QGroupBox):
             return self.classes[current_index]
         elif default_index is not None:
             self.class_selector.setCurrentIndex(default_index)
-            self.tab.set_default_working_value(
+            self.main_window.set_default_working_value(
                 f"{self.root_config_path}.path",
                 self.get_fully_qualified_classname(self.default_class),
             )
             return self.default_class
         else:
             self.class_selector.setCurrentIndex(0)
-            self.tab.set_default_working_value(
+            self.main_window.set_default_working_value(
                 f"{self.root_config_path}.path",
                 self.get_fully_qualified_classname(self.classes[0]),
             )
@@ -131,7 +132,7 @@ class DynamicClassFormBlock(QGroupBox):
     def _create_enum_field(self, schema, value, config_path):
         if value is None:
             value = schema.get("default", schema["enum"][0])
-            self.tab.set_default_working_value(config_path, value)
+            self.main_window.set_default_working_value(config_path, value)
 
         combo = QComboBox()
         combo.addItems(schema["enum"])
@@ -142,10 +143,10 @@ class DynamicClassFormBlock(QGroupBox):
             combo.setCurrentIndex(selected_index)
         except ValueError:
             combo.setCurrentIndex(0)
-            self.tab.set_default_working_value(config_path, schema["enum"][0])
+            self.main_window.set_default_working_value(config_path, schema["enum"][0])
 
         combo.currentIndexChanged.connect(
-            lambda i: self.tab.set_working_value(
+            lambda i: self.main_window.set_working_value(
                 config_path, schema["enum"][i]
             )
         )
@@ -154,35 +155,35 @@ class DynamicClassFormBlock(QGroupBox):
     def _create_boolean_field(self, schema, value, config_path):
         if value is None:
             value = schema.get("default", False)
-            self.tab.set_default_working_value(config_path, value)
+            self.main_window.set_default_working_value(config_path, value)
 
         field = QCheckBox("")
         field.setChecked(value)
         field.stateChanged.connect(
-            lambda v: self.tab.set_working_value(config_path, bool(v))
+            lambda v: self.main_window.set_working_value(config_path, bool(v))
         )
         return field
 
     def _create_file_field(self, schema, value, config_path):
         if value is None:
             value = schema.get("default", "")
-            self.tab.set_default_working_value(config_path, value)
+            self.main_window.set_default_working_value(config_path, value)
 
         field = FileField(self.tab)
         field.setValue(value or "")
         field.value_changed.connect(
-            lambda v: self.tab.set_working_value(config_path, v)
+            lambda v: self.main_window.set_working_value(config_path, v)
         )
         return field
 
     def _create_text_field(self, schema, value, config_path):
         if value is None:
             value = schema.get("default", "")
-            self.tab.set_default_working_value(config_path, value)
+            self.main_window.set_default_working_value(config_path, value)
 
         field = QLineEdit()
         field.setText(value or "")
         field.textChanged.connect(
-            lambda v: self.tab.set_working_value(config_path, v)
+            lambda v: self.main_window.set_working_value(config_path, v)
         )
         return field
