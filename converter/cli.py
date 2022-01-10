@@ -66,13 +66,9 @@ def init_logging(verbosity, no_color, config):
     :param config: The path to the config file
     """
     config_dir = os.path.abspath(os.path.dirname(config))
-    log_dir = os.path.join(config_dir, "log")
-
-    if not os.path.exists(log_dir):
-        os.mkdir(log_dir)
-
     time_string = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    filename_time = os.path.join(log_dir, time_string)
+    log_dir = os.path.join(config_dir, "runs", time_string)
+    os.makedirs(log_dir, exist_ok=True)
 
     console_log_level = [logging.WARNING, logging.INFO, logging.DEBUG][
         min(2, verbosity)  # max verbosity level is 2
@@ -90,7 +86,7 @@ def init_logging(verbosity, no_color, config):
                     ),
                 },
                 "file": {"format": "%(asctime)s %(levelname)-7s: %(message)s"},
-                "validation": {"format": "%(message)s"},
+                "yaml": {"format": "%(message)s"},
             },
             "filters": {"info_only": {"class": "converter.cli.InfoFilter"}},
             "handlers": {
@@ -102,14 +98,21 @@ def init_logging(verbosity, no_color, config):
                 "log-file": {
                     "class": "logging.FileHandler",
                     "formatter": "file",
-                    "filename": f"{filename_time}-converter.log",
+                    "filename": os.path.join(log_dir, "converter.log"),
                     "level": logging.DEBUG,
                     "mode": "w",
                 },
-                "validation-log-yml": {
+                "validation-log-yaml": {
                     "class": "logging.FileHandler",
-                    "formatter": "validation",
-                    "filename": f"{filename_time}-validation.yaml",
+                    "formatter": "yaml",
+                    "filename": os.path.join(log_dir, "validation.yaml"),
+                    "level": logging.INFO,
+                    "mode": "w",
+                },
+                "metadata-log-yaml": {
+                    "class": "logging.FileHandler",
+                    "formatter": "yaml",
+                    "filename": os.path.join(log_dir, "metadata.yaml"),
                     "level": logging.INFO,
                     "mode": "w",
                 },
@@ -117,9 +120,14 @@ def init_logging(verbosity, no_color, config):
             "loggers": {
                 "converter.validator": {
                     "level": logging.INFO,
-                    "handlers": ["validation-log-yml"],
+                    "handlers": ["validation-log-yaml"],
                     "propagate": True,
-                }
+                },
+                "converter.metadata": {
+                    "level": logging.INFO,
+                    "handlers": ["metadata-log-yaml"],
+                    "propagate": True,
+                },
             },
             "root": {"level": "DEBUG", "handlers": ["console", "log-file"]},
         }

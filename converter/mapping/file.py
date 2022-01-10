@@ -211,6 +211,9 @@ class FileMappingSpec(MappingSpec):
                 types=reverse_types,
                 null_values=reverse_null_values,
             ),
+            metadata={
+                "path": path,
+            },
         )
 
         all_found_configs[self.path] = self
