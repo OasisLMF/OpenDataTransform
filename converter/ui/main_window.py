@@ -3,7 +3,7 @@ import os
 from __feature__ import true_property  # noqa
 from PySide6.QtCore import Signal
 from PySide6.QtGui import QAction
-from PySide6.QtWidgets import QFileDialog, QMainWindow, QMessageBox, QTabWidget
+from PySide6.QtWidgets import QFileDialog, QMainWindow, QMessageBox, QTabWidget, QScrollArea
 
 from converter.config import Config
 from converter.ui.config_tab.main import ConfigTab
@@ -31,13 +31,20 @@ class MainWindow(QMainWindow):
         tabs = QTabWidget()
 
         self.config_tab = ConfigTab(self)
-        tabs.addTab(self.config_tab, "Config")
+        config_scroll_wrapper = QScrollArea()
+        config_scroll_wrapper.setWidget(self.config_tab)
+        tabs.addTab(config_scroll_wrapper, "Config")
 
         self.metadata_tab = MetadataTab(self)
-        tabs.addTab(self.metadata_tab, "Metadata")
+        meta_scroll_wrapper = QScrollArea()
+        meta_scroll_wrapper.setWidget(self.metadata_tab)
+        tabs.addTab(meta_scroll_wrapper, "Metadata")
 
         self.run_tab = RunTab(self)
-        tabs.addTab(self.run_tab, "Run")
+        run_scroll_wrapper = QScrollArea()
+        run_scroll_wrapper.setWidget(self.run_tab)
+        tabs.addTab(run_scroll_wrapper, "Run")
+
 
         self.setCentralWidget(tabs)
 
