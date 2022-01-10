@@ -7,6 +7,7 @@ from PySide6.QtWidgets import QFileDialog, QMainWindow, QMessageBox, QTabWidget
 
 from converter.config import Config
 from converter.ui.config_tab.main import ConfigTab
+from converter.ui.metadata_tab.main import MetadataTab
 from converter.ui.run_tab.main import RunTab
 
 
@@ -31,6 +32,9 @@ class MainWindow(QMainWindow):
 
         self.config_tab = ConfigTab(self)
         tabs.addTab(self.config_tab, "Config")
+
+        self.metadata_tab = MetadataTab(self)
+        tabs.addTab(self.metadata_tab, "Metadata")
 
         self.run_tab = RunTab(self)
         tabs.addTab(self.run_tab, "Run")

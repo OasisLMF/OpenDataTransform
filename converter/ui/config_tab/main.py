@@ -3,10 +3,9 @@ from typing import List, Type
 from __feature__ import true_property  # noqa
 from PySide6.QtWidgets import QVBoxLayout, QWidget
 
-from converter.config import Config
 from converter.connector import BaseConnector, CsvConnector
 from converter.runner import BaseRunner, DaskRunner, ModinRunner, PandasRunner
-from converter.ui.config_tab.dynamic import DynamicClassFormBlock
+from converter.ui.fields.dynamic import DynamicClassFormBlock
 from converter.ui.config_tab.mapping import MappingGroupBox
 
 

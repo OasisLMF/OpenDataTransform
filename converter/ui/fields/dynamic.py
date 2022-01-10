@@ -8,7 +8,7 @@ from PySide6.QtWidgets import (
     QLineEdit,
 )
 
-from converter.ui.config_tab.file import FileField
+from converter.ui.fields.file import FileField
 
 
 class DynamicClassFormBlock(QGroupBox):

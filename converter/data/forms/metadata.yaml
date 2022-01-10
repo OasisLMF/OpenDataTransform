@@ -1,0 +1,99 @@
+prtfolio_name:
+    title: Portfolio Name
+    type: string
+entity_company_book:
+    title: Entity/Company/Book
+    type: string
+as_of_date:
+    title: As-Of Date
+    type: date
+perils:
+    title: Perils
+    type: string
+    sub_type: multiselect
+    enum:
+        - Earthquake - Shake only
+        - Fire Following
+        - Tsunami
+        - Sprinkler Leakage
+        - Landslide
+        - Liquefaction
+        - Tropical Cyclone
+        - Extra Tropical Cyclone
+        - Storm Surge
+        - River / Fluvial Flood
+        - Flash / Surface / Pluvial Flood
+        - Straight-line / other convective wind
+        - Tornado
+        - Hail
+        - Snow
+        - Ice
+        - Freeze
+        - NonCat
+        - Wildfire / Bushfire
+        - NBCR Terrorism
+        - Conventional Terrorism
+        - Lightning
+        - Winterstorm Wind
+        - Smoke
+        - Drought Induced Subsidence
+        - Crop Hail (From Convective Storm)
+        - Cyber Security Data and Privacy Breach
+        - Cyber Security Property Damage
+        - Pandemic Flu
+        - Other
+line_of_business:
+    title: Line Of Business
+    type: string
+    sub_type: multiselect
+    enum:
+        - Residential
+        - Commercial
+        - Industrial
+        - Automotive
+        - MH
+geographic_scope:
+    title: Geographic Scope
+    type: string
+    sub_type: multiselect
+    enum:
+        - Global
+        - group: Regions
+          entries: [ ]
+        - group: Countries
+          entries: [ ]
+contract_features:
+    title: Contract features
+    type: string
+    sub_type: multiselect
+    enum:
+        - Contract features
+        - Excess & Layered policies
+        - CEA mini-policy
+        - Franchise deductibles
+        - min-max deductibles
+        - Sublimits
+        - Facultative
+        - Step policy conditions
+        - Franchise deductibles
+        - Other
+special_conditions:
+    title: Special conditions
+    type: string
+    sub_type: multiselect
+    enum:
+        - JER
+        - Large industrial facilities
+        - Greenhouses
+        - New Zealand Earthquake Commission
+        - Wind farms
+        - Flood mitigation
+        - Builders risk
+        - GoM
+        - Secondary modifiers
+        - Other
+notes:
+    title: Notes
+    type: string
+    sub_type: text_area
+
