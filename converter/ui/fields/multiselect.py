@@ -1,3 +1,4 @@
+from PySide6.QtGui import QFont
 from __feature__ import true_property  # noqa
 from PySide6.QtWidgets import QListWidget, QListWidgetItem
 from PySide6.QtCore import Qt
@@ -21,6 +22,11 @@ class MultiSelect(QListWidget):
             else:
                 group_header = QListWidgetItem(opt["group"])
                 group_header.setFlags(Qt.ItemFlag.NoItemFlags)
+                group_header.setForeground(Qt.black)
+                header_font = QFont()
+                header_font.setWeight(QFont.Bold)
+                group_header.setFont(header_font)
+
                 self.addItem(group_header)
 
                 for group_opt in opt["entries"]:

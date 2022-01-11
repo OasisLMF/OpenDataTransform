@@ -45,7 +45,6 @@ class MainWindow(QMainWindow):
         run_scroll_wrapper.setWidget(self.run_tab)
         tabs.addTab(run_scroll_wrapper, "Run")
 
-
         self.setCentralWidget(tabs)
 
         self.running_changed.connect(
