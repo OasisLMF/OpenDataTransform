@@ -1,0 +1,247 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Creating Data Connections &mdash; Open Data Transformation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/c" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/u" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/s" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/t" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/o" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/m" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/." type="text/css" />
+  <link rel="stylesheet" href="../../../_static/c" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/s" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/s" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../../../_static/idf_square.ico"/>
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Open Data Transformation
+          
+
+          
+            
+            <img src="../../../_static/IDF_Original.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../userguide_index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../mappings/index.html">Mappings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../execute/index.html">Executing a data transformation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reporting/index.html">Reporting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../knownissues/index.html">Known Issues</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../testing/index.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Developer information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../package/index.html">API Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Open Data Transformation</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Creating Data Connections</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../../_sources/components/developer/data-connections/creating-data-connections.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="creating-data-connections">
+<h1>Creating Data Connections<a class="headerlink" href="#creating-data-connections" title="Permalink to this headline">¶</a></h1>
+<p>Each data connection should implement 3 methods, a constructor, <code class="code docutils literal notranslate"><span class="pre">extract</span></code> and
+<code class="code docutils literal notranslate"><span class="pre">load</span></code>.</p>
+<p>A <code class="code docutils literal notranslate"><span class="pre">BaseConnector</span></code> exists at <code class="code docutils literal notranslate"><span class="pre">converter.connector.BaseConnector</span></code> which
+should be used as a base class for all data connections. This implements a
+constructor for the connector that takes the provided options and stores them in
+the <code class="code docutils literal notranslate"><span class="pre">options</span></code> property but this method should be overridden for handling
+specific options and providing default values.</p>
+<p>The <code class="code docutils literal notranslate"><span class="pre">extract</span></code> accepts no arguments. It takes data from the source and passes it
+into the system. It should return an iterable where each entry is a row of data
+represented as a dictionary of key value pairs. If multiple data sources need to
+br joined together to produce an entry for a single row this should be handled
+in the connector. To allow for large data sets this should be a python generator
+object rather than returning a list containing all elements.</p>
+<p>The <code class="code docutils literal notranslate"><span class="pre">load</span></code> method takes one argument which is an iterable of data rows
+represented by dictionaries of key value pairs. It should take each row and add
+them to the target. The input data may be a list or any other iterable and you
+should not assume the inbound can be iterated over multiple times. The
+<code class="code docutils literal notranslate"><span class="pre">load</span></code> method just handle receiving <code class="code docutils literal notranslate"><span class="pre">NotSet</span></code>, <code class="code docutils literal notranslate"><span class="pre">None</span></code> and
+<code class="code docutils literal notranslate"><span class="pre">NaN</span></code> values.</p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

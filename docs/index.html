@@ -54,7 +54,7 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Configuration" href="config.html" /> 
+    <link rel="next" title="User Guide" href="userguide_index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -104,15 +104,14 @@
             
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="config.html">Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="config.html#debugging">Debugging</a></li>
-<li class="toctree-l1"><a class="reference internal" href="components/data-connections/index.html">Data Connections</a></li>
+<li class="toctree-l1"><a class="reference internal" href="userguide_index.html">User Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="components/mappings/index.html">Mappings</a></li>
-<li class="toctree-l1"><a class="reference internal" href="components/runners/index.html">Runners</a></li>
-<li class="toctree-l1"><a class="reference internal" href="components/cli/index.html">CLI</a></li>
-<li class="toctree-l1"><a class="reference internal" href="package/index.html">API Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="components/testing/index.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components/execute/index.html">Executing a data transformation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components/reporting/index.html">Reporting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="components/knownissues/index.html">Known Issues</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components/testing/index.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components/developer/index.html">Developer information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="package/index.html">API Reference</a></li>
 </ul>
 
             
@@ -200,35 +199,84 @@
 <li><p>Mapping files can be provided as a set, with one mapping file for each of the account, location, and reinsurance files.</p></li>
 </ul>
 </div>
-<div class="section" id="open-exposure-data">
-<h2>Open Exposure Data<a class="headerlink" href="#open-exposure-data" title="Permalink to this headline">¶</a></h2>
-<p>The OED (Open Exposure Data) Standard is at the core of the Open Data Transformation Framework. The OED Standard arose from the lack of an industry standard for Oasis LMF-based models. OED assists with solving interoperability problems current in the insurance market, where implementing a model-developer-independent exposure data and results repositories will assist in creating more choice in the use of catastrophe models and analytical tools. OED is curated by OASIS, along with ORD, under the  <a class="reference external" href="https://oasislmf.org/open-data-standards">Open Data Standards (ODS) Initiative</a>.</p>
-</div>
-<div class="section" id="user-guide">
-<h2>User guide<a class="headerlink" href="#user-guide" title="Permalink to this headline">¶</a></h2>
-<p>The user guide is under development.</p>
-<p>The Open  Data Transformation can be run locally via a Python Shell or command line.</p>
-<ol class="arabic simple">
-<li><p>Download and install the Python package from <a class="reference external" href="https://github.com/OasisLMF/OpenDataTransform/">the project GitHub pages</a>. A web-based user interface is under development.</p></li>
-</ol>
-<p>2. Complete a configuration file to point to the source account, location, and reinsurance flat files (in OED or another model format). The configuration file should also point to the mapping files to be used in the transformation. Example config files and source files (AIR CEDE example) are available <a class="reference external" href="https://github.com/OasisLMF/OpenDataTransform/tree/master/examples">here</a>.
-This contains <a class="reference external" href="https://github.com/OasisLMF/OpenDataTransform/tree/master/examples/demonstration">demonstration files using basic transformation operations</a> and <a class="reference external" href="https://github.com/OasisLMF/OpenDataTransform/tree/master/examples/cede">AIR to OED examples</a>.</p>
-<ol class="arabic simple" start="3">
-<li><p>Execute the python package in the command line to produce the converted output .csv files.</p></li>
-</ol>
-<p>Validation and testing procedures are under development to assist in confirming the validity of transformations, and to assist future development.</p>
-</div>
-<div class="section" id="further-developer-information">
-<h2>Further developer information<a class="headerlink" href="#further-developer-information" title="Permalink to this headline">¶</a></h2>
-<p>The Open Data Transformation is designed to convert exposure data from one format to another as long as both formats can be expressed as an iterable of dictionaries. That is, the possible field values must be mapped to a key (field name) for each model format.</p>
-<p>The convertor framework is modular, using several swappable components:</p>
-<ul class="simple">
-<li><p>Data Connections for specifying how the input and output data should be processed by the system. The current version support csv file input and output as csv files only, but a new connection could enable, for example, extracting data directly from a model database.</p></li>
-<li><p>Mapping describing how the fields should be transformed to between formats.</p></li>
-<li><p>The Runner, which takes the input connection, transforms the data using the mapping and passes the transformed data onto the output connection.</p></li>
-</ul>
-<p>Each of these components are configurable and even swappable to some new implementation.</p>
+<div class="section" id="the-open-exposure-data-oed-standard">
+<h2>The Open Exposure Data (OED) Standard<a class="headerlink" href="#the-open-exposure-data-oed-standard" title="Permalink to this headline">¶</a></h2>
+<p>The OED (Open Exposure Data) Standard is at the core of the Open Data Transformation Framework.</p>
+<p>The OED Standard arose from the lack of an industry standard for Oasis LMF-based models. OED assists with solving interoperability problems current in the insurance market, where implementing a model-developer-independent exposure data and results repositories will assist in creating more choice in the use of catastrophe models and analytical tools.</p>
+<p>OED is curated by OASIS, along with ORD (Open Results Data), under the <a class="reference external" href="https://oasislmf.org/open-data-standards">Open Data Standards (ODS) Initiative</a>. The ODS GitHub page is <a class="reference external" href="https://github.com/OasisLMF/OpenDataStandards/">github.com/OasisLMF/OpenDataStandards/</a>.</p>
 <div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="userguide_index.html">User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="userguide_index.html#installing-the-package">Installing the package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="userguide_index.html#inputs">Inputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="userguide_index.html#outputs">Outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="userguide_index.html#mappings">Mappings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="userguide_index.html#executing-a-data-transformation">Executing a data transformation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="userguide_index.html#reporting">Reporting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="components/mappings/index.html">Mappings</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="components/mappings/mapping-files.html">Mapping Files</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="components/mappings/mapping-files.html#bases"><cite>bases</cite></a></li>
+<li class="toctree-l3"><a class="reference internal" href="components/mappings/mapping-files.html#input-format-output-format"><cite>input_format</cite>/<cite>output_format</cite></a></li>
+<li class="toctree-l3"><a class="reference internal" href="components/mappings/mapping-files.html#forward-reverse"><cite>forward</cite>/<cite>reverse</cite></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="components/mappings/transformer-language.html">Transformer Language</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="components/mappings/transformer-language.html#primitive-types">Primitive Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="components/mappings/transformer-language.html#column-lookup">Column Lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="components/mappings/transformer-language.html#operations">Operations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="components/mappings/transformer-language.html#groupings">Groupings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="components/mappings/transformer-language.html#string-manipulations">String Manipulations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="components/execute/index.html">Executing a data transformation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="components/execute/ui.html">Running ODTF via User Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="components/execute/config.html">Running ODTF via Command Line</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="components/execute/config.html#configuring-the-transformation-tool-for-use-in-command-line-interface">Configuring the transformation tool for use in command line interface</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="components/execute/dbConnection.html">Running ODTF via database connection</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="components/reporting/index.html">Reporting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="components/reporting/index.html#portfolio-metadata">Portfolio metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="components/reporting/index.html#data-validation">Data validation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="components/knownissues/index.html">Known Issues</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components/testing/index.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components/developer/index.html">Developer information</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="components/developer/config/index.html">Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="components/developer/config/index.html#environment-configuration">Environment Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="components/developer/config/index.html#cli-configuration">CLI Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="components/developer/config/index.html#debugging">Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="components/developer/cli/index.html">CLI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="components/developer/data-connections/index.html">Data Connections</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="components/developer/data-connections/creating-data-connections.html">Creating Data Connections</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="components/developer/data-connections/creating-data-connections.html">Creating Data Connections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="components/developer/runners/index.html">Runners</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="components/developer/runners/index.html#coercing-data-types">Coercing data types</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="package/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="package/converter/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">converter</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="package/converter/index.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="package/converter/index.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -239,7 +287,7 @@ This contains <a class="reference external" href="https://github.com/OasisLMF/Op
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="config.html" class="btn btn-neutral float-right" title="Configuration" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="userguide_index.html" class="btn btn-neutral float-right" title="User Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

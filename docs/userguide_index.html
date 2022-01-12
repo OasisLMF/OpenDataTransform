@@ -1,0 +1,293 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>User Guide &mdash; Open Data Transformation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+  <link rel="stylesheet" href="_static/c" type="text/css" />
+  <link rel="stylesheet" href="_static/u" type="text/css" />
+  <link rel="stylesheet" href="_static/s" type="text/css" />
+  <link rel="stylesheet" href="_static/t" type="text/css" />
+  <link rel="stylesheet" href="_static/o" type="text/css" />
+  <link rel="stylesheet" href="_static/m" type="text/css" />
+  <link rel="stylesheet" href="_static/." type="text/css" />
+  <link rel="stylesheet" href="_static/c" type="text/css" />
+  <link rel="stylesheet" href="_static/s" type="text/css" />
+  <link rel="stylesheet" href="_static/s" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="_static/idf_square.ico"/>
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Mappings" href="components/mappings/index.html" />
+    <link rel="prev" title="The Open Data Transformation Framework" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Open Data Transformation
+          
+
+          
+            
+            <img src="_static/IDF_Original.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installing-the-package">Installing the package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#inputs">Inputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#outputs">Outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mappings">Mappings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#executing-a-data-transformation">Executing a data transformation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reporting">Reporting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="components/mappings/index.html">Mappings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components/execute/index.html">Executing a data transformation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components/reporting/index.html">Reporting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components/knownissues/index.html">Known Issues</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components/testing/index.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components/developer/index.html">Developer information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="package/index.html">API Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Open Data Transformation</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>User Guide</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/userguide_index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="user-guide">
+<h1>User Guide<a class="headerlink" href="#user-guide" title="Permalink to this headline">¶</a></h1>
+<p>This user guide will get you started with transforming exposure data in the Open Data Transformation Framework.</p>
+<p>There are two options for running transformations: using the command line or via the user interface.</p>
+<p>Both methods require a local installation of the Python package.</p>
+<div class="section" id="installing-the-package">
+<h2>Installing the package<a class="headerlink" href="#installing-the-package" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Download the Python package from the project GitHub pages at <a class="reference external" href="https://github.com/OasisLMF/OpenDataTransform/">github.com/OasisLMF/OpenDataTransform</a>.</p></li>
+<li><p>Install the Python package using <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">git+https://github.com/OasisLMF/OasisDataConverter.git</span></code></p></li>
+</ol>
+<p>You will require <a class="reference external" href="https://www.python.org/">Python</a> version 3.8 or higher, and <a class="reference external" href="https://pypi.org/project/pip/">pip</a> to be installed. To install Python, follow instructions at the <a class="reference external" href="https://www.python.org/about/gettingstarted/">Python For Beginners</a> page.</p>
+</div>
+<div class="section" id="inputs">
+<h2>Inputs<a class="headerlink" href="#inputs" title="Permalink to this headline">¶</a></h2>
+<p><strong>Configuration information</strong>: This defines the input file names and file paths of input, output files, the mapping files to use, and other choices such as the type of runner (which affects transformation speed). A configuration file written in .yaml format is required to run the tool in the command line. This configuration file can also be loaded into the user interface, or the transformation can be configured directly in the user interface and saved to file.</p>
+<p><strong>Input data</strong>: Flat file input (account, location, reinsurance files in .csv format) or SQL database.</p>
+<p><strong>Mapping files</strong>: One mapping file for each input file. These describe the data types to be included in the transformation, and the transformation operations defined by the user. The files are in
+.yaml/.yml format, more explanation on .yaml can be found <a class="reference external" href="https://docs.fileformat.com/programming/yaml/">here</a>.</p>
+<p><strong>Data validation definition</strong>: One validation definition file for each input file. These describe the data validation metrics that will be performed to check the transformation. The file defines the fields and operations (sum, count, etc.) required to check data was transformed correctly. The files are in .yaml/.yml format.</p>
+<p>The Open Data Transformation Framework uses an <em>extractor</em> to read the input data, a <em>runner</em> to perform the transformation based on the mapping file, and a <em>loader</em> component to output data in the defined format and location, as shown below.</p>
+<a class="reference internal image-reference" href="_images/ODTF_structure.png"><img alt="Schema of the Open Data Transformation Framework structure" src="_images/ODTF_structure.png" style="width: 600px;" /></a>
+</div>
+<div class="section" id="outputs">
+<h2>Outputs<a class="headerlink" href="#outputs" title="Permalink to this headline">¶</a></h2>
+<p>The transformation will produce:</p>
+<p><strong>Output data</strong>: Data is transformed to the destination format defined in the configuration and mapping files, and saved as .csv files. One file is saved for each account, location, and reinsurance as required by the destination format. The destination file name and path are defined by the user in configuration.</p>
+<p><strong>Log file</strong>: A log file, named <em>&lt;date&gt;-&lt;time&gt;–converter.log</em>, is produced, containing the configuration information and confirmation of of successful transformation, or a record of errors encountered.</p>
+<p><strong>Data validation files</strong>: A data validation file, containing a comparison of various metrics in both the input file and output file. For example, the sum of Total Insured Value grouped by Occupancy Type and Currency. The fields and operations are defined by the user in the validation definition files.</p>
+</div>
+<div class="section" id="mappings">
+<h2>Mappings<a class="headerlink" href="#mappings" title="Permalink to this headline">¶</a></h2>
+<p>Mappings describe how columns will be converted between two data formats. Mappings are made up of multiple mapping files that describe how convert from one source format to another destination format - i.e., one mapping file is defined per model-pair. A mapping file can be used to define a forward transformation (e.g., Model A to B) and a reverse transformation (Model B to A).</p>
+<p><strong>Mapping file templates</strong> are available in the GitHub repo. These are provided as ‘default’ mappings for use as-is or as a base from which to create new mappings. By copying and editing these, a user can tailor the mapping for a specific case (a portfolio or user may require a specific match-up of occupancy code in the source and destination formats, which is not used in the default file). The templates can be updated to reflect changes in model formats - to account for changes to field names or field values or the addition/deletion of new fields or field values in the latest version.</p>
+<p>The mapping file header describes the mapping version, the source and destination formats (and their versions), and information about when and who created the mapping.</p>
+<p>The file defines the source field data types and the transformations to be performed. Transformations can copy one field into another, substitute field values using a <em>replace</em> function, or include conditional transformation using a <em>where</em> clause.</p>
+<a class="reference internal image-reference" href="_images/example_mapping_overview.png"><img alt="An excerpt of an example mapping file" src="_images/example_mapping_overview.png" style="width: 600px;" /></a>
+<p>An example mapping file for CEDE to OED conversion are available for <a class="reference external" href="https://github.com/OasisLMF/OpenDataTransform/blob/master/examples/cede_test_v3/AIR-OED-ACC_v3.yml">account files</a> and <a class="reference external" href="https://github.com/OasisLMF/OpenDataTransform/blob/master/examples/cede_test_v3/AIR-OED-LOC_v3.yml">location files</a>.</p>
+<p>Mappings can also be linked together in the configuration file to transform data from one format to another even if a direct conversion between the two does not exist. For example, a mapping exists from model A to B, and another exists from model B to C. In the configuration information, the source can be given as A and destination as C, and the transformation will automatically route data from A to B to C.</p>
+<p>The <strong>Mapping Files</strong> section provides more information on the contents of a mapping file.</p>
+</div>
+<div class="section" id="executing-a-data-transformation">
+<h2>Executing a data transformation<a class="headerlink" href="#executing-a-data-transformation" title="Permalink to this headline">¶</a></h2>
+<p>A data transformation can be executed via the <strong>User Interface</strong> or the <strong>Command Line</strong>. Either method will allow to use flat file input data, or a database connection.</p>
+<p>The <strong>Executing a data transformation</strong> section provides more information on the contents of a mapping file.</p>
+</div>
+<div class="section" id="reporting">
+<h2>Reporting<a class="headerlink" href="#reporting" title="Permalink to this headline">¶</a></h2>
+<p>The tool reports portfolio metadata and data validation metrics to a log file, which will be stored in the same location as the config file.</p>
+<p><strong>Portfolio metadata</strong> can be reported via the configuration file and UI. This data is recorded in the log file, and summarises the portfolio that has been transformed. It includes contextual information about the contents of the file, which are not read by the tool; for example the region, line of business, and complexity of the portfolio attributes. It also records information about the data of test, analysts running the test.</p>
+<p><strong>Data validation</strong> files are .yaml files. They require the fields, operator, and any grouping required to summarise the data in both the input file and output file.</p>
+<p>The <strong>Reporting</strong> section provides more information on setting up, completing and interpreting the metadata and validation.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="components/mappings/index.html" class="btn btn-neutral float-right" title="Mappings" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="The Open Data Transformation Framework" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

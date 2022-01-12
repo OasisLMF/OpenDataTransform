@@ -1,10 +1,10 @@
-input_format: A
+input_format: a
 output_format: B
 forward:
   types:
-    a:
-      type: float
     b:
+      type: float
+    a:
       type: float
   transform:
     c:

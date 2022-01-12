@@ -14,6 +14,9 @@ An exposure data transformation is under development to convert data between OED
 There is potential to apply the framework to the transformation of results data, via the ORD (Open Results Data) Standard.
 
 
+
+
+
 Benefits of the Framework
 -------------------------------------------------------
 
@@ -32,56 +35,33 @@ Benefits of the Framework
 * Mapping files can be provided as a set, with one mapping file for each of the account, location, and reinsurance files.
 
 
-Open Exposure Data
----------------------
-
-The OED (Open Exposure Data) Standard is at the core of the Open Data Transformation Framework. The OED Standard arose from the lack of an industry standard for Oasis LMF-based models. OED assists with solving interoperability problems current in the insurance market, where implementing a model-developer-independent exposure data and results repositories will assist in creating more choice in the use of catastrophe models and analytical tools. OED is curated by OASIS, along with ORD, under the  `Open Data Standards (ODS) Initiative <https://oasislmf.org/open-data-standards>`_.
-
-
-User guide
----------------------------
-
-The user guide is under development.
-
-The Open  Data Transformation can be run locally via a Python Shell or command line. 
-
-1. Download and install the Python package from `the project GitHub pages <https://github.com/OasisLMF/OpenDataTransform/>`_. A web-based user interface is under development.
-
-2. Complete a configuration file to point to the source account, location, and reinsurance flat files (in OED or another model format). The configuration file should also point to the mapping files to be used in the transformation. Example config files and source files (AIR CEDE example) are available `here <https://github.com/OasisLMF/OpenDataTransform/tree/master/examples>`_. 
-This contains `demonstration files using basic transformation operations <https://github.com/OasisLMF/OpenDataTransform/tree/master/examples/demonstration>`_ and `AIR to OED examples <https://github.com/OasisLMF/OpenDataTransform/tree/master/examples/cede>`_.
-
-3. Execute the python package in the command line to produce the converted output .csv files.
-
-Validation and testing procedures are under development to assist in confirming the validity of transformations, and to assist future development.
 
 
 
-Further developer information
--------------------------------
+The Open Exposure Data (OED) Standard
+------------------------------------------
 
-The Open Data Transformation is designed to convert exposure data from one format to another as long as both formats can be expressed as an iterable of dictionaries. That is, the possible field values must be mapped to a key (field name) for each model format.
+The OED (Open Exposure Data) Standard is at the core of the Open Data Transformation Framework. 
 
-The convertor framework is modular, using several swappable components:
+The OED Standard arose from the lack of an industry standard for Oasis LMF-based models. OED assists with solving interoperability problems current in the insurance market, where implementing a model-developer-independent exposure data and results repositories will assist in creating more choice in the use of catastrophe models and analytical tools. 
 
-* Data Connections for specifying how the input and output data should be processed by the system. The current version support csv file input and output as csv files only, but a new connection could enable, for example, extracting data directly from a model database.
+OED is curated by OASIS, along with ORD (Open Results Data), under the `Open Data Standards (ODS) Initiative <https://oasislmf.org/open-data-standards>`_. The ODS GitHub page is `github.com/OasisLMF/OpenDataStandards/ <https://github.com/OasisLMF/OpenDataStandards/>`_.
 
-* Mapping describing how the fields should be transformed to between formats.
 
-* The Runner, which takes the input connection, transforms the data using the mapping and passes the transformed data onto the output connection.
 
-Each of these components are configurable and even swappable to some new implementation.
 
 .. toctree::
-   :hidden:
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Contents:
 
-   config.rst
-   components/data-connections/index.rst
+   userguide_index.rst
    components/mappings/index.rst
-   components/runners/index.rst
-   components/cli/index.rst
-   package/index.rst
-   components/testing/index.rst
+   components/execute/index.rst
+   components/reporting/index.rst
    components/knownissues/index.rst
+   components/testing/index.rst
+   components/developer/index.rst
+   package/index.rst
+   
+
    

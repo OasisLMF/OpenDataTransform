@@ -11,14 +11,3 @@ forward:
       - transformation: a * 2
     d:
       - transformation: b + 3
-reverse:
-  types:
-    c:
-      type: float
-    d:
-      type: float
-  transform:
-    a:
-      - transformation: c / 2
-    b:
-      - transformation: d - 3

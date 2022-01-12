@@ -1,0 +1,14 @@
+Running ODTF via User Interface
+================
+
+Run the user interface by ...
+
+<show screenshots>
+<give instructions>
+
+
+
+
+
+
+The option is available to set up the transformation by loading a configuration file. Alternatively, you can configure the transformation entirely in the UI, and save that config file to your data folder.

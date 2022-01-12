@@ -1,0 +1,303 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>User Guide &mdash; Open Data Transformation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/c" type="text/css" />
+  <link rel="stylesheet" href="../_static/u" type="text/css" />
+  <link rel="stylesheet" href="../_static/s" type="text/css" />
+  <link rel="stylesheet" href="../_static/t" type="text/css" />
+  <link rel="stylesheet" href="../_static/o" type="text/css" />
+  <link rel="stylesheet" href="../_static/m" type="text/css" />
+  <link rel="stylesheet" href="../_static/." type="text/css" />
+  <link rel="stylesheet" href="../_static/c" type="text/css" />
+  <link rel="stylesheet" href="../_static/s" type="text/css" />
+  <link rel="stylesheet" href="../_static/s" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../_static/idf_square.ico"/>
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Known Issues" href="../components/knownissues/index.html" />
+    <link rel="prev" title="The Open Data Transformation Framework" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Open Data Transformation
+          
+
+          
+            
+            <img src="../_static/IDF_Original.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installing-the-package">Installing the package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configuring-the-transformation-tool">Configuring the transformation tool</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mappings">Mappings</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#executing-the-data-transformation">Executing the data transformation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reporting">Reporting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../components/knownissues/index.html">Known Issues</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components/testing/index.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devInfo/index.html">Developer information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../package/index.html">API Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Open Data Transformation</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>User Guide</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/userguide/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="user-guide">
+<h1>User Guide<a class="headerlink" href="#user-guide" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="installing-the-package">
+<h2>Installing the package<a class="headerlink" href="#installing-the-package" title="Permalink to this headline">¶</a></h2>
+<p>There are two options for running the ODT - via command line or via the user interface. Both methods require a local installation of the Python package. Here is how to do it:</p>
+<ol class="arabic simple">
+<li><p>Download the Python package from <a class="reference external" href="https://github.com/OasisLMF/OpenDataTransform/">the project GitHub pages</a>.</p></li>
+<li><p>Install the Python package using <code class="docutils literal notranslate"><span class="pre">`pip</span> <span class="pre">install</span> <span class="pre">git+https://github.com/OasisLMF/OasisDataConverter.git`</span></code></p></li>
+</ol>
+<p>You will require <a class="reference external" href="https://www.python.org/">Python</a> version 3.8 or higher, and <a class="reference external" href="https://pypi.org/project/pip/">pip</a> to be installed. To install Python, follow instructions at the <a class="reference external" href="https://www.python.org/about/gettingstarted/">Python For Beginners</a> page.</p>
+</div>
+<div class="section" id="configuring-the-transformation-tool">
+<h2>Configuring the transformation tool<a class="headerlink" href="#configuring-the-transformation-tool" title="Permalink to this headline">¶</a></h2>
+<p>&gt; Setting up the config file</p>
+<p>The configuration file points the tool to the source account, location, and reinsurance flat files (in OED or another model format).
+The configuration file should also point to the mapping files to be used in the transformation.</p>
+<p>Example config files and source files (AIR CEDE example) are available <a class="reference external" href="https://github.com/OasisLMF/OEDtransform/tree/master/examples/cede_test">here</a>.</p>
+</div>
+<div class="section" id="mappings">
+<h2>Mappings<a class="headerlink" href="#mappings" title="Permalink to this headline">¶</a></h2>
+<p>Mappings describe how columns are converted between two data formats.</p>
+<p>Mappings are made up of multiple mapping files that describe how convert from one format to another. These can be chained together to get from one format to another even if a direct conversion between the two does not exist.</p>
+<p>Example mapping files for CEDE to OED conversion are <a class="reference external" href="https://github.com/OasisLMF/OEDtransform/blob/master/examples/cede_test_v3/AIR-OED-ACC_v3.yml">here for account files</a> and <a class="reference external" href="https://github.com/OasisLMF/OEDtransform/blob/master/examples/cede_test_v3/AIR-OED-LOC_v3.yml">here for location files</a>.</p>
+<div class="toctree-wrapper compound">
+</div>
+<p>&gt; Setting up new mapping files</p>
+<p>&gt; Using existing mapping files</p>
+</div>
+<div class="section" id="executing-the-data-transformation">
+<h2>Executing the data transformation<a class="headerlink" href="#executing-the-data-transformation" title="Permalink to this headline">¶</a></h2>
+<p>OPTION 1 - via the Command Line Interface</p>
+<p>Command line usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Usage</span><span class="p">:</span> <span class="n">converter</span> <span class="p">[</span><span class="n">OPTIONS</span><span class="p">]</span> <span class="n">COMMAND</span> <span class="p">[</span><span class="n">ARGS</span><span class="p">]</span><span class="o">...</span>
+
+  <span class="n">Initialises</span> <span class="n">the</span> <span class="n">cli</span> <span class="n">grouping</span> <span class="k">with</span> <span class="n">default</span> <span class="n">options</span><span class="o">.</span>
+
+<span class="n">Options</span><span class="p">:</span>
+  <span class="o">-</span><span class="n">o</span><span class="p">,</span> <span class="o">--</span><span class="n">option</span> <span class="n">TEXT</span><span class="o">...</span>  <span class="n">Sets</span> <span class="n">a</span> <span class="n">configuration</span> <span class="n">option</span><span class="p">,</span> <span class="n">a</span> <span class="n">path</span> <span class="ow">and</span> <span class="n">value</span> <span class="n">are</span>
+                        <span class="n">required</span> <span class="n">eg</span> <span class="o">-</span><span class="n">o</span> <span class="n">extractor</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">foo</span><span class="o">.</span><span class="n">bar</span> <span class="n">bash</span>
+
+  <span class="o">-</span><span class="n">c</span><span class="p">,</span> <span class="o">--</span><span class="n">config</span> <span class="n">TEXT</span>     <span class="n">Path</span> <span class="n">to</span> <span class="n">the</span> <span class="n">configuration</span> <span class="n">file</span><span class="o">.</span>
+  <span class="o">-</span><span class="n">v</span><span class="p">,</span> <span class="o">--</span><span class="n">verbose</span>         <span class="n">Specifies</span> <span class="n">the</span> <span class="n">verbosity</span> <span class="n">level</span><span class="p">,</span> <span class="k">if</span> <span class="n">used</span> <span class="n">multiple</span> <span class="n">times</span>
+                        <span class="n">the</span> <span class="n">verbosity</span> <span class="ow">is</span> <span class="n">increased</span> <span class="n">further</span>
+
+  <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">color</span>            <span class="n">Disables</span> <span class="n">colorised</span> <span class="n">output</span><span class="o">.</span>
+  <span class="o">--</span><span class="n">help</span>                <span class="n">Show</span> <span class="n">this</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span><span class="o">.</span>
+
+<span class="n">Commands</span><span class="p">:</span>
+  <span class="n">run</span>          <span class="n">Runs</span> <span class="n">the</span> <span class="n">data</span> <span class="n">conversion</span>
+  <span class="n">show</span><span class="o">-</span><span class="n">config</span>  <span class="n">Prints</span> <span class="n">the</span> <span class="n">resolved</span> <span class="n">config</span> <span class="n">to</span> <span class="n">the</span> <span class="n">console</span>
+</pre></div>
+</div>
+<p>OPTION 2 - via the User Interface</p>
+<p>Instructions for the user interface method of execution will be provided in January 2022.</p>
+</div>
+<div class="section" id="reporting">
+<h2>Reporting<a class="headerlink" href="#reporting" title="Permalink to this headline">¶</a></h2>
+<p>The tool reports portfolio metadata and data validation metrics to a log file, which will be stored in the same location as the config file.</p>
+<p>&gt; Portfolio metadata
+Portfolio metadata can be reported via the configuration file and UI. This data is recorded in the log file, and summarises the portfolio that has been transformed. It includes contextual information about the contents of the file, which are not read by the tool; for example the region, line of business, and complexity of the portfolio attributes. It also records information about the data of test, analysts running the test.</p>
+<p>&gt; Data validation
+Data validation files are .yaml files. They require the fields, operator, and any grouping required to summarise the data in both the input file and output file.</p>
+<p>&gt;&gt; Setting up the data validation
+To be completed.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="../components/knownissues/index.html" class="btn btn-neutral float-right" title="Known Issues" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../index.html" class="btn btn-neutral float-left" title="The Open Data Transformation Framework" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
