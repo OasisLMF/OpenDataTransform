@@ -61,6 +61,7 @@ OED is curated by OASIS, along with ORD (Open Results Data), under the `Open Dat
    components/knownissues/index.rst
    components/testing/index.rst
    components/developer/index.rst
+   components/releaseNotes/releaseNotes_index.rst
    package/index.rst
    
 
