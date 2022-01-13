@@ -9,6 +9,7 @@ class FileField(QHBoxLayout):
         super().__init__()
 
         self.tab = tab
+        self.main_window = tab.main_window
         self.name_field = QLineEdit()
         self.name_field.setEnabled(False)
         self.addWidget(self.name_field)
@@ -18,8 +19,8 @@ class FileField(QHBoxLayout):
         self.addWidget(self.file_button)
 
     def on_select_clicked(self):
-        if self.tab.config.path:
-            config_dir = os.path.dirname(self.tab.config.path)
+        if self.main_window.config.path:
+            config_dir = os.path.dirname(self.main_window.config.path)
         else:
             config_dir = os.getcwd()
 

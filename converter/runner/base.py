@@ -21,6 +21,7 @@ from converter.mapping.base import (
     DirectionalMapping,
     TransformationEntry,
 )
+from converter.metadata.log import log_metadata
 from converter.transformers.transform import run
 from converter.types.notset import NotSet, NotSetType
 
@@ -243,12 +244,13 @@ class BaseRunner(_BaseRunner):
         loader: BaseConnector,
     ):
         """
-        Runs the transformation process and swnds the data to the data loader
+        Runs the transformation process and sends the data to the data loader
 
         :param extractor: The data connection to extract data from
         :param mapping: Mapping object describing the transformations to apply
         :param loader: The data connection to load data to
         """
+        log_metadata(self.config, mapping)
         loader.load(self.transform(extractor, mapping))
 
     def transform(
@@ -286,6 +288,7 @@ class BaseAsyncRunner(_BaseRunner):
         mapping: BaseMapping,
         loader: BaseConnector,
     ):
+        log_metadata(self.config, mapping)
         asyncio.run(loader.aload(self.transform(extractor, mapping)))
 
     async def transform(
