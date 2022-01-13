@@ -6,10 +6,11 @@ import pytest
 
 from converter.config import Config
 from converter.connector import CsvConnector
+from tests.config.fakes import fake_config, fake_transformation_config
 
 
 def test_file_does_not_exist___error_is_raised():
-    connector = CsvConnector(Config(), path="somepath.csv")
+    connector = CsvConnector(fake_transformation_config(), path="somepath.csv")
 
     with pytest.raises(FileNotFoundError):
         list(connector.extract())
@@ -31,7 +32,7 @@ def test_file_contains_data_with_heading___all_entries_are_loaded():
         f.flush()
 
         assert (
-            list(CsvConnector(Config(), path=f.name).extract())
+            list(CsvConnector(fake_transformation_config(), path=f.name).extract())
             == expected_data
         )
 
@@ -40,7 +41,7 @@ def test_no_data_is_passed_to_loader___no_file_is_written():
     with TemporaryDirectory() as p:
         output_path = os.path.join(p, "result.csv")
 
-        CsvConnector(Config(), path=output_path).load([])
+        CsvConnector(fake_transformation_config(), path=output_path).load([])
 
         assert not os.path.exists(output_path)
 
@@ -55,7 +56,7 @@ def test_data_is_passed_to_loader___data_with_heading_is_written_to_file():
     with TemporaryDirectory() as p:
         output_path = os.path.join(p, "result.csv")
 
-        CsvConnector(Config(), path=output_path).load(expected_data)
+        CsvConnector(fake_transformation_config(), path=output_path).load(expected_data)
 
         with open(output_path, "r") as f:
             assert (
@@ -75,7 +76,7 @@ def test_data_is_passed_to_loader_no_header___data_is_written_to_file():
         output_path = os.path.join(p, "result.csv")
 
         CsvConnector(
-            Config(),
+            fake_transformation_config(),
             path=output_path,
             write_header=False,
         ).load(expected_data)

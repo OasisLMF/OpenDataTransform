@@ -14,6 +14,7 @@ import networkx as nx
 from lark import Tree
 
 from converter.config import Config
+from converter.config.config import TransformationConfig
 from converter.mapping.errors import NoConversionPathError
 from converter.transformers.transform import parse
 
@@ -129,26 +130,25 @@ class BaseMapping:
 
     def __init__(
         self,
-        config: Config,
+        config: TransformationConfig,
         file_type: str,
-        input_format: MappingFormat,
-        output_format: MappingFormat,
         **options,
     ):
         self._mapping_graph: Optional[Dict[str, nx.DiGraph]] = None
         self._path = None
 
         self.config = config
+        self.input_format = MappingFormat(**self.config.get("input_format"))
+        self.output_format = MappingFormat(**self.config.get("output_format"))
+
         self._options = {
             "file_type": file_type,
-            "input_format": input_format,
-            "output_format": output_format,
+            "input_format": self.input_format,
+            "output_format": self.output_format,
             **options,
         }
 
         self.file_type = file_type
-        self.input_format = input_format
-        self.output_format = output_format
 
     @property
     def mapping_specs(self) -> Reversible[MappingSpec]:

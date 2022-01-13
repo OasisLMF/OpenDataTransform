@@ -1,6 +1,7 @@
 from typing import Any, AsyncIterable, Dict, Iterable
 
 from converter.config import Config
+from converter.config.config import TransformationConfig
 
 
 class BaseConnector:
@@ -18,7 +19,7 @@ class BaseConnector:
     name = "Base Connector"
     options_schema = {"type": "object", "properties": {}}
 
-    def __init__(self, config: Config, **options):
+    def __init__(self, config: TransformationConfig, **options):
         self._options = options
         self.config = config
 

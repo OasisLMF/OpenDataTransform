@@ -406,8 +406,6 @@ class FileMapping(BaseMapping):
         self,
         config,
         file_type: str,
-        input_format: MappingFormat,
-        output_format: MappingFormat,
         search_paths: List[str] = None,
         standard_search_path: str = get_data_path("mappings"),
         search_working_dir=True,
@@ -429,8 +427,6 @@ class FileMapping(BaseMapping):
         super().__init__(
             config,
             file_type,
-            input_format,
-            output_format,
             search_paths=search_paths,
             standard_search_path=standard_search_path,
             search_working_dir=search_working_dir,

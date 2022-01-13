@@ -7,6 +7,7 @@ from converter.mapping import FileMapping
 from converter.mapping.base import MappingFormat
 from converter.runner import PandasRunner
 from converter.types.notset import NotSet
+from tests.config.fakes import fake_transformation_config
 from tests.runner.test_base import FakeConnector
 
 
@@ -36,7 +37,7 @@ def test_when_is_false___other_transforms_are_performed_warning_is_written():
 
         # run forward
         forward_mapping = FileMapping(
-            Config(),
+            fake_transformation_config(),
             "ACC",
             MappingFormat(name="A", version="1"),
             MappingFormat(name="B", version="1"),
@@ -46,7 +47,7 @@ def test_when_is_false___other_transforms_are_performed_warning_is_written():
         forward_extractor = FakeConnector(data=input_data)
         forward_loader = FakeConnector()
 
-        PandasRunner(Config()).run(
+        PandasRunner(fake_transformation_config()).run(
             forward_extractor, forward_mapping, forward_loader
         )
 
@@ -87,7 +88,7 @@ def test_runner_handles_when_secondary_cases_are_false():
 
         # run forward
         forward_mapping = FileMapping(
-            Config(),
+            fake_transformation_config(),
             "ACC",
             MappingFormat(name="A", version="1"),
             MappingFormat(name="B", version="1"),
@@ -97,7 +98,7 @@ def test_runner_handles_when_secondary_cases_are_false():
         forward_extractor = FakeConnector(data=input_data)
         forward_loader = FakeConnector()
 
-        PandasRunner(Config()).run(
+        PandasRunner(fake_transformation_config()).run(
             forward_extractor, forward_mapping, forward_loader
         )
 

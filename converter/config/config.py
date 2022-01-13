@@ -1,7 +1,7 @@
 import os
 from functools import reduce
 from itertools import chain
-from typing import Any, Dict, Iterable, Tuple, TypeVar
+from typing import Any, Dict, Iterable, Tuple, TypeVar, List
 
 import yaml
 
@@ -18,6 +18,82 @@ class NotFoundType:
 
 
 NotFound = NotFoundType()
+
+
+def deep_merge_dictionary_items(first: Any, second: Any) -> ConfigSource:
+    """
+    Merges the 2 dictionary entries, the process is as follows:
+
+    1. If the element from the first dictionary is not found use the
+       element from the second independent from type
+    2. If the element in the second dictionary is not a dictionary and has
+       been found stop here and use it
+    3. If the second element isn't found and the first has use the first
+       value
+    4. If both elements have been found then use the merge of the 2
+
+    :param first: The first dict or the value from the first dict to try
+        to merge
+    :param second: The second dict or the value from the second dict to
+        try to merge
+
+    :return: The merged result
+    """
+    if first is NotFound or (
+            second is not NotFound and not isinstance(second, dict)
+    ):
+        # if the first value was not found or the second value has been
+        # found and is not a dictionary, use it
+        return second
+    elif first is not NotFound and second is NotFound:
+        # else if we have no value from second and first is found use it
+        return first
+    else:
+        # otherwise, continue merging deeper
+        return {
+            key: deep_merge_dictionary_items(
+                first.get(key, NotFound), second.get(key, NotFound)
+            )
+            for key in chain(first.keys(), second.keys())
+        }
+
+
+def get_json_path(config: Dict[str, Any], path: str, fallback: Any = NotFound) -> Any:
+    """
+    Gets a property from the configuration from it's path in the config.
+    The path should be dotted path into the config. For example, with the
+    config::
+
+         {
+            "foo": {
+                "bar": "baz"
+            }
+         }
+
+    The path `"foo.bar"` would return `"baz"` and the path `"foo"` would
+    return `{"bar": "baz"}`.
+
+    If the path isn't found in the config the `fallback` value is used if
+    one is provided, if no fallback is provided a `KeyError` is raised.
+
+    :param path: The path of the requested value into the config.
+    :param fallback: The value to use if the path isn't found.
+
+    :return: The found path ot fallback if provided
+    """
+    res = reduce(
+        lambda conf, path_part: conf.get(path_part, NotFound),
+        path.lower().split("."),
+        config,
+    )
+
+    if res is not NotFound:
+        return res
+
+    if fallback is not NotFound:
+        return fallback
+
+    raise KeyError(path)
 
 
 class Config:
@@ -142,51 +218,12 @@ class Config:
         first = first or {}
         second = second or {}
 
-        merged = self.deep_merge_dictionary_items(first, second)
+        merged = deep_merge_dictionary_items(first, second)
 
         if others:
             return self.merge_config_sources(merged, *others)
 
         return merged
-
-    def deep_merge_dictionary_items(
-        self, first: Any, second: Any
-    ) -> ConfigSource:
-        """
-        Merges the 2 dictionary entries, the process is as follows:
-
-        1. If the element from the first dictionary is not found use the
-           element from the second independent from type
-        2. If the element in the second dictionary is not a dictionary and has
-           been found stop here and use it
-        3. If the second element isn't found and the first has use the first
-           value
-        4. If both elements have been found then use the merge of the 2
-
-        :param first: The first dict or the value from the first dict to try
-            to merge
-        :param second: The second dict or the value from the second dict to
-            try to merge
-
-        :return: The merged result
-        """
-        if first is NotFound or (
-            second is not NotFound and not isinstance(second, dict)
-        ):
-            # if the first value was not found or the second value has been
-            # found and is not a dictionary, use it
-            return second
-        elif first is not NotFound and second is NotFound:
-            # else if we have no value from second and first is found use it
-            return first
-        else:
-            # otherwise, continue merging deeper
-            return {
-                key: self.deep_merge_dictionary_items(
-                    first.get(key, NotFound), second.get(key, NotFound)
-                )
-                for key in chain(first.keys(), second.keys())
-            }
 
     def normalise_property_names(self, d: ConfigSource) -> ConfigSource:
         """
@@ -215,41 +252,7 @@ class Config:
             return key.lower(), value
 
     def get(self, path: str, fallback: Any = NotFound) -> Any:
-        """
-        Gets a property from the configuration from it's path in the config.
-        The path should be dotted path into the config. For example, with the
-        config::
-
-             {
-                "foo": {
-                    "bar": "baz"
-                }
-             }
-
-        The path `"foo.bar"` would return `"baz"` and the path `"foo"` would
-        return `{"bar": "baz"}`.
-
-        If the path isn't found in the config the `fallback` value is used if
-        one is provided, if no fallback is provided a `KeyError` is raised.
-
-        :param path: The path of the requested value into the config.
-        :param fallback: The value to use if the path isn't found.
-
-        :return: The found path ot fallback if provided
-        """
-        res = reduce(
-            lambda conf, path_part: conf.get(path_part, NotFound),
-            path.lower().split("."),
-            self.config,
-        )
-
-        if res is not NotFound:
-            return res
-
-        if fallback is not NotFound:
-            return fallback
-
-        raise KeyError(path)
+        return get_json_path(self.config, path, fallback=fallback)
 
     def set(self, path: str, value: Any):
         """
@@ -320,3 +323,46 @@ class Config:
         Gets an iterable of (key, value) tuples.
         """
         return self.config.items()
+
+    def get_transformation_configs(self) -> List["TransformationConfig"]:
+        return [
+            TransformationConfig(self, file_type)
+            for file_type in self.get("transformations", fallback={}).keys()
+        ]
+
+
+class TransformationConfig:
+    def __init__(self, config: Config, file_type: str):
+        self.root_config = config
+        self.file_type = file_type
+
+        # merge the template transformation with the overrides
+        self.config = deep_merge_dictionary_items(
+            self.root_config.get("template_transformation", fallback={}),
+            self.root_config.get(f"transformations.{file_type}", fallback={}),
+        )
+
+    def absolute_path(self, p):
+        return self.root_config.absolute_path(p)
+
+    def keys(self):
+        """
+        Gets an iterable keys.
+        """
+        return self.config.keys()
+
+    def items(self):
+        """
+        Gets an iterable of (key, value) tuples.
+        """
+        return self.config.items()
+
+    @property
+    def path(self):
+        return self.root_config.path
+
+    def get(self, path: str, fallback: Any = NotFound) -> Any:
+        return get_json_path(self.config, path, fallback=fallback)
+
+    def __eq__(self, other):
+        return self.config == other.config

@@ -44,41 +44,54 @@ def test_component_class_paths_are_set___specific_component_classes_are_used():
     ) as mapping_ctor_mock:
         config = Config(
             overrides={
-                "runner": {
-                    "path": "tests.controller.test_base.FakeRunner",
-                    "options": {"first": "Some Runner Param"},
-                },
-                "extractor": {
-                    "path": "tests.controller.test_base.FakeExtractor",
-                    "options": {"first": "Some Extractor Param"},
-                },
-                "loader": {
-                    "path": "tests.controller.test_base.FakeLoader",
-                    "options": {"first": "Some Loader Param"},
-                },
-                "mapping": {
-                    "path": "tests.controller.test_base.FakeMapping",
-                    "options": {"first": "Some Mapping Param"},
-                },
+                "transformations": {
+                    "ACC": {
+                        "input_format": {
+                            "name": "A",
+                            "version": "1",
+                        },
+                        "output_format": {
+                            "name": "B",
+                            "version": "1",
+                        },
+                        "runner": {
+                            "path": "tests.controller.test_base.FakeRunner",
+                            "options": {"first": "Some Runner Param"},
+                        },
+                        "extractor": {
+                            "path": "tests.controller.test_base.FakeExtractor",
+                            "options": {"first": "Some Extractor Param"},
+                        },
+                        "loader": {
+                            "path": "tests.controller.test_base.FakeLoader",
+                            "options": {"first": "Some Loader Param"},
+                        },
+                        "mapping": {
+                            "path": "tests.controller.test_base.FakeMapping",
+                            "options": {"first": "Some Mapping Param"},
+                        },
+                    }
+                }
             }
         )
 
         controller = Controller(config)
 
-        controller.run()
+        controller.run(threaded=False)
 
+        transformer_config = config.get_transformation_configs()[0]
         extractor_ctor_mock.assert_called_once_with(
-            config,
+            transformer_config,
             first="Some Extractor Param",
         )
         loader_ctor_mock.assert_called_once_with(
-            config, first="Some Loader Param"
+            transformer_config, first="Some Loader Param"
         )
         mapping_ctor_mock.assert_called_once_with(
-            config, first="Some Mapping Param"
+            transformer_config, first="Some Mapping Param"
         )
         runner_ctor_mock.assert_called_once_with(
-            config, first="Some Runner Param"
+            transformer_config, first="Some Runner Param"
         )
         runner.run.assert_called_once_with(extractor, mapping, loader)
 
@@ -101,25 +114,38 @@ def test_component_class_paths_default___default_component_classes_are_used():
     ) as mapping_ctor_mock:
         config = Config(
             overrides={
-                "runner": {"options": {"first": "Some Runner Param"}},
-                "extractor": {"options": {"first": "Some Extractor Param"}},
-                "loader": {"options": {"first": "Some Loader Param"}},
-                "mapping": {"options": {"first": "Some Mapping Param"}},
+                "transformations": {
+                    "ACC": {
+                        "input_format": {
+                            "name": "A",
+                            "version": "1",
+                        },
+                        "output_format": {
+                            "name": "B",
+                            "version": "1",
+                        },
+                        "runner": {"options": {"first": "Some Runner Param"}},
+                        "extractor": {"options": {"first": "Some Extractor Param"}},
+                        "loader": {"options": {"first": "Some Loader Param"}},
+                        "mapping": {"options": {"first": "Some Mapping Param"}},
+                    }
+                }
             }
         )
 
         controller = Controller(config)
 
-        controller.run()
+        controller.run(threaded=False)
 
+        transformer_config = config.get_transformation_configs()[0]
         connector_ctor_mock.assert_any_call(
-            config, first="Some Extractor Param"
+            transformer_config, first="Some Extractor Param"
         )
-        connector_ctor_mock.assert_any_call(config, first="Some Loader Param")
+        connector_ctor_mock.assert_any_call(transformer_config, first="Some Loader Param")
         mapping_ctor_mock.assert_called_once_with(
-            config, first="Some Mapping Param"
+            transformer_config, first="Some Mapping Param"
         )
         runner_ctor_mock.assert_called_once_with(
-            config, first="Some Runner Param"
+            transformer_config, first="Some Runner Param"
         )
         runner.run.assert_called_once_with(extractor, mapping, loader)

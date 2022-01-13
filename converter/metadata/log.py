@@ -3,7 +3,7 @@ from datetime import datetime
 
 import yaml
 
-from converter.config import Config
+from converter.config.config import TransformationConfig
 from converter.mapping import BaseMapping
 
 
@@ -11,7 +11,7 @@ def get_logger():
     return logging.getLogger(__name__)
 
 
-def log_metadata(config: Config, mapping: BaseMapping):
+def log_metadata(config: TransformationConfig, mapping: BaseMapping):
     get_logger().info(
         yaml.safe_dump(
             {
