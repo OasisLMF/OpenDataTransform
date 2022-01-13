@@ -12,7 +12,7 @@ from converter.config import Config
 @contextlib.contextmanager
 def config_file(conf):
     with NamedTemporaryFile("w+") as f:
-        yaml.dump(conf, f)
+        yaml.safe_dump(conf, f)
         yield f.name
 
 

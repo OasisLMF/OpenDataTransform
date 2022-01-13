@@ -5,8 +5,8 @@ from PySide6.QtWidgets import QVBoxLayout, QWidget
 
 from converter.connector import BaseConnector, CsvConnector
 from converter.runner import BaseRunner, DaskRunner, ModinRunner, PandasRunner
-from converter.ui.fields.dynamic import DynamicClassFormBlock
 from converter.ui.config_tab.mapping import MappingGroupBox
+from converter.ui.fields.dynamic import DynamicClassFormBlock
 
 
 CONNECTOR_CLASSES: List[Type[BaseConnector]] = list(

@@ -4,7 +4,7 @@ import os
 from collections import OrderedDict
 from functools import reduce
 from itertools import chain, product
-from typing import Dict, Iterable, List, Reversible, Set, TypedDict, Union
+from typing import Any, Dict, Iterable, List, Reversible, Set, TypedDict, Union
 
 from ..data import get_data_path
 from ..errors import ConverterError
@@ -15,6 +15,7 @@ from .base import (
     ColumnConversion,
     ColumnConversions,
     DirectionalMapping,
+    MappingFormat,
     MappingSpec,
     TransformationEntry,
     TransformationSet,
@@ -48,12 +49,22 @@ RawDirectionalConfig = TypedDict(
 )
 
 
+RawMappingFormat = TypedDict(
+    "RawMappingFormat",
+    {
+        "name": str,
+        "version": str,
+    },
+)
+
+
 RawMappingConfig = TypedDict(
     "RawMappingConfig",
     {
         "bases": List[str],
-        "input_format": str,
-        "output_format": str,
+        "file_type": str,
+        "input_format": MappingFormat,
+        "output_format": MappingFormat,
         "forward": RawDirectionalConfig,
         "reverse": RawDirectionalConfig,
     },
@@ -126,29 +137,53 @@ class FileMappingSpec(MappingSpec):
             for base_name in config.get("bases", [])
         ]
 
+        # get the file_type from the bases if not set on the current config
+        file_type: Union[str, None] = self._resolve_property(
+            *(b.file_type for b in self.bases),
+            config.get("file_type"),
+        )
+
+        if not file_type:
+            raise InvalidMappingFile(
+                "file_type not found in the config file or its bases",
+                self.path,
+            )
+
         # get the input format from the bases if not set on the current config
-        input_format: Union[str, None] = self._resolve_property(
+        raw_input_format: Union[
+            RawMappingFormat, MappingFormat, None
+        ] = self._resolve_property(
             *(b.input_format for b in self.bases),
             config.get("input_format"),
         )
 
-        if not input_format:
+        if not raw_input_format:
             raise InvalidMappingFile(
                 "input_format not found in the config file or its bases",
                 self.path,
             )
+        elif not isinstance(raw_input_format, MappingFormat):
+            input_format = MappingFormat(**raw_input_format)
+        else:
+            input_format = raw_input_format
 
         # get the output format from the bases if not set on the current config
-        output_format: Union[str, None] = self._resolve_property(
+        raw_output_format: Union[
+            RawMappingFormat, MappingFormat, None
+        ] = self._resolve_property(
             *(b.output_format for b in self.bases),
             config.get("output_format"),
         )
 
-        if not output_format:
+        if not raw_output_format:
             raise InvalidMappingFile(
                 "output_format not found in the config file or its bases",
                 self.path,
             )
+        elif not isinstance(raw_output_format, MappingFormat):
+            output_format = MappingFormat(**raw_output_format)
+        else:
+            output_format = raw_output_format
 
         # merge the transforms from all the parents and the current config
         forward_transform: TransformationSet = self._reduce_transforms(
@@ -195,6 +230,7 @@ class FileMappingSpec(MappingSpec):
         )
 
         super().__init__(
+            file_type,
             input_format,
             output_format,
             forward=DirectionalMapping(
@@ -236,7 +272,7 @@ class FileMappingSpec(MappingSpec):
         }
 
     @classmethod
-    def _resolve_property(cls, *values: Union[None, str]) -> Union[None, str]:
+    def _resolve_property(cls, *values: Union[None, Any]) -> Union[None, Any]:
         """
         Finds the first non None value
 
@@ -369,6 +405,9 @@ class FileMapping(BaseMapping):
     def __init__(
         self,
         config,
+        file_type: str,
+        input_format: MappingFormat,
+        output_format: MappingFormat,
         search_paths: List[str] = None,
         standard_search_path: str = get_data_path("mappings"),
         search_working_dir=True,
@@ -389,6 +428,9 @@ class FileMapping(BaseMapping):
 
         super().__init__(
             config,
+            file_type,
+            input_format,
+            output_format,
             search_paths=search_paths,
             standard_search_path=standard_search_path,
             search_working_dir=search_working_dir,
@@ -484,6 +526,7 @@ class FileMapping(BaseMapping):
                     conf.keys()
                     ^ {
                         "bases",
+                        "file_type",
                         "input_format",
                         "output_format",
                         "forward",

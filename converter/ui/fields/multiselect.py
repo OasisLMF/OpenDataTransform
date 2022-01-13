@@ -1,7 +1,7 @@
-from PySide6.QtGui import QFont
 from __feature__ import true_property  # noqa
-from PySide6.QtWidgets import QListWidget, QListWidgetItem
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QFont
+from PySide6.QtWidgets import QListWidget, QListWidgetItem
 
 
 class MultiSelect(QListWidget):

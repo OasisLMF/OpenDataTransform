@@ -5,8 +5,13 @@
 # LICENSE: BSD 3 clause license
 # SOURCE: https://github.com/OasisLMF/OpenDataTransform/
 # COMMENTS: Header for mapping file to transform Location information. Update May 2021.
-input_format: AIR_LOC_v3
-output_format: OED_LOC
+type: LOC
+input:
+  name: AIR
+  version: 3
+output:
+  name: OED
+  version: 2
 forward:
   types:
     ContractID:

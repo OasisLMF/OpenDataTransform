@@ -1,5 +1,5 @@
 from __feature__ import true_property  # noqa
-from PySide6.QtWidgets import QPlainTextEdit, QLineEdit
+from PySide6.QtWidgets import QLineEdit, QPlainTextEdit
 
 
 class StringField(QLineEdit):

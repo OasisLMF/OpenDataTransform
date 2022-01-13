@@ -5,8 +5,13 @@
 # LICENSE: BSD 3 clause license
 # SOURCE: https://github.com/OasisLMF/OpenDataTransform/
 # COMMENTS: Header for mapping file to transform account information. Update May 2021.
-input_format: AIR_ACC_v3
-output_format: OED_ACC
+type: ACC
+input:
+  name: AIR
+  version: 3
+output:
+  name: OED
+  version: 2
 forward:
   types:
     ContractID:

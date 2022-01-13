@@ -15,7 +15,9 @@ class MappingCombo(QComboBox):
 
         self.update_selection_from_config(self.tab.main_window.config)
         self.currentTextChanged.connect(
-            lambda v: self.tab.main_window.set_working_value(f"mapping.options.{prop}", v)
+            lambda v: self.tab.main_window.set_working_value(
+                f"mapping.options.{prop}", v
+            )
         )
 
     def refresh_options(self, options):

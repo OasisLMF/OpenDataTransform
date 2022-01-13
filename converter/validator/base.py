@@ -40,6 +40,7 @@ class ValidationResult(TypedDict):
 
 
 class ValidationLogEntry(TypedDict):
+    file_type: str
     format: str
     validations: List[ValidationResult]
 
@@ -94,9 +95,16 @@ class BaseValidator(Generic[DataType, GroupedDataType]):
             standard_search_path,
         ]
 
-    def load_config(self, fmt) -> Union[None, ValidatorConfig]:
+    def load_config(
+        self, fmt, version, file_type
+    ) -> Union[None, ValidatorConfig]:
+        # Build the candidate paths with and without the version preferring
+        # with the version if its available
         candidate_paths = [
-            os.path.join(p, f"validation_{fmt}.yaml")
+            os.path.join(p, f"validation_{fmt}_v{version}_{file_type}.yaml")
+            for p in self.search_paths
+        ] + [
+            os.path.join(p, f"validation_{fmt}_{file_type}.yaml")
             for p in self.search_paths
         ]
 
@@ -117,10 +125,14 @@ class BaseValidator(Generic[DataType, GroupedDataType]):
 
         return ValidatorConfig(config_path)
 
-    def run(self, data: DataType, fmt: str):
-        config = self.load_config(fmt)
+    def run(self, data: DataType, fmt: str, version: str, file_type: str):
+        config = self.load_config(fmt, version, file_type)
 
-        result: ValidationLogEntry = {"format": fmt, "validations": []}
+        result: ValidationLogEntry = {
+            "file_type": file_type,
+            "format": fmt,
+            "validations": [],
+        }
         if config:
             for entry in config.entries:
                 result["validations"].append(self.run_entry(data, entry))

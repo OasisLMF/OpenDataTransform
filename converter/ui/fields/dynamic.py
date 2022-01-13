@@ -143,7 +143,9 @@ class DynamicClassFormBlock(QGroupBox):
             combo.setCurrentIndex(selected_index)
         except ValueError:
             combo.setCurrentIndex(0)
-            self.main_window.set_default_working_value(config_path, schema["enum"][0])
+            self.main_window.set_default_working_value(
+                config_path, schema["enum"][0]
+            )
 
         combo.currentIndexChanged.connect(
             lambda i: self.main_window.set_working_value(

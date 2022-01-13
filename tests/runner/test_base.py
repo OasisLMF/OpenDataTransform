@@ -8,6 +8,7 @@ from converter.config import Config
 from converter.connector import BaseConnector
 from converter.files.yaml import write_yaml
 from converter.mapping import BaseMapping, FileMapping
+from converter.mapping.base import MappingFormat
 from converter.runner import BaseRunner
 from converter.runner.base import BaseAsyncRunner
 from tests.connector.fakes import FakeConnector
@@ -30,8 +31,9 @@ def test_mapping_applies_to_all_cols___forward_and_reverse_gets_to_the_input(
         write_yaml(
             os.path.join(search, "A-B.yml"),
             {
-                "input_format": "A",
-                "output_format": "B",
+                "file_type": "ACC",
+                "input_format": {"name": "A", "version": "1"},
+                "output_format": {"name": "B", "version": "1"},
                 "forward": {
                     "transform": {
                         "c": [{"transformation": "a * 2"}],
@@ -50,8 +52,9 @@ def test_mapping_applies_to_all_cols___forward_and_reverse_gets_to_the_input(
         # run forward
         forward_mapping = FileMapping(
             Config(),
-            input_format="A",
-            output_format="B",
+            "ACC",
+            MappingFormat(name="A", version="1"),
+            MappingFormat(name="B", version="1"),
             standard_search_path=search,
             search_working_dir=False,
         )
@@ -72,8 +75,9 @@ def test_mapping_applies_to_all_cols___forward_and_reverse_gets_to_the_input(
         # reverse runner
         reverse_mapping = FileMapping(
             Config(),
-            input_format="B",
-            output_format="A",
+            "ACC",
+            MappingFormat(name="B", version="1"),
+            MappingFormat(name="A", version="1"),
             standard_search_path=search,
             search_working_dir=False,
         )
@@ -103,8 +107,9 @@ def test_multiple_mapping_steps___forward_and_reverse_gets_to_the_input(
         write_yaml(
             os.path.join(search, "A-B.yml"),
             {
-                "input_format": "A",
-                "output_format": "B",
+                "file_type": "ACC",
+                "input_format": {"name": "A", "version": "1"},
+                "output_format": {"name": "B", "version": "1"},
                 "forward": {
                     "transform": {
                         "c": [{"transformation": "a * 2"}],
@@ -122,8 +127,9 @@ def test_multiple_mapping_steps___forward_and_reverse_gets_to_the_input(
         write_yaml(
             os.path.join(search, "B-C.yml"),
             {
-                "input_format": "B",
-                "output_format": "C",
+                "file_type": "ACC",
+                "input_format": {"name": "B", "version": "1"},
+                "output_format": {"name": "C", "version": "1"},
                 "forward": {
                     "transform": {
                         "e": [{"transformation": "c * 3"}],
@@ -142,8 +148,9 @@ def test_multiple_mapping_steps___forward_and_reverse_gets_to_the_input(
         # run forward
         forward_mapping = FileMapping(
             Config(),
-            input_format="A",
-            output_format="C",
+            "ACC",
+            MappingFormat(name="A", version="1"),
+            MappingFormat(name="C", version="1"),
             standard_search_path=search,
             search_working_dir=False,
         )
@@ -164,8 +171,9 @@ def test_multiple_mapping_steps___forward_and_reverse_gets_to_the_input(
         # reverse runner
         reverse_mapping = FileMapping(
             Config(),
-            input_format="C",
-            output_format="A",
+            "ACC",
+            MappingFormat(name="C", version="1"),
+            MappingFormat(name="A", version="1"),
             standard_search_path=search,
             search_working_dir=False,
         )
@@ -195,8 +203,9 @@ def test_multiple_transforms_could_apply___first_is_applied(
         write_yaml(
             os.path.join(search, "A-B.yml"),
             {
-                "input_format": "A",
-                "output_format": "B",
+                "file_type": "ACC",
+                "input_format": {"name": "A", "version": "1"},
+                "output_format": {"name": "B", "version": "1"},
                 "forward": {
                     "transform": {
                         "c": [
@@ -218,8 +227,9 @@ def test_multiple_transforms_could_apply___first_is_applied(
         # run forward
         forward_mapping = FileMapping(
             Config(),
-            input_format="A",
-            output_format="B",
+            "ACC",
+            MappingFormat(name="A", version="1"),
+            MappingFormat(name="B", version="1"),
             standard_search_path=search,
             search_working_dir=False,
         )
@@ -240,8 +250,9 @@ def test_multiple_transforms_could_apply___first_is_applied(
         # reverse runner
         reverse_mapping = FileMapping(
             Config(),
-            input_format="B",
-            output_format="A",
+            "ACC",
+            MappingFormat(name="B", version="1"),
+            MappingFormat(name="A", version="1"),
             standard_search_path=search,
             search_working_dir=False,
         )
@@ -271,8 +282,9 @@ def test_row_is_value___value_is_set_on_all_columns(
         write_yaml(
             os.path.join(search, "A-B.yml"),
             {
-                "input_format": "A",
-                "output_format": "B",
+                "file_type": "ACC",
+                "input_format": {"name": "A", "version": "1"},
+                "output_format": {"name": "B", "version": "1"},
                 "forward": {
                     "transform": {
                         "c": [{"transformation": "a * 2"}],
@@ -292,8 +304,9 @@ def test_row_is_value___value_is_set_on_all_columns(
         # run forward
         forward_mapping = FileMapping(
             Config(),
-            input_format="A",
-            output_format="B",
+            "ACC",
+            MappingFormat(name="A", version="1"),
+            MappingFormat(name="B", version="1"),
             standard_search_path=search,
             search_working_dir=False,
         )
@@ -314,8 +327,9 @@ def test_row_is_value___value_is_set_on_all_columns(
         # reverse runner
         reverse_mapping = FileMapping(
             Config(),
-            input_format="B",
-            output_format="A",
+            "ACC",
+            MappingFormat(name="B", version="1"),
+            MappingFormat(name="A", version="1"),
             standard_search_path=search,
             search_working_dir=False,
         )
@@ -333,7 +347,12 @@ def test_base_transform_raises():
     with pytest.raises(NotImplementedError):
         BaseRunner(Config()).transform(
             BaseConnector(Config()),
-            BaseMapping(Config(), input_format="A", output_format="B"),
+            BaseMapping(
+                Config(),
+                "ACC",
+                MappingFormat(name="A", version="1"),
+                MappingFormat(name="B", version="1"),
+            ),
         )
 
 
@@ -344,6 +363,11 @@ async def test_base_async_transform_raises():
             row
             async for row in BaseAsyncRunner(Config()).transform(
                 BaseConnector(Config()),
-                BaseMapping(Config(), input_format="A", output_format="B"),
+                BaseMapping(
+                    Config(),
+                    "ACC",
+                    MappingFormat(name="A", version="1"),
+                    MappingFormat(name="B", version="1"),
+                ),
             )
         ]

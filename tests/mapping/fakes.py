@@ -2,7 +2,7 @@ from typing import List
 
 from converter.config import Config
 from converter.mapping import BaseMapping, MappingSpec
-from converter.mapping.base import DirectionalMapping
+from converter.mapping.base import DirectionalMapping, MappingFormat
 
 
 class FakeMapping(BaseMapping):
@@ -15,6 +15,7 @@ class FakeMapping(BaseMapping):
     ):
         super().__init__(
             config or Config(),
+            "ACC",
             input_format=input_format,
             output_format=output_format,
         )
@@ -28,12 +29,13 @@ class FakeMapping(BaseMapping):
 
 def make_simple_mapping(transformation_set, types=None):
     return FakeMapping(
-        "A",
-        "B",
+        MappingFormat(name="A", version="1"),
+        MappingFormat(name="B", version="1"),
         [
             MappingSpec(
-                "A",
-                "B",
+                "ACC",
+                MappingFormat(name="A", version="1"),
+                MappingFormat(name="B", version="1"),
                 forward=DirectionalMapping(
                     "A",
                     "B",

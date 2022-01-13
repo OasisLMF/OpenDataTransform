@@ -1,7 +1,7 @@
 from __feature__ import true_property  # noqa
-from PySide6.QtWidgets import QCalendarWidget
-from PySide6.QtCore import Qt, QDate
 from dateutil.utils import today
+from PySide6.QtCore import QDate, Qt
+from PySide6.QtWidgets import QCalendarWidget
 
 
 class DateField(QCalendarWidget):
@@ -20,9 +20,7 @@ class DateField(QCalendarWidget):
     def on_config_loaded(self, new_config):
         conf_date = new_config.get(self.config_path, None)
         if conf_date:
-            self.setSelectedDate(
-                QDate.fromString(conf_date, Qt.ISODate)
-            )
+            self.setSelectedDate(QDate.fromString(conf_date, Qt.ISODate))
         else:
             # if no date is set the default is today so we need to store this
             # in the default working config so that it will be written
@@ -33,6 +31,5 @@ class DateField(QCalendarWidget):
 
     def on_changed(self):
         self.main_window.set_working_value(
-            self.config_path,
-            self.selectedDate.toString(Qt.ISODate)
+            self.config_path, self.selectedDate.toString(Qt.ISODate)
         )
