@@ -13,7 +13,6 @@ from typing import (
     Union,
 )
 
-from converter.config import Config
 from converter.config.config import TransformationConfig
 from converter.connector.base import BaseConnector
 from converter.mapping.base import (

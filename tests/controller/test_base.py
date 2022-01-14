@@ -44,6 +44,7 @@ def test_component_class_paths_are_set___specific_component_classes_are_used():
     ) as mapping_ctor_mock:
         config = Config(
             overrides={
+                "parallel": False,
                 "transformations": {
                     "ACC": {
                         "input_format": {
@@ -114,6 +115,7 @@ def test_component_class_paths_default___default_component_classes_are_used():
     ) as mapping_ctor_mock:
         config = Config(
             overrides={
+                "parallel": False,
                 "transformations": {
                     "ACC": {
                         "input_format": {
@@ -125,9 +127,13 @@ def test_component_class_paths_default___default_component_classes_are_used():
                             "version": "1",
                         },
                         "runner": {"options": {"first": "Some Runner Param"}},
-                        "extractor": {"options": {"first": "Some Extractor Param"}},
+                        "extractor": {
+                            "options": {"first": "Some Extractor Param"}
+                        },
                         "loader": {"options": {"first": "Some Loader Param"}},
-                        "mapping": {"options": {"first": "Some Mapping Param"}},
+                        "mapping": {
+                            "options": {"first": "Some Mapping Param"}
+                        },
                     }
                 }
             }
@@ -141,7 +147,9 @@ def test_component_class_paths_default___default_component_classes_are_used():
         connector_ctor_mock.assert_any_call(
             transformer_config, first="Some Extractor Param"
         )
-        connector_ctor_mock.assert_any_call(transformer_config, first="Some Loader Param")
+        connector_ctor_mock.assert_any_call(
+            transformer_config, first="Some Loader Param"
+        )
         mapping_ctor_mock.assert_called_once_with(
             transformer_config, first="Some Mapping Param"
         )

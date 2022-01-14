@@ -121,7 +121,7 @@ def test_config_path_is_not_set___absolute_path_is_based_off_working_dir():
     assert config.absolute_path("foo.bar") == os.path.abspath("foo.bar")
 
 
-def test_config_path_is_set___absolute_path_is_based_off_dir_of_fake_transformation_config():
+def test_config_path_is_set___absolute_path_is_based_off_dir_of_config():
     config = fake_config({"foo": {"BAR": "BAz"}})
 
     assert config.absolute_path("foo.bar") == os.path.abspath(

@@ -1,7 +1,7 @@
 import os
 from functools import reduce
 from itertools import chain
-from typing import Any, Dict, Iterable, Tuple, TypeVar, List
+from typing import Any, Dict, Iterable, List, Tuple, TypeVar
 
 import yaml
 
@@ -40,7 +40,7 @@ def deep_merge_dictionary_items(first: Any, second: Any) -> ConfigSource:
     :return: The merged result
     """
     if first is NotFound or (
-            second is not NotFound and not isinstance(second, dict)
+        second is not NotFound and not isinstance(second, dict)
     ):
         # if the first value was not found or the second value has been
         # found and is not a dictionary, use it
@@ -58,7 +58,9 @@ def deep_merge_dictionary_items(first: Any, second: Any) -> ConfigSource:
         }
 
 
-def get_json_path(config: Dict[str, Any], path: str, fallback: Any = NotFound) -> Any:
+def get_json_path(
+    config: Dict[str, Any], path: str, fallback: Any = NotFound
+) -> Any:
     """
     Gets a property from the configuration from it's path in the config.
     The path should be dotted path into the config. For example, with the

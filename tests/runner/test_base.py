@@ -4,11 +4,9 @@ from tempfile import TemporaryDirectory
 import pytest
 from hypothesis import given, settings
 
-from converter.config import Config
 from converter.connector import BaseConnector
 from converter.files.yaml import write_yaml
 from converter.mapping import BaseMapping, FileMapping
-from converter.mapping.base import MappingFormat
 from converter.runner import BaseRunner
 from converter.runner.base import BaseAsyncRunner
 from tests.config.fakes import fake_transformation_config
@@ -54,8 +52,6 @@ def test_mapping_applies_to_all_cols___forward_and_reverse_gets_to_the_input(
         forward_mapping = FileMapping(
             fake_transformation_config(),
             "ACC",
-            MappingFormat(name="A", version="1"),
-            MappingFormat(name="B", version="1"),
             standard_search_path=search,
             search_working_dir=False,
         )
@@ -75,10 +71,23 @@ def test_mapping_applies_to_all_cols___forward_and_reverse_gets_to_the_input(
 
         # reverse runner
         reverse_mapping = FileMapping(
-            fake_transformation_config(),
+            fake_transformation_config(
+                {
+                    "transformations": {
+                        "ACC": {
+                            "input_format": {
+                                "name": "B",
+                                "version": "1",
+                            },
+                            "output_format": {
+                                "name": "A",
+                                "version": "1",
+                            },
+                        }
+                    }
+                }
+            ),
             "ACC",
-            MappingFormat(name="B", version="1"),
-            MappingFormat(name="A", version="1"),
             standard_search_path=search,
             search_working_dir=False,
         )
@@ -148,10 +157,23 @@ def test_multiple_mapping_steps___forward_and_reverse_gets_to_the_input(
 
         # run forward
         forward_mapping = FileMapping(
-            fake_transformation_config(),
+            fake_transformation_config(
+                {
+                    "transformations": {
+                        "ACC": {
+                            "input_format": {
+                                "name": "A",
+                                "version": "1",
+                            },
+                            "output_format": {
+                                "name": "C",
+                                "version": "1",
+                            },
+                        }
+                    }
+                }
+            ),
             "ACC",
-            MappingFormat(name="A", version="1"),
-            MappingFormat(name="C", version="1"),
             standard_search_path=search,
             search_working_dir=False,
         )
@@ -171,10 +193,23 @@ def test_multiple_mapping_steps___forward_and_reverse_gets_to_the_input(
 
         # reverse runner
         reverse_mapping = FileMapping(
-            fake_transformation_config(),
+            fake_transformation_config(
+                {
+                    "transformations": {
+                        "ACC": {
+                            "input_format": {
+                                "name": "C",
+                                "version": "1",
+                            },
+                            "output_format": {
+                                "name": "A",
+                                "version": "1",
+                            },
+                        }
+                    }
+                }
+            ),
             "ACC",
-            MappingFormat(name="C", version="1"),
-            MappingFormat(name="A", version="1"),
             standard_search_path=search,
             search_working_dir=False,
         )
@@ -229,8 +264,6 @@ def test_multiple_transforms_could_apply___first_is_applied(
         forward_mapping = FileMapping(
             fake_transformation_config(),
             "ACC",
-            MappingFormat(name="A", version="1"),
-            MappingFormat(name="B", version="1"),
             standard_search_path=search,
             search_working_dir=False,
         )
@@ -250,10 +283,23 @@ def test_multiple_transforms_could_apply___first_is_applied(
 
         # reverse runner
         reverse_mapping = FileMapping(
-            fake_transformation_config(),
+            fake_transformation_config(
+                {
+                    "transformations": {
+                        "ACC": {
+                            "input_format": {
+                                "name": "B",
+                                "version": "1",
+                            },
+                            "output_format": {
+                                "name": "A",
+                                "version": "1",
+                            },
+                        }
+                    }
+                }
+            ),
             "ACC",
-            MappingFormat(name="B", version="1"),
-            MappingFormat(name="A", version="1"),
             standard_search_path=search,
             search_working_dir=False,
         )
@@ -306,8 +352,6 @@ def test_row_is_value___value_is_set_on_all_columns(
         forward_mapping = FileMapping(
             fake_transformation_config(),
             "ACC",
-            MappingFormat(name="A", version="1"),
-            MappingFormat(name="B", version="1"),
             standard_search_path=search,
             search_working_dir=False,
         )
@@ -327,10 +371,23 @@ def test_row_is_value___value_is_set_on_all_columns(
 
         # reverse runner
         reverse_mapping = FileMapping(
-            fake_transformation_config(),
+            fake_transformation_config(
+                {
+                    "transformations": {
+                        "ACC": {
+                            "input_format": {
+                                "name": "B",
+                                "version": "1",
+                            },
+                            "output_format": {
+                                "name": "A",
+                                "version": "1",
+                            },
+                        }
+                    }
+                }
+            ),
             "ACC",
-            MappingFormat(name="B", version="1"),
-            MappingFormat(name="A", version="1"),
             standard_search_path=search,
             search_working_dir=False,
         )
@@ -351,14 +408,8 @@ def test_base_transform_raises():
             BaseMapping(
                 fake_transformation_config(),
                 "ACC",
-                MappingFormat(name="A", version="1"),
-                MappingFormat(name="B", version="1"),
             ),
         )
-
-
-def fake_transformation_config():
-    pass
 
 
 @pytest.mark.asyncio
@@ -366,13 +417,13 @@ async def test_base_async_transform_raises():
     with pytest.raises(NotImplementedError):
         [
             row
-            async for row in BaseAsyncRunner(fake_transformation_config()).transform(
+            async for row in BaseAsyncRunner(
+                fake_transformation_config()
+            ).transform(
                 BaseConnector(fake_transformation_config()),
                 BaseMapping(
                     fake_transformation_config(),
                     "ACC",
-                    MappingFormat(name="A", version="1"),
-                    MappingFormat(name="B", version="1"),
                 ),
             )
         ]

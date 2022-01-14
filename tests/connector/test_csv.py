@@ -4,9 +4,8 @@ from tempfile import NamedTemporaryFile, TemporaryDirectory
 
 import pytest
 
-from converter.config import Config
 from converter.connector import CsvConnector
-from tests.config.fakes import fake_config, fake_transformation_config
+from tests.config.fakes import fake_transformation_config
 
 
 def test_file_does_not_exist___error_is_raised():
@@ -32,7 +31,11 @@ def test_file_contains_data_with_heading___all_entries_are_loaded():
         f.flush()
 
         assert (
-            list(CsvConnector(fake_transformation_config(), path=f.name).extract())
+            list(
+                CsvConnector(
+                    fake_transformation_config(), path=f.name
+                ).extract()
+            )
             == expected_data
         )
 
@@ -56,7 +59,9 @@ def test_data_is_passed_to_loader___data_with_heading_is_written_to_file():
     with TemporaryDirectory() as p:
         output_path = os.path.join(p, "result.csv")
 
-        CsvConnector(fake_transformation_config(), path=output_path).load(expected_data)
+        CsvConnector(fake_transformation_config(), path=output_path).load(
+            expected_data
+        )
 
         with open(output_path, "r") as f:
             assert (

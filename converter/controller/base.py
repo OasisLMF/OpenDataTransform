@@ -1,6 +1,6 @@
 import importlib
-from typing import Any, Type
 import threading
+from typing import Any, Type
 
 from ..config import Config
 from ..config.config import TransformationConfig
@@ -24,17 +24,21 @@ class Controller:
         module = importlib.import_module(module_path)
         return getattr(module, cls)
 
-    def run(self, threaded=True):
+    def run(self):
         """
         Generates the converter components from the config and runs the
         transformation
         """
         transformation_configs = self.config.get_transformation_configs()
-        if threaded:
-            threads = list(map(
-                lambda c: threading.Thread(target=lambda: self._run_transformation(c)),
-                transformation_configs
-            ))
+        if self.config.get("parallel", True):
+            threads = list(
+                map(
+                    lambda c: threading.Thread(
+                        target=lambda: self._run_transformation(c)
+                    ),
+                    transformation_configs,
+                )
+            )
 
             for thread in threads:
                 thread.start()
@@ -53,6 +57,7 @@ class Controller:
         )
         mapping: BaseMapping = mapping_class(
             config,
+            config.file_type,
             **config.get("mapping.options", fallback={}),
         )
 
@@ -75,9 +80,7 @@ class Controller:
         )
 
         runner_class: Type[BaseRunner] = self._load_from_module(
-            config.get(
-                "runner.path", fallback="converter.runner.PandasRunner"
-            )
+            config.get("runner.path", fallback="converter.runner.PandasRunner")
         )
         runner: BaseRunner = runner_class(
             config, **config.get("runner.options", fallback={})

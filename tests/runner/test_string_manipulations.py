@@ -2,8 +2,8 @@ from hypothesis import given, settings
 
 from converter.mapping.base import ColumnConversion, TransformationEntry
 from converter.types.notset import NotSet
-from ..config.fakes import fake_transformation_config
 
+from ..config.fakes import fake_transformation_config
 from ..connector.fakes import FakeConnector
 from ..mapping.fakes import make_simple_mapping
 from .stategies import runners

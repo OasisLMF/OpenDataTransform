@@ -1,6 +1,5 @@
 from hypothesis import given, settings
 
-from converter.config import Config
 from converter.mapping.base import ColumnConversion, TransformationEntry
 from tests.config.fakes import fake_transformation_config
 from tests.connector.fakes import FakeConnector

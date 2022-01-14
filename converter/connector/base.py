@@ -1,6 +1,5 @@
 from typing import Any, AsyncIterable, Dict, Iterable
 
-from converter.config import Config
 from converter.config.config import TransformationConfig
 
 

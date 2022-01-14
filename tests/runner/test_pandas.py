@@ -1,10 +1,8 @@
 import os
 from tempfile import TemporaryDirectory
 
-from converter.config import Config
 from converter.files.yaml import write_yaml
 from converter.mapping import FileMapping
-from converter.mapping.base import MappingFormat
 from converter.runner import PandasRunner
 from converter.types.notset import NotSet
 from tests.config.fakes import fake_transformation_config
@@ -39,8 +37,6 @@ def test_when_is_false___other_transforms_are_performed_warning_is_written():
         forward_mapping = FileMapping(
             fake_transformation_config(),
             "ACC",
-            MappingFormat(name="A", version="1"),
-            MappingFormat(name="B", version="1"),
             standard_search_path=search,
             search_working_dir=False,
         )
@@ -90,8 +86,6 @@ def test_runner_handles_when_secondary_cases_are_false():
         forward_mapping = FileMapping(
             fake_transformation_config(),
             "ACC",
-            MappingFormat(name="A", version="1"),
-            MappingFormat(name="B", version="1"),
             standard_search_path=search,
             search_working_dir=False,
         )

@@ -13,7 +13,6 @@ from typing import (
 import networkx as nx
 from lark import Tree
 
-from converter.config import Config
 from converter.config.config import TransformationConfig
 from converter.mapping.errors import NoConversionPathError
 from converter.transformers.transform import parse
@@ -157,7 +156,7 @@ class BaseMapping:
         """
         raise NotImplementedError()
 
-    def _build_mapping_graph(self) -> Dict[str, nx.DiGraph]:
+    def _build_mapping_graph(self) -> nx.DiGraph:
         """
         Creates a networkx graph to represent the relationships between
         formats in the system.
@@ -171,7 +170,7 @@ class BaseMapping:
         # mapping on each edge
         if self.file_type:
             specs: Iterable[MappingSpec] = filter(
-                lambda s: s.file_type == self.file_type,
+                lambda s: s.file_type.lower() == self.file_type.lower(),
                 reversed(self.mapping_specs),
             )
         else:

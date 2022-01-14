@@ -18,12 +18,12 @@ from converter.mapping.file import (
     FileMappingSpec,
     InvalidMappingFile,
 )
+from tests.config.fakes import fake_transformation_config
 
 
 #
 # MappingFile tests
 #
-from tests.config.fakes import fake_transformation_config
 
 
 def test_mapping_file_has_no_base___mapping_is_loaded_as_expected():
@@ -815,19 +815,21 @@ def test_mapping_file_has_forward_and_reverse_trans___both_paths_are_valid():
         ] == [{"b": [TransformationEntry(transformation="a", when="True")]}]
 
         ba_mapping = FileMapping(
-            fake_transformation_config({
-                "transformations": {
-                    "ACC": {
-                        "input_format": {
-                            "name": "B",
-                            "version": "1",
-                        },
-                        "output_format": {
-                            "name": "A",
-                            "version": "1",
-                        },
+            fake_transformation_config(
+                {
+                    "transformations": {
+                        "ACC": {
+                            "input_format": {
+                                "name": "B",
+                                "version": "1",
+                            },
+                            "output_format": {
+                                "name": "A",
+                                "version": "1",
+                            },
+                        }
                     }
-                }}
+                }
             ),
             "ACC",
             standard_search_path=first,
@@ -854,8 +856,6 @@ def test_mapping_file_has_no_reverse___reverse_path_is_not_possible():
         ab_mapping = FileMapping(
             fake_transformation_config(),
             file_type="ACC",
-            input_format=MappingFormat(name="A", version="1"),
-            output_format=MappingFormat(name="B", version="1"),
             standard_search_path=first,
             search_working_dir=False,
         )
@@ -869,10 +869,23 @@ def test_mapping_file_has_no_reverse___reverse_path_is_not_possible():
             match="No conversion path from B v1 to A v1.",
         ):
             ba_mapping = FileMapping(
-                fake_transformation_config(),
+                fake_transformation_config(
+                    {
+                        "transformations": {
+                            "ACC": {
+                                "input_format": {
+                                    "name": "B",
+                                    "version": "1",
+                                },
+                                "output_format": {
+                                    "name": "A",
+                                    "version": "1",
+                                },
+                            }
+                        }
+                    }
+                ),
                 file_type="ACC",
-                input_format=MappingFormat(name="B", version="1"),
-                output_format=MappingFormat(name="A", version="1"),
                 standard_search_path=first,
                 search_working_dir=False,
             )
@@ -899,8 +912,6 @@ def test_mapping_file_has_no_forward___forward_path_is_not_possible():
             ab_mapping = FileMapping(
                 fake_transformation_config(),
                 file_type="ACC",
-                input_format=MappingFormat(name="A", version="1"),
-                output_format=MappingFormat(name="B", version="1"),
                 standard_search_path=first,
                 search_working_dir=False,
             )
@@ -912,10 +923,23 @@ def test_mapping_file_has_no_forward___forward_path_is_not_possible():
             ]
 
         ba_mapping = FileMapping(
-            fake_transformation_config(),
+            fake_transformation_config(
+                {
+                    "transformations": {
+                        "ACC": {
+                            "input_format": {
+                                "name": "B",
+                                "version": "1",
+                            },
+                            "output_format": {
+                                "name": "A",
+                                "version": "1",
+                            },
+                        }
+                    }
+                }
+            ),
             file_type="ACC",
-            input_format=MappingFormat(name="B", version="1"),
-            output_format=MappingFormat(name="A", version="1"),
             standard_search_path=first,
             search_working_dir=False,
         )
@@ -950,8 +974,6 @@ def test_forward_is_provided_in_preferred_directory___forward_from_preferred():
         ab_mapping = FileMapping(
             fake_transformation_config(),
             file_type="ACC",
-            input_format=MappingFormat(name="A", version="1"),
-            output_format=MappingFormat(name="B", version="1"),
             search_paths=[second],
             standard_search_path=first,
             search_working_dir=False,
@@ -962,10 +984,23 @@ def test_forward_is_provided_in_preferred_directory___forward_from_preferred():
         ] == [{"c": [TransformationEntry(transformation="d", when="True")]}]
 
         ba_mapping = FileMapping(
-            fake_transformation_config(),
+            fake_transformation_config(
+                {
+                    "transformations": {
+                        "ACC": {
+                            "input_format": {
+                                "name": "B",
+                                "version": "1",
+                            },
+                            "output_format": {
+                                "name": "A",
+                                "version": "1",
+                            },
+                        }
+                    }
+                }
+            ),
             file_type="ACC",
-            input_format=MappingFormat(name="B", version="1"),
-            output_format=MappingFormat(name="A", version="1"),
             search_paths=[second],
             standard_search_path=first,
             search_working_dir=False,
@@ -1001,8 +1036,6 @@ def test_reverse_is_provided_in_prefered_directory___reverse_from_preferred():
         ab_mapping = FileMapping(
             fake_transformation_config(),
             file_type="ACC",
-            input_format=MappingFormat(name="A", version="1"),
-            output_format=MappingFormat(name="B", version="1"),
             search_paths=[second],
             standard_search_path=first,
             search_working_dir=False,
@@ -1013,10 +1046,23 @@ def test_reverse_is_provided_in_prefered_directory___reverse_from_preferred():
         ] == [{"b": [TransformationEntry(transformation="a", when="True")]}]
 
         ba_mapping = FileMapping(
-            fake_transformation_config(),
+            fake_transformation_config(
+                {
+                    "transformations": {
+                        "ACC": {
+                            "input_format": {
+                                "name": "B",
+                                "version": "1",
+                            },
+                            "output_format": {
+                                "name": "A",
+                                "version": "1",
+                            },
+                        }
+                    }
+                }
+            ),
             file_type="ACC",
-            input_format=MappingFormat(name="B", version="1"),
-            output_format=MappingFormat(name="A", version="1"),
             search_paths=[second],
             standard_search_path=first,
             search_working_dir=False,
@@ -1051,10 +1097,23 @@ def test_multiple_steps_are_in_the_conversion___all_steps_are_returned():
         )
 
         ab_mapping = FileMapping(
-            fake_transformation_config(),
+            fake_transformation_config(
+                {
+                    "transformations": {
+                        "ACC": {
+                            "input_format": {
+                                "name": "A",
+                                "version": "1",
+                            },
+                            "output_format": {
+                                "name": "C",
+                                "version": "1",
+                            },
+                        }
+                    }
+                }
+            ),
             file_type="ACC",
-            input_format=MappingFormat(name="A", version="1"),
-            output_format=MappingFormat(name="C", version="1"),
             standard_search_path=first,
             search_working_dir=False,
         )
@@ -1067,10 +1126,23 @@ def test_multiple_steps_are_in_the_conversion___all_steps_are_returned():
         ]
 
         ba_mapping = FileMapping(
-            fake_transformation_config(),
+            fake_transformation_config(
+                {
+                    "transformations": {
+                        "ACC": {
+                            "input_format": {
+                                "name": "C",
+                                "version": "1",
+                            },
+                            "output_format": {
+                                "name": "A",
+                                "version": "1",
+                            },
+                        }
+                    }
+                }
+            ),
             "ACC",
-            MappingFormat(name="C", version="1"),
-            MappingFormat(name="A", version="1"),
             standard_search_path=first,
             search_working_dir=False,
         )
@@ -1111,8 +1183,6 @@ def test_types_have_null_values_set___processed_null_values_are_loaded():
         transformation = FileMapping(
             fake_transformation_config(),
             file_type="ACC",
-            input_format=MappingFormat(name="A", version="1"),
-            output_format=MappingFormat(name="B", version="1"),
             standard_search_path=d,
             search_working_dir=False,
         ).get_transformations()[0]
@@ -1151,8 +1221,6 @@ def test_nullable_is_set___nullable_on_field_is_correct(nullable):
         transformation = FileMapping(
             fake_transformation_config(),
             file_type="ACC",
-            input_format=MappingFormat(name="A", version="1"),
-            output_format=MappingFormat(name="B", version="1"),
             standard_search_path=d,
             search_working_dir=False,
         ).get_transformations()[0]
@@ -1185,8 +1253,6 @@ def test_null_values_are_set_on_forward___forward_values_are_loaded_into_col():
         transformation = FileMapping(
             fake_transformation_config(),
             file_type="ACC",
-            input_format=MappingFormat(name="A", version="1"),
-            output_format=MappingFormat(name="B", version="1"),
             standard_search_path=d,
             search_working_dir=False,
         ).get_transformations()[0]

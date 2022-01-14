@@ -1,6 +1,5 @@
 from typing import List
 
-from converter.config import Config
 from converter.mapping import BaseMapping, MappingSpec
 from converter.mapping.base import DirectionalMapping, MappingFormat
 from tests.config.fakes import fake_transformation_config

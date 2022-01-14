@@ -1,4 +1,3 @@
-from converter.config import Config
 from converter.connector import BaseConnector
 from tests.config.fakes import fake_transformation_config
 

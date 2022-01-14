@@ -1,6 +1,5 @@
 import pytest
 
-from converter.config import Config
 from converter.mapping import BaseMapping
 from converter.mapping.base import MappingFormat
 from tests.config.fakes import fake_transformation_config
