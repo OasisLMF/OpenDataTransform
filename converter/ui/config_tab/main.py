@@ -31,7 +31,7 @@ RUNNER_CLASSES: List[Type[BaseRunner]] = list(
 
 
 class ConfigTab(QWidget):
-    def __init__(self, parent):
+    def __init__(self, parent, root_config_path):
         super().__init__(parent=parent)
 
         self.main_window = parent
@@ -39,18 +39,18 @@ class ConfigTab(QWidget):
         self.layout = QVBoxLayout(self)
 
         # setup mapping config
-        self.layout.addWidget(MappingGroupBox(self))
+        self.layout.addWidget(MappingGroupBox(self, root_config_path))
 
         # setup extractor config
         self.layout.addWidget(
             DynamicClassFormBlock(
-                self, "Extractor", "extractor", CONNECTOR_CLASSES
+                self, "Extractor", f"{root_config_path}.extractor", CONNECTOR_CLASSES
             )
         )
 
         # setup loader config
         self.layout.addWidget(
-            DynamicClassFormBlock(self, "Loader", "loader", CONNECTOR_CLASSES)
+            DynamicClassFormBlock(self, "Loader", f"{root_config_path}.loader", CONNECTOR_CLASSES)
         )
 
         # add runner config
@@ -58,7 +58,7 @@ class ConfigTab(QWidget):
             DynamicClassFormBlock(
                 self,
                 "Runner",
-                "runner",
+                f"{root_config_path}.runner",
                 RUNNER_CLASSES,
                 default_class=PandasRunner,
             )

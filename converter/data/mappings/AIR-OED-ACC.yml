@@ -5,12 +5,13 @@
 # LICENSE: BSD 3 clause license
 # SOURCE: https://github.com/OasisLMF/OpenDataTransform/
 # COMMENTS: Mapping to convert AIR CEDE account data to OED.
-input:
-  format: AIR
-  class: ACC
-output:
-  format: OED
-  class: ACC
+file_type: acc
+input_format:
+  name: AIR
+  version: "8"
+output_format:
+  name: OED
+  version: "1.1.5"
 forward:
   types:
     ExposureSetName:

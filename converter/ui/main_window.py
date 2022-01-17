@@ -8,7 +8,7 @@ from PySide6.QtWidgets import (
     QMainWindow,
     QMessageBox,
     QScrollArea,
-    QTabWidget,
+    QTabWidget, QToolButton,
 )
 
 from converter.config import Config
@@ -34,24 +34,31 @@ class MainWindow(QMainWindow):
         self._create_menu_bar()
 
         # setup tabs
-        tabs = QTabWidget()
-
-        self.config_tab = ConfigTab(self)
-        config_scroll_wrapper = QScrollArea()
-        config_scroll_wrapper.setWidget(self.config_tab)
-        tabs.addTab(config_scroll_wrapper, "Config")
-
-        self.metadata_tab = MetadataTab(self)
-        meta_scroll_wrapper = QScrollArea()
-        meta_scroll_wrapper.setWidget(self.metadata_tab)
-        tabs.addTab(meta_scroll_wrapper, "Metadata")
+        self.tabs = QTabWidget()
 
         self.run_tab = RunTab(self)
         run_scroll_wrapper = QScrollArea()
         run_scroll_wrapper.setWidget(self.run_tab)
-        tabs.addTab(run_scroll_wrapper, "Run")
+        self.tabs.addTab(run_scroll_wrapper, "Run")
 
-        self.setCentralWidget(tabs)
+        self.metadata_tab = MetadataTab(self)
+        meta_scroll_wrapper = QScrollArea()
+        meta_scroll_wrapper.setWidget(self.metadata_tab)
+        self.tabs.addTab(meta_scroll_wrapper, "Metadata")
+
+        # add create tab button
+        self.tabButton = QToolButton(self)
+        self.tabButton.text = "+"
+        font = self.tabButton.font
+        font.bold = True
+        self.tabButton.font = font
+        self.tabs.setCornerWidget(self.tabButton)
+        # self.tabButton.clicked.connect(self.add_page)
+
+        self.config_tabs = []
+        self.initialiseConfigTabs()
+
+        self.setCentralWidget(self.tabs)
 
         self.running_changed.connect(
             lambda b: self.menuBar().setEnabled(not b)
@@ -97,6 +104,9 @@ class MainWindow(QMainWindow):
 
             # update the new log location
             self.update_log_paths(file_path)
+
+            # setup the config tabs
+            self.initialiseConfigTabs()
 
     def _handle_file_save(self, overwrite=False):
         if not overwrite or not self._loaded_config.path:
@@ -155,3 +165,39 @@ class MainWindow(QMainWindow):
         file_menu.addAction(self.open_config)
         file_menu.addAction(self.save_config)
         file_menu.addAction(self.save_config_as)
+
+    def initialiseConfigTabs(self):
+        for tab in self.config_tabs:
+            tab.deleteLater()
+
+        config = self.config
+        template = config.get("template_transformation", None)
+        acc = config.get("transformations.acc", None)
+        loc = config.get("transformations.loc", None)
+        ri = config.get("transformations.ri", None)
+
+        if template or acc or loc or ri:
+            if template:
+                self.createTab("template_transformation", "Template")
+
+            if acc:
+                self.createTab("transformations.acc", "Account")
+
+            if loc:
+                self.createTab("transformations.loc", "Location")
+
+            if ri:
+                self.createTab("transformations.ri", "Reinsurance")
+        else:
+            # if the config isn't set create the defaults
+            self.createTab("template_transformation", "Template")
+            self.createTab("transformations.acc", "Account")
+            self.createTab("transformations.loc", "Location")
+            self.createTab("transformations.ri", "Reinsurance")
+
+    def createTab(self, config_path, label):
+        tab = ConfigTab(self, config_path)
+        scroll_wrapper = QScrollArea()
+        scroll_wrapper.setWidget(tab)
+        self.tabs.addTab(scroll_wrapper, label)
+        self.config_tabs.append(scroll_wrapper)
