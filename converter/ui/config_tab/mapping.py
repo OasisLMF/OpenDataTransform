@@ -34,7 +34,7 @@ class MappingCombo(QComboBox):
 
     def update_selection_from_config(self, config):
         try:
-            selection = config.get(self.config_path, None)
+            selection = config.get(self.config_path)
             current_index = self.options.index(MappingFormat(**selection))
             self.setCurrentIndex(current_index)
         except (ValueError, KeyError):

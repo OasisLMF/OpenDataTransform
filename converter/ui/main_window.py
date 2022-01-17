@@ -12,6 +12,7 @@ from PySide6.QtWidgets import (
 )
 
 from converter.config import Config
+from converter.ui.config_tab.add_tab_button import AddTabButton
 from converter.ui.config_tab.main import ConfigTab
 from converter.ui.metadata_tab.main import MetadataTab
 from converter.ui.run_tab.main import RunTab
@@ -47,16 +48,12 @@ class MainWindow(QMainWindow):
         self.tabs.addTab(meta_scroll_wrapper, "Metadata")
 
         # add create tab button
-        self.tabButton = QToolButton(self)
-        self.tabButton.text = "+"
-        font = self.tabButton.font
-        font.bold = True
-        self.tabButton.font = font
-        self.tabs.setCornerWidget(self.tabButton)
-        # self.tabButton.clicked.connect(self.add_page)
+        self.tab_button = AddTabButton(self)
+        self.tabs.setCornerWidget(self.tab_button)
 
         self.config_tabs = []
-        self.initialiseConfigTabs()
+        self.initialise_config_tabs()
+        self.tab_button.tab_added.connect(self.create_tab)
 
         self.setCentralWidget(self.tabs)
 
@@ -106,7 +103,7 @@ class MainWindow(QMainWindow):
             self.update_log_paths(file_path)
 
             # setup the config tabs
-            self.initialiseConfigTabs()
+            self.initialise_config_tabs()
 
     def _handle_file_save(self, overwrite=False):
         if not overwrite or not self._loaded_config.path:
@@ -166,36 +163,38 @@ class MainWindow(QMainWindow):
         file_menu.addAction(self.save_config)
         file_menu.addAction(self.save_config_as)
 
-    def initialiseConfigTabs(self):
+    def initialise_config_tabs(self):
         for tab in self.config_tabs:
             tab.deleteLater()
 
         config = self.config
-        template = config.get("template_transformation", None)
-        acc = config.get("transformations.acc", None)
-        loc = config.get("transformations.loc", None)
-        ri = config.get("transformations.ri", None)
+        if config.has_template or config.has_acc or config.has_loc or config.has_ri:
+            if config.has_template:
+                self.create_tab(self.config.TEMPLATE_TRANSFORMATION_PATH)
 
-        if template or acc or loc or ri:
-            if template:
-                self.createTab("template_transformation", "Template")
+            if config.has_acc:
+                self.create_tab(self.config.ACC_TRANSFORMATION_PATH)
 
-            if acc:
-                self.createTab("transformations.acc", "Account")
+            if config.has_loc:
+                self.create_tab(self.config.LOC_TRANSFORMATION_PATH)
 
-            if loc:
-                self.createTab("transformations.loc", "Location")
-
-            if ri:
-                self.createTab("transformations.ri", "Reinsurance")
+            if config.has_ri:
+                self.create_tab(self.config.RI_TRANSFORMATION_PATH)
         else:
             # if the config isn't set create the defaults
-            self.createTab("template_transformation", "Template")
-            self.createTab("transformations.acc", "Account")
-            self.createTab("transformations.loc", "Location")
-            self.createTab("transformations.ri", "Reinsurance")
+            self.create_tab(self.config.TEMPLATE_TRANSFORMATION_PATH)
+            self.create_tab(self.config.ACC_TRANSFORMATION_PATH)
+            self.create_tab(self.config.LOC_TRANSFORMATION_PATH)
+            self.create_tab(self.config.RI_TRANSFORMATION_PATH)
 
-    def createTab(self, config_path, label):
+    def create_tab(self, config_path):
+        label = {
+            self.config.TEMPLATE_TRANSFORMATION_PATH: "Template",
+            self.config.ACC_TRANSFORMATION_PATH: "Account",
+            self.config.LOC_TRANSFORMATION_PATH: "Location",
+            self.config.RI_TRANSFORMATION_PATH: "Reinsurance",
+        }[config_path]
+
         tab = ConfigTab(self, config_path)
         scroll_wrapper = QScrollArea()
         scroll_wrapper.setWidget(tab)

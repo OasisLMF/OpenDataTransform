@@ -104,6 +104,12 @@ class Config:
     command line and overrides and merges them into a single map.
     """
 
+    TEMPLATE_TRANSFORMATION_PATH = "template_transformation"
+    TRANSFORMATIONS_PATH = "transformations"
+    ACC_TRANSFORMATION_PATH = f"{TRANSFORMATIONS_PATH}.acc"
+    LOC_TRANSFORMATION_PATH = f"{TRANSFORMATIONS_PATH}.loc"
+    RI_TRANSFORMATION_PATH = f"{TRANSFORMATIONS_PATH}.ri"
+
     def __init__(
         self,
         argv: Dict[str, Any] = None,
@@ -329,8 +335,24 @@ class Config:
     def get_transformation_configs(self) -> List["TransformationConfig"]:
         return [
             TransformationConfig(self, file_type)
-            for file_type in self.get("transformations", fallback={}).keys()
+            for file_type in self.get(self.TRANSFORMATIONS_PATH, fallback={}).keys()
         ]
+
+    @property
+    def has_template(self):
+        return self.get(self.TEMPLATE_TRANSFORMATION_PATH, None) is not None
+
+    @property
+    def has_acc(self):
+        return self.get(self.ACC_TRANSFORMATION_PATH, None) is not None
+
+    @property
+    def has_loc(self):
+        return self.get(self.LOC_TRANSFORMATION_PATH, None) is not None
+
+    @property
+    def has_ri(self):
+        return self.get(self.RI_TRANSFORMATION_PATH, None) is not None
 
 
 class TransformationConfig:
@@ -340,8 +362,8 @@ class TransformationConfig:
 
         # merge the template transformation with the overrides
         self.config = deep_merge_dictionary_items(
-            self.root_config.get("template_transformation", fallback={}),
-            self.root_config.get(f"transformations.{file_type}", fallback={}),
+            self.root_config.get(self.root_config.TEMPLATE_TRANSFORMATION_PATH, fallback={}),
+            self.root_config.get(f"{self.config.TRANSFORMATIONS_PATH}.{file_type}", fallback={}),
         )
 
     def absolute_path(self, p):
