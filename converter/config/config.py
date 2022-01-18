@@ -285,6 +285,18 @@ class Config:
 
         block[path_parts[-1]] = value
 
+    def delete(self, path):
+        block = self.config
+
+        path_parts = path.lower().split(".")
+        for path_part in path_parts[:-1]:
+            if path_part not in block:
+                return
+            block = block[path_part]
+
+        if path_parts[-1] in block:
+            del block[path_parts[-1]]
+
     def to_yaml(self):
         """
         Generates a yaml string  representation of the normalised config

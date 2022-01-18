@@ -8,7 +8,8 @@ from PySide6.QtWidgets import (
     QMainWindow,
     QMessageBox,
     QScrollArea,
-    QTabWidget, QToolButton,
+    QTabWidget,
+    QTabBar,
 )
 
 from converter.config import Config
@@ -36,23 +37,27 @@ class MainWindow(QMainWindow):
 
         # setup tabs
         self.tabs = QTabWidget()
+        self.tabs.tabsClosable = True
+        self.tabs.tabCloseRequested.connect(self.on_close_tab)
 
         self.run_tab = RunTab(self)
         run_scroll_wrapper = QScrollArea()
         run_scroll_wrapper.setWidget(self.run_tab)
         self.tabs.addTab(run_scroll_wrapper, "Run")
+        self.tabs.tabBar().setTabButton(0, QTabBar.RightSide, None)
 
         self.metadata_tab = MetadataTab(self)
         meta_scroll_wrapper = QScrollArea()
         meta_scroll_wrapper.setWidget(self.metadata_tab)
         self.tabs.addTab(meta_scroll_wrapper, "Metadata")
+        self.tabs.tabBar().setTabButton(1, QTabBar.RightSide, None)
 
         # add create tab button
         self.tab_button = AddTabButton(self)
         self.tabs.setCornerWidget(self.tab_button)
 
         self.config_tabs = []
-        self.initialise_config_tabs()
+        self.initialise_config_tabs(self.config)
         self.tab_button.tab_added.connect(self.create_tab)
 
         self.setCentralWidget(self.tabs)
@@ -103,7 +108,7 @@ class MainWindow(QMainWindow):
             self.update_log_paths(file_path)
 
             # setup the config tabs
-            self.initialise_config_tabs()
+            self.initialise_config_tabs(self.config)
 
     def _handle_file_save(self, overwrite=False):
         if not overwrite or not self._loaded_config.path:
@@ -129,7 +134,7 @@ class MainWindow(QMainWindow):
         )
         self._working_config = Config()
         self._default_working_config = Config()
-        self.config_changed.emit(self._loaded_config)
+        self.config_changed.emit(self.config)
 
     @property
     def config_has_changes(self):
@@ -163,28 +168,20 @@ class MainWindow(QMainWindow):
         file_menu.addAction(self.save_config)
         file_menu.addAction(self.save_config_as)
 
-    def initialise_config_tabs(self):
+    def initialise_config_tabs(self, config):
         for tab in self.config_tabs:
             tab.deleteLater()
 
-        config = self.config
-        if config.has_template or config.has_acc or config.has_loc or config.has_ri:
-            if config.has_template:
-                self.create_tab(self.config.TEMPLATE_TRANSFORMATION_PATH)
-
-            if config.has_acc:
-                self.create_tab(self.config.ACC_TRANSFORMATION_PATH)
-
-            if config.has_loc:
-                self.create_tab(self.config.LOC_TRANSFORMATION_PATH)
-
-            if config.has_ri:
-                self.create_tab(self.config.RI_TRANSFORMATION_PATH)
-        else:
-            # if the config isn't set create the defaults
+        if config.has_template:
             self.create_tab(self.config.TEMPLATE_TRANSFORMATION_PATH)
+
+        if config.has_acc:
             self.create_tab(self.config.ACC_TRANSFORMATION_PATH)
+
+        if config.has_loc:
             self.create_tab(self.config.LOC_TRANSFORMATION_PATH)
+
+        if config.has_ri:
             self.create_tab(self.config.RI_TRANSFORMATION_PATH)
 
     def create_tab(self, config_path):
@@ -195,8 +192,20 @@ class MainWindow(QMainWindow):
             self.config.RI_TRANSFORMATION_PATH: "Reinsurance",
         }[config_path]
 
-        tab = ConfigTab(self, config_path)
+        tab = ConfigTab(self, config_path, force_all_fields=config_path == self.config.TEMPLATE_TRANSFORMATION_PATH)
         scroll_wrapper = QScrollArea()
         scroll_wrapper.setWidget(tab)
         self.tabs.addTab(scroll_wrapper, label)
         self.config_tabs.append(scroll_wrapper)
+
+    def on_close_tab(self, idx):
+        scroll_scroll: QScrollArea = self.tabs.widget(idx)
+        tab: ConfigTab = scroll_scroll.widget()
+        tab.deleteLater()
+
+        self._loaded_config.delete(tab.root_config_path)
+        self._default_working_config.delete(tab.root_config_path)
+        self._working_config.delete(tab.root_config_path)
+        self.config_changed.emit(self.config)
+
+        self.tabs.removeTab(idx)

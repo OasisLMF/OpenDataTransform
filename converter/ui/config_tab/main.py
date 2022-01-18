@@ -31,15 +31,18 @@ RUNNER_CLASSES: List[Type[BaseRunner]] = list(
 
 
 class ConfigTab(QWidget):
-    def __init__(self, parent, root_config_path):
+    def __init__(self, parent, root_config_path, force_all_fields=False):
         super().__init__(parent=parent)
 
+        self.root_config_path = root_config_path
+        self.force_all_fields = force_all_fields
+        self.show_all_fields = force_all_fields
         self.main_window = parent
 
         self.layout = QVBoxLayout(self)
 
         # setup mapping config
-        self.layout.addWidget(MappingGroupBox(self, root_config_path))
+        self.layout.addWidget(MappingGroupBox(self, root_config_path, self.show_all_fields))
 
         # setup extractor config
         self.layout.addWidget(

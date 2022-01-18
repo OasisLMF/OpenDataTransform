@@ -20,7 +20,7 @@ class MappingCombo(QComboBox):
         self.update_selection_from_config(self.tab.main_window.config)
         self.currentTextChanged.connect(
             lambda v: self.tab.main_window.set_working_value(
-                config_path, self.options[self.getCurrentIndex() - 1]  # -1 as the first option is blank
+                config_path, self.options[self.currentIndex - 1]  # -1 as the first option is blank
             )
         )
 

@@ -18,8 +18,8 @@ class StringField(QLineEdit):
     def on_config_loaded(self, new_config):
         self.setText(new_config.get(self.config_path, ""))
 
-    def on_changed(self, v):
-        self.main_window.set_working_value(self.config_path, v)
+    def on_changed(self, *v):
+        self.main_window.set_working_value(self.config_path, *v)
 
 
 class TextAreaField(QPlainTextEdit):
@@ -38,5 +38,5 @@ class TextAreaField(QPlainTextEdit):
     def on_config_loaded(self, new_config):
         self.setPlainText(new_config.get(self.config_path, ""))
 
-    def on_changed(self, v):
-        self.main_window.set_working_value(self.config_path, v)
+    def on_changed(self):
+        self.main_window.set_working_value(self.config_path, self.plainText)
