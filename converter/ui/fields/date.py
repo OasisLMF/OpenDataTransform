@@ -13,11 +13,14 @@ class DateField(QCalendarWidget):
         self.config_path = config_path
 
         self.on_config_loaded(tab.main_window.config)
-        self.selectionChanged.connect(self.on_changed)
-
         self.main_window.config_changed.connect(self.on_config_loaded)
 
     def on_config_loaded(self, new_config):
+        try:
+            self.selectionChanged.disconnect(self.on_changed)
+        except RuntimeError:
+            pass
+
         conf_date = new_config.get(self.config_path, None)
         if conf_date:
             self.setSelectedDate(QDate.fromString(conf_date, Qt.ISODate))
@@ -28,6 +31,8 @@ class DateField(QCalendarWidget):
                 self.config_path,
                 today().isoformat(),
             )
+
+        self.selectionChanged.connect(self.on_changed)
 
     def on_changed(self):
         self.main_window.set_working_value(

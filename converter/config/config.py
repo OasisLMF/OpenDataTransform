@@ -366,6 +366,13 @@ class Config:
     def has_ri(self):
         return self.get(self.RI_TRANSFORMATION_PATH, None) is not None
 
+    def __contains__(self, item):
+        try:
+            self.get(item)
+            return True
+        except KeyError:
+            return False
+
 
 class TransformationConfig:
     def __init__(self, config: Config, file_type: str):

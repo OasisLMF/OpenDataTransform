@@ -16,7 +16,13 @@ class StringField(QLineEdit):
         self.main_window.config_changed.connect(self.on_config_loaded)
 
     def on_config_loaded(self, new_config):
+        try:
+            self.textChanged.disconnect(self.on_changed)
+        except RuntimeError:
+            pass
+
         self.setText(new_config.get(self.config_path, ""))
+        self.textChanged.connect(self.on_changed)
 
     def on_changed(self, *v):
         self.main_window.set_working_value(self.config_path, *v)
@@ -31,12 +37,17 @@ class TextAreaField(QPlainTextEdit):
         self.config_path = config_path
 
         self.on_config_loaded(tab.main_window.config)
-        self.textChanged.connect(self.on_changed)
 
         self.main_window.config_changed.connect(self.on_config_loaded)
 
     def on_config_loaded(self, new_config):
+        try:
+            self.textChanged.disconnect(self.on_changed)
+        except RuntimeError:
+            pass
+
         self.setPlainText(new_config.get(self.config_path, ""))
+        self.textChanged.connect(self.on_changed)
 
     def on_changed(self):
         self.main_window.set_working_value(self.config_path, self.plainText)

@@ -23,31 +23,23 @@ class AddMenu(QMenu):
         self.add_ri_action.triggered.connect(self.add_ri_entry)
 
         self.setup_available_actions()
-        self.main_window.config_changed.connect(self.setup_available_actions)
 
     def add_template_entry(self):
-        self.add_config_entry(self.main_window.config.TEMPLATE_TRANSFORMATION_PATH, self.add_template_action)
+        self.add_config_entry(self.main_window.config.TEMPLATE_TRANSFORMATION_PATH)
 
     def add_acc_entry(self):
-        self.add_config_entry(self.main_window.config.ACC_TRANSFORMATION_PATH, self.add_acc_action)
+        self.add_config_entry(self.main_window.config.ACC_TRANSFORMATION_PATH)
 
     def add_loc_entry(self):
-        self.add_config_entry(self.main_window.config.LOC_TRANSFORMATION_PATH, self.add_loc_action)
+        self.add_config_entry(self.main_window.config.LOC_TRANSFORMATION_PATH)
 
     def add_ri_entry(self):
-        self.add_config_entry(self.main_window.config.RI_TRANSFORMATION_PATH, self.add_ri_action)
+        self.add_config_entry(self.main_window.config.RI_TRANSFORMATION_PATH)
 
-    def add_config_entry(self, config_path, action):
+    def add_config_entry(self, config_path):
         self.main_window.set_working_value(config_path, {})
-        self.removeAction(action)
-        self.parent().tab_added.emit(config_path)
 
     def setup_available_actions(self):
-        self.removeAction(self.add_template_action)
-        self.removeAction(self.add_acc_action)
-        self.removeAction(self.add_loc_action)
-        self.removeAction(self.add_ri_action)
-
         if not self.main_window.config.has_template:
             self.addAction(self.add_template_action)
 
@@ -62,8 +54,6 @@ class AddMenu(QMenu):
 
 
 class AddTabButton(QPushButton):
-    tab_added = Signal(str)
-
     def __init__(self, main_window):
         super().__init__()
 
@@ -71,7 +61,15 @@ class AddTabButton(QPushButton):
 
         self.text = ""
 
-        self.context_menu = AddMenu(main_window, self)
-        self.setMenu(self.context_menu)
+        self.context_menu = None
+        self.setup_context_menu()
+        self.main_window.config_changed.connect(self.setup_context_menu)
 
         self.setFixedWidth(25)
+
+    def setup_context_menu(self, *args):
+        if self.context_menu:
+            self.context_menu.deleteLater()
+
+        self.context_menu = AddMenu(self.main_window, self)
+        self.setMenu(self.context_menu)

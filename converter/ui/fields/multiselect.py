@@ -34,11 +34,14 @@ class MultiSelect(QListWidget):
 
         # set the initial selections
         self.on_config_loaded(tab.main_window.config)
-        self.itemSelectionChanged.connect(self.on_selection_changed)
-
         self.main_window.config_changed.connect(self.on_config_loaded)
 
     def on_config_loaded(self, new_config):
+        try:
+            self.itemSelectionChanged.disconnect(self.on_selection_changed)
+        except RuntimeError:
+            pass
+
         self.clearSelection()
         selected = new_config.get(self.config_path, [])
         for selection in selected:
@@ -47,6 +50,8 @@ class MultiSelect(QListWidget):
                 self.item(idx).setSelected(True)
             except ValueError:
                 pass
+
+        self.itemSelectionChanged.connect(self.on_selection_changed)
 
     def on_selection_changed(self):
         self.main_window.set_working_value(

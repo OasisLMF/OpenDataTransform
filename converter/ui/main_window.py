@@ -56,9 +56,9 @@ class MainWindow(QMainWindow):
         self.tab_button = AddTabButton(self)
         self.tabs.setCornerWidget(self.tab_button)
 
-        self.config_tabs = []
+        self.config_tabs = {}
         self.initialise_config_tabs(self.config)
-        self.tab_button.tab_added.connect(self.create_tab)
+        self.config_changed.connect(self.initialise_config_tabs)
 
         self.setCentralWidget(self.tabs)
 
@@ -141,9 +141,11 @@ class MainWindow(QMainWindow):
         return bool(self._working_config)
 
     def set_working_value(self, path, v):
-        if self._working_config.get(path, None) == v:
+        current = self.config.get(path, None)
+        if current == v:
             return
         self._working_config.set(path, v)
+        self.config_changed.emit(self.config)
 
     def set_default_working_value(self, path, v):
         self._default_working_config.set(path, v)
@@ -169,20 +171,19 @@ class MainWindow(QMainWindow):
         file_menu.addAction(self.save_config_as)
 
     def initialise_config_tabs(self, config):
-        for tab in self.config_tabs:
-            tab.deleteLater()
+        self.initialise_config_tab(config, config.TEMPLATE_TRANSFORMATION_PATH)
+        self.initialise_config_tab(config, config.ACC_TRANSFORMATION_PATH)
+        self.initialise_config_tab(config, config.LOC_TRANSFORMATION_PATH)
+        self.initialise_config_tab(config, config.RI_TRANSFORMATION_PATH)
 
-        if config.has_template:
-            self.create_tab(self.config.TEMPLATE_TRANSFORMATION_PATH)
+    def initialise_config_tab(self, config, root_config_path):
+        in_config = root_config_path in config
 
-        if config.has_acc:
-            self.create_tab(self.config.ACC_TRANSFORMATION_PATH)
-
-        if config.has_loc:
-            self.create_tab(self.config.LOC_TRANSFORMATION_PATH)
-
-        if config.has_ri:
-            self.create_tab(self.config.RI_TRANSFORMATION_PATH)
+        if in_config and root_config_path not in self.config_tabs:
+            self.create_tab(root_config_path)
+        elif not in_config and root_config_path in self.config_tabs:
+            self.config_tabs[root_config_path].deleteLater()
+            del self.config_tabs[root_config_path]
 
     def create_tab(self, config_path):
         label = {
@@ -196,12 +197,11 @@ class MainWindow(QMainWindow):
         scroll_wrapper = QScrollArea()
         scroll_wrapper.setWidget(tab)
         self.tabs.addTab(scroll_wrapper, label)
-        self.config_tabs.append(scroll_wrapper)
+        self.config_tabs[config_path] = scroll_wrapper
 
     def on_close_tab(self, idx):
         scroll_scroll: QScrollArea = self.tabs.widget(idx)
         tab: ConfigTab = scroll_scroll.widget()
-        tab.deleteLater()
 
         self._loaded_config.delete(tab.root_config_path)
         self._default_working_config.delete(tab.root_config_path)

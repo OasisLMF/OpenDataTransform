@@ -31,10 +31,6 @@ class DynamicClassFormBlock(QGroupBox):
         self.layout.addRow(QLabel("Class:"), self.class_selector)
 
         self.on_config_loaded(self.main_window.config)
-        self.class_selector.currentIndexChanged.connect(
-            self.on_selection_changed
-        )
-
         self.main_window.config_changed.connect(self.on_config_loaded)
 
         self.setLayout(self.layout)
@@ -58,10 +54,18 @@ class DynamicClassFormBlock(QGroupBox):
         )
 
     def on_config_loaded(self, new_config):
+        try:
+            self.class_selector.currentIndexChanged.disconnect(self.on_selection_changed)
+        except RuntimeError:
+            pass
+
         selection = self.update_selection_from_config(new_config)
         self.dynamic_fields = self.update_dynamic_fields_from_selection(
             selection, new_config
         )
+
+        self.class_selector.currentIndexChanged.connect(self.on_selection_changed)
+
 
     def update_selection_from_config(self, config):
         class_paths = [

@@ -1,3 +1,4 @@
+from PySide6.QtCore import Slot
 from __feature__ import true_property  # noqa
 from PySide6.QtWidgets import QComboBox, QFormLayout, QGroupBox, QLabel
 
@@ -9,6 +10,7 @@ class MappingCombo(QComboBox):
     def __init__(self, tab, config_path, options):
         super().__init__()
         self.tab = tab
+        self.main_window = tab.main_window
         self.config_path = config_path
         self.options = options
 
@@ -18,10 +20,12 @@ class MappingCombo(QComboBox):
         ])
 
         self.update_selection_from_config(self.tab.main_window.config)
-        self.currentTextChanged.connect(
-            lambda v: self.tab.main_window.set_working_value(
-                config_path, self.options[self.currentIndex - 1]  # -1 as the first option is blank
-            )
+        self.main_window.config_changed.connect(self.update_selection_from_config)
+
+    def on_selection_changed(self, v):
+        option = self.options[self.currentIndex]
+        self.tab.main_window.set_working_value(
+            self.config_path, {"name": option.name, "version": option.version} if option else None
         )
 
     def refresh_options(self, options):
@@ -34,18 +38,27 @@ class MappingCombo(QComboBox):
 
     def update_selection_from_config(self, config):
         try:
+            self.currentTextChanged.disconnect(self.on_selection_changed)
+        except RuntimeError:
+            pass
+
+        try:
             selection = config.get(self.config_path)
-            current_index = self.options.index(MappingFormat(**selection))
-            self.setCurrentIndex(current_index)
+            selected_index = self.options.index(MappingFormat(**selection) if selection else None)
+            if selected_index != self.currentIndex:
+                self.setCurrentIndex(selected_index)
         except (ValueError, KeyError):
             self.setCurrentIndex(0)
 
+        self.currentTextChanged.connect(self.on_selection_changed)
+
 
 class MappingGroupBox(QGroupBox):
-    def __init__(self, tab, root_config_path):
+    def __init__(self, tab, root_config_path, show_all_fields):
         super(MappingGroupBox, self).__init__("Mapping")
 
         self.tab = tab
+        self.show_all_fields = show_all_fields
 
         layout = QFormLayout()
 
@@ -58,11 +71,6 @@ class MappingGroupBox(QGroupBox):
         self.output_combo = MappingCombo(self.tab, f"{root_config_path}.output_format", formats)
         layout.addRow(QLabel("To:"), self.output_combo)
 
-        # connect the combobox to be update when a config is loaded
-        self.tab.main_window.config_changed.connect(
-            self.refresh_on_config_load
-        )
-
         self.setLayout(layout)
 
     @classmethod
@@ -70,12 +78,3 @@ class MappingGroupBox(QGroupBox):
         return [None] + list(
             FileMapping(config, raise_errors=False).mapping_graph.nodes
         )
-
-    def refresh_on_config_load(self, new_config):
-        formats = self.get_mapping_formats(new_config)
-
-        self.input_combo.refresh_options(formats)
-        self.input_combo.update_selection_from_config(new_config)
-
-        self.output_combo.refresh_options(formats)
-        self.output_combo.update_selection_from_config(new_config)
