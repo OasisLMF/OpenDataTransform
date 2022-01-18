@@ -1,4 +1,5 @@
 import os
+import re
 from functools import reduce
 from itertools import chain
 from typing import Any, Dict, Iterable, List, Tuple, TypeVar
@@ -365,6 +366,24 @@ class Config:
     @property
     def has_ri(self):
         return self.get(self.RI_TRANSFORMATION_PATH, None) is not None
+
+    def uses_template_value(self, property_path):
+        template_property_path = re.sub(r"^transformations\.[^.]+", self.TEMPLATE_TRANSFORMATION_PATH, property_path)
+        try:
+            template_value = self.get(template_property_path)
+        except KeyError:
+            # if the property isn't in the template then we cant be using the template value
+            return False
+
+        try:
+            config_value = self.get(property_path)
+        except KeyError:
+            # if the property is in the template but not in the config
+            # we must be using the template path
+            return True
+
+        # if it is set in both specify we are using the template if the 2 values are the same
+        return template_value == config_value
 
     def __contains__(self, item):
         try:

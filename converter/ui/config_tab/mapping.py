@@ -1,4 +1,3 @@
-from PySide6.QtCore import Slot
 from __feature__ import true_property  # noqa
 from PySide6.QtWidgets import QComboBox, QFormLayout, QGroupBox, QLabel
 
@@ -58,23 +57,45 @@ class MappingGroupBox(QGroupBox):
         super(MappingGroupBox, self).__init__("Mapping")
 
         self.tab = tab
+        self.main_window = tab.main_window
         self.show_all_fields = show_all_fields
+        self.root_config_path = root_config_path
 
-        layout = QFormLayout()
+        self.layout = QFormLayout()
 
         config = self.tab.main_window.config
-        formats = self.get_mapping_formats(config)
+        self.formats = self.get_mapping_formats(config)
 
-        self.input_combo = MappingCombo(self.tab, f"{root_config_path}.input_format", formats)
-        layout.addRow(QLabel("From:"), self.input_combo)
+        self.input_label = QLabel("From:")
+        self.input_combo = MappingCombo(self.tab, f"{root_config_path}.input_format", self.formats)
+        self.layout.addRow(self.input_label, self.input_combo)
 
-        self.output_combo = MappingCombo(self.tab, f"{root_config_path}.output_format", formats)
-        layout.addRow(QLabel("To:"), self.output_combo)
+        self.output_label = QLabel("To:")
+        self.output_combo = MappingCombo(self.tab, f"{root_config_path}.output_format", self.formats)
+        self.layout.addRow(self.output_label, self.output_combo)
 
-        self.setLayout(layout)
+        self.set_row_visibility(config)
+        self.main_window.config_changed.connect(self.set_row_visibility)
+
+        self.setLayout(self.layout)
 
     @classmethod
     def get_mapping_formats(cls, config):
         return [None] + list(
             FileMapping(config, raise_errors=False).mapping_graph.nodes
         )
+
+    def set_row_visibility(self, config):
+        if self.show_all_fields or not config.uses_template_value(f"{self.root_config_path}.input_format"):
+            self.input_label.show()
+            self.input_combo.show()
+        else:
+            self.input_label.hide()
+            self.input_combo.hide()
+
+        if self.show_all_fields or not config.uses_template_value(f"{self.root_config_path}.output_format"):
+            self.output_label.show()
+            self.output_combo.show()
+        else:
+            self.output_label.hide()
+            self.output_combo.hide()
