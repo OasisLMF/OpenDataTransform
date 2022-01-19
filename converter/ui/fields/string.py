@@ -1,53 +1,28 @@
 from __feature__ import true_property  # noqa
 from PySide6.QtWidgets import QLineEdit, QPlainTextEdit
 
+from converter.ui.fields.base import BaseFieldMixin
 
-class StringField(QLineEdit):
-    def __init__(self, tab, config_path):
-        super().__init__()
 
-        self.tab = tab
-        self.main_window = tab.main_window
-        self.config_path = config_path
+class StringField(BaseFieldMixin, QLineEdit):
+    def update_ui_from_config(self, config):
+        self.setText(config.get(self.config_path, ""))
 
-        self.on_config_loaded(tab.main_window.config)
-        self.textChanged.connect(self.on_changed)
+    @property
+    def change_signal(self):
+        return self.textChanged
 
-        self.main_window.config_changed.connect(self.on_config_loaded)
-
-    def on_config_loaded(self, new_config):
-        try:
-            self.textChanged.disconnect(self.on_changed)
-        except RuntimeError:
-            pass
-
-        self.setText(new_config.get(self.config_path, ""))
-        self.textChanged.connect(self.on_changed)
-
-    def on_changed(self, *v):
+    def on_change(self, *v):
         self.main_window.set_working_value(self.config_path, *v)
 
 
-class TextAreaField(QPlainTextEdit):
-    def __init__(self, tab, config_path):
-        super().__init__()
+class TextAreaField(BaseFieldMixin, QPlainTextEdit):
+    def update_ui_from_config(self, config):
+        self.setPlainText(config.get(self.config_path, ""))
 
-        self.tab = tab
-        self.main_window = tab.main_window
-        self.config_path = config_path
+    @property
+    def change_signal(self):
+        return self.textChanged
 
-        self.on_config_loaded(tab.main_window.config)
-
-        self.main_window.config_changed.connect(self.on_config_loaded)
-
-    def on_config_loaded(self, new_config):
-        try:
-            self.textChanged.disconnect(self.on_changed)
-        except RuntimeError:
-            pass
-
-        self.setPlainText(new_config.get(self.config_path, ""))
-        self.textChanged.connect(self.on_changed)
-
-    def on_changed(self):
+    def on_change(self):
         self.main_window.set_working_value(self.config_path, self.plainText)

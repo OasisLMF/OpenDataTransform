@@ -8,7 +8,10 @@ from PySide6.QtWidgets import (
     QLineEdit,
 )
 
+from converter.ui.fields.checkbox import Checkbox
 from converter.ui.fields.file import FileField
+from converter.ui.fields.select import Select
+from converter.ui.fields.string import StringField
 
 
 class DynamicClassFormBlock(QGroupBox):
@@ -66,7 +69,6 @@ class DynamicClassFormBlock(QGroupBox):
 
         self.class_selector.currentIndexChanged.connect(self.on_selection_changed)
 
-
     def update_selection_from_config(self, config):
         class_paths = [
             self.get_fully_qualified_classname(c) for c in self.classes
@@ -110,25 +112,24 @@ class DynamicClassFormBlock(QGroupBox):
             self.layout.removeRow(field)
 
         return [
-            self._create_dynamic_field(field_name, schema, config)
+            self._create_dynamic_field(field_name, schema)
             for field_name, schema in selection.options_schema.get(
                 "properties", {}
             ).items()
         ]
 
-    def _create_dynamic_field(self, field_name, schema, config):
+    def _create_dynamic_field(self, field_name, schema):
         config_path = f"{self.root_config_path}.options.{field_name}"
-        value = config.get(config_path, None)
         label = schema.get("title", field_name)
 
         if "enum" in schema:
-            field = self._create_enum_field(schema, value, config_path)
+            field = Select(self.tab, config_path, schema["enum"], empty_label="")
         elif schema["type"] == "boolean":
-            field = self._create_boolean_field(schema, value, config_path)
+            field = Checkbox(self.tab, config_path, "", schema.get("default", False))
         elif schema["type"] == "string" and schema["subtype"] == "path":
-            field = self._create_file_field(schema, value, config_path)
+            field = FileField(self.tab, config_path)
         else:
-            field = self._create_text_field(schema, value, config_path)
+            field = StringField(self.tab, config_path)
 
         self.layout.addRow(label, field)
         return field
