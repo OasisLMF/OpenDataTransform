@@ -2,7 +2,7 @@ from typing import List, Type
 
 from PySide6.QtCore import Signal
 from __feature__ import true_property  # noqa
-from PySide6.QtWidgets import QVBoxLayout, QWidget
+from PySide6.QtWidgets import QVBoxLayout, QWidget, QPushButton
 
 from converter.connector import BaseConnector, CsvConnector
 from converter.runner import BaseRunner, DaskRunner, ModinRunner, PandasRunner
@@ -70,6 +70,30 @@ class ConfigTab(QWidget):
             )
         )
 
+        # if we dont force all the fields to be shown and a template is set,
+        # add a toggle button to show/hide
+        if not force_all_fields:
+            self.toggle_all_fields_button = QPushButton("Show all fields")
+            self.toggle_all_fields_button.clicked.connect(self.toggle_all_fields)
+            self.update_show_field_toggle_button_visibility(self.main_window.config)
+            self.main_window.config_changed.connect(self.update_show_field_toggle_button_visibility)
+            self.layout.addWidget(self.toggle_all_fields_button)
+        else:
+            self.toggle_all_fields_button = None
+
         self.main_window.running_changed.connect(
             lambda b: self.setEnabled(not b)
         )
+
+    def toggle_all_fields(self):
+        self.show_all_fields = not self.show_all_fields
+        self.toggle_all_fields_button.text = (
+            "Show all fields" if not self.show_all_fields else "Hide template fields"
+        )
+        self.show_all_updated.emit(self.show_all_fields)
+
+    def update_show_field_toggle_button_visibility(self, config):
+        if self.main_window.config.has_template:
+            self.toggle_all_fields_button.show()
+        else:
+            self.toggle_all_fields_button.hide()

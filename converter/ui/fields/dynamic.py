@@ -1,11 +1,7 @@
 from __feature__ import true_property  # noqa
 from PySide6.QtWidgets import (
-    QCheckBox,
-    QComboBox,
     QFormLayout,
     QGroupBox,
-    QLabel,
-    QLineEdit,
 )
 
 from converter.ui.fields.checkbox import Checkbox
