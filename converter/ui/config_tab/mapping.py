@@ -60,11 +60,11 @@ class MappingGroupBox(QGroupBox):
         config = self.tab.main_window.config
         self.formats = self.get_mapping_formats(config)
 
-        self.input_label = Label("From:", self, f"{root_config_path}.input_format")
+        self.input_label = Label("From:", self.tab, f"{root_config_path}.input_format")
         self.input_combo = MappingCombo(self.tab, f"{root_config_path}.input_format", self.formats)
         self.layout.addRow(self.input_label, self.input_combo)
 
-        self.output_label = Label("To:", self, f"{root_config_path}.output_format")
+        self.output_label = Label("To:", self.tab, f"{root_config_path}.output_format")
         self.output_combo = MappingCombo(self.tab, f"{root_config_path}.output_format", self.formats)
         self.layout.addRow(self.output_label, self.output_combo)
 
