@@ -142,8 +142,10 @@ class MainWindow(QMainWindow):
 
     def set_working_value(self, path, v):
         current = self.config.get(path, None)
+
         if current == v:
             return
+
         self._working_config.set(path, v)
         self.config_changed.emit(self.config)
 

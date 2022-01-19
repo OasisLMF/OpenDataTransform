@@ -25,7 +25,28 @@ class AddMenu(QMenu):
         self.setup_available_actions()
 
     def add_template_entry(self):
-        self.add_config_entry(self.main_window.config.TEMPLATE_TRANSFORMATION_PATH)
+        self.add_config_entry(
+            self.main_window.config.TEMPLATE_TRANSFORMATION_PATH,
+            {
+                "loader": {
+                    "path": "converter.connector.csv.CsvConnector",
+                    "options": {
+                        "write_header": True,
+                        "quoting": "nonnumeric",
+                    }
+                },
+                "extractor": {
+                    "path": "converter.connector.csv.CsvConnector",
+                    "options": {
+                        "write_header": True,
+                        "quoting": "nonnumeric",
+                    }
+                },
+                "runner": {
+                    "path": "converter.runner.pandas.PandasRunner",
+                }
+            }
+        )
 
     def add_acc_entry(self):
         self.add_config_entry(self.main_window.config.ACC_TRANSFORMATION_PATH)
@@ -36,8 +57,8 @@ class AddMenu(QMenu):
     def add_ri_entry(self):
         self.add_config_entry(self.main_window.config.RI_TRANSFORMATION_PATH)
 
-    def add_config_entry(self, config_path):
-        self.main_window.set_working_value(config_path, {})
+    def add_config_entry(self, config_path, default_conf=None):
+        self.main_window.set_working_value(config_path, default_conf or {})
 
     def setup_available_actions(self):
         if not self.main_window.config.has_template:

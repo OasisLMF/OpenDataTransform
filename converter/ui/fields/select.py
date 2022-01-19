@@ -5,15 +5,15 @@ from converter.ui.fields.base import BaseFieldMixin
 
 
 class Select(BaseFieldMixin, QComboBox):
-    def __init__(self, tab, config_path, options, empty_label=None, empty_value=None):
+    def __init__(self, tab, config_path, options, empty_label=None, empty_value=None, labels=None):
         self.empty_label = empty_label
+
+        self.options = options
+        self.option_labels = labels or list(map(str, options))
 
         if empty_label is not None:
             self.options = [empty_value, *options]
-            self.option_labels = [empty_label, *map(str, options)]
-        else:
-            self.options = options
-            self.option_labels = list(map(str, options))
+            self.option_labels = [empty_label, *self.option_labels]
 
         super().__init__(tab, config_path, defer_initial_ui_update=True)
 

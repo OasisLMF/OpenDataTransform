@@ -1,5 +1,6 @@
 from typing import List, Type
 
+from PySide6.QtCore import Signal
 from __feature__ import true_property  # noqa
 from PySide6.QtWidgets import QVBoxLayout, QWidget
 
@@ -31,6 +32,8 @@ RUNNER_CLASSES: List[Type[BaseRunner]] = list(
 
 
 class ConfigTab(QWidget):
+    show_all_updated = Signal(bool)
+
     def __init__(self, parent, root_config_path, force_all_fields=False):
         super().__init__(parent=parent)
 
@@ -42,7 +45,7 @@ class ConfigTab(QWidget):
         self.layout = QVBoxLayout(self)
 
         # setup mapping config
-        self.layout.addWidget(MappingGroupBox(self, root_config_path, self.show_all_fields))
+        self.layout.addWidget(MappingGroupBox(self, root_config_path))
 
         # setup extractor config
         self.layout.addWidget(

@@ -10,6 +10,10 @@ class BaseFieldMixin:
             self.on_config_changed(self.main_window.config)
         self.main_window.config_changed.connect(self.on_config_changed)
 
+        if hasattr(self.tab, "show_all_updated"):
+            self.tab.show_all_updated.connect(self.on_show_all_updated)
+        self.main_window.config_changed.connect(self.on_config_changed_update_visibility)
+
     def on_config_changed(self, new_config):
         try:
             self.change_signal.disconnect(self.on_change)
@@ -29,3 +33,15 @@ class BaseFieldMixin:
 
     def on_change(self, *args, **kwargs):
         raise NotImplementedError()
+
+    def on_show_all_updated(self, show_all):
+        self.update_visibility(show_all, self.tab.main_window.config)
+
+    def on_config_changed_update_visibility(self, config):
+        self.update_visibility(getattr(self.tab, "show_all_fields", True), config)
+
+    def update_visibility(self, show_all, config):
+        if show_all or not config.uses_template_value(self.config_path):
+            self.show()
+        else:
+            self.hide()

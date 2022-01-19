@@ -44,3 +44,11 @@ class FileField(BaseFieldMixin, QHBoxLayout):
 
     def update_ui_from_config(self, config):
         self.name_field.setText(config.get(self.config_path, ""))
+
+    def show(self):
+        self.file_button.show()
+        self.name_field.show()
+
+    def hide(self):
+        self.file_button.hide()
+        self.name_field.hide()
