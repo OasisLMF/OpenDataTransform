@@ -1,3 +1,5 @@
+from __feature__ import true_property  # noqa
+
 class BaseFieldMixin:
     def __init__(self, tab, config_path, *args, defer_initial_ui_update=False, **kwargs):
         super().__init__(*args, **kwargs)

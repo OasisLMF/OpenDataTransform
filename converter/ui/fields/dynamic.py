@@ -2,6 +2,7 @@ from __feature__ import true_property  # noqa
 from PySide6.QtWidgets import (
     QFormLayout,
     QGroupBox,
+    QSizePolicy,
 )
 
 from converter.ui.fields.checkbox import Checkbox

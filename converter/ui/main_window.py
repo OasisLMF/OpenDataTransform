@@ -41,9 +41,7 @@ class MainWindow(QMainWindow):
         self.tabs.tabCloseRequested.connect(self.on_close_tab)
 
         self.run_tab = RunTab(self)
-        run_scroll_wrapper = QScrollArea()
-        run_scroll_wrapper.setWidget(self.run_tab)
-        self.tabs.addTab(run_scroll_wrapper, "Run")
+        self.tabs.addTab(self.run_tab, "Run")
         self.tabs.tabBar().setTabButton(0, QTabBar.RightSide, None)
 
         self.metadata_tab = MetadataTab(self)
@@ -196,10 +194,8 @@ class MainWindow(QMainWindow):
         }[config_path]
 
         tab = ConfigTab(self, config_path, force_all_fields=config_path == self.config.TEMPLATE_TRANSFORMATION_PATH)
-        scroll_wrapper = QScrollArea()
-        scroll_wrapper.setWidget(tab)
-        self.tabs.addTab(scroll_wrapper, label)
-        self.config_tabs[config_path] = scroll_wrapper
+        self.tabs.addTab(tab, label)
+        self.config_tabs[config_path] = tab
 
     def on_close_tab(self, idx):
         scroll_scroll: QScrollArea = self.tabs.widget(idx)

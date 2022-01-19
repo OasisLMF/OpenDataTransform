@@ -2,7 +2,7 @@ from typing import List, Type
 
 from PySide6.QtCore import Signal
 from __feature__ import true_property  # noqa
-from PySide6.QtWidgets import QVBoxLayout, QWidget, QPushButton
+from PySide6.QtWidgets import QVBoxLayout, QWidget, QPushButton, QSpacerItem
 
 from converter.connector import BaseConnector, CsvConnector
 from converter.runner import BaseRunner, DaskRunner, ModinRunner, PandasRunner
@@ -80,6 +80,9 @@ class ConfigTab(QWidget):
             self.layout.addWidget(self.toggle_all_fields_button)
         else:
             self.toggle_all_fields_button = None
+
+        # Add a spacer to push all the fields up when fields are hidden
+        self.layout.addStretch()
 
         self.main_window.running_changed.connect(
             lambda b: self.setEnabled(not b)
