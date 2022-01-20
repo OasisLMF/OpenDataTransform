@@ -13,7 +13,7 @@ def get_logger():
 
 def log_metadata(config: TransformationConfig, mapping: BaseMapping):
     get_logger().info(
-        yaml.safe_dump(
+        yaml.safe_dump([
             {
                 "file_type": mapping.file_type,
                 "input_format": mapping.input_format._asdict(),
@@ -29,5 +29,5 @@ def log_metadata(config: TransformationConfig, mapping: BaseMapping):
                 "data_of_conversion": datetime.now().isoformat(),
                 **config.get("metadata", {}),
             }
-        )
+        ])
     )
