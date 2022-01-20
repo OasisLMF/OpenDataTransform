@@ -42,14 +42,14 @@ class MainWindow(QMainWindow):
         self.tabs.tabsClosable = True
         self.tabs.tabCloseRequested.connect(self.on_close_tab)
 
-        self.run_tab = RunTab(self)
-        self.tabs.addTab(self.run_tab, "Run")
-        self.tabs.tabBar().setTabButton(0, QTabBar.RightSide, None)
-
         self.metadata_tab = MetadataTab(self)
         meta_scroll_wrapper = QScrollArea()
         meta_scroll_wrapper.setWidget(self.metadata_tab)
         self.tabs.addTab(meta_scroll_wrapper, "Metadata")
+        self.tabs.tabBar().setTabButton(0, QTabBar.RightSide, None)
+
+        self.run_tab = RunTab(self)
+        self.tabs.addTab(self.run_tab, "Run")
         self.tabs.tabBar().setTabButton(1, QTabBar.RightSide, None)
 
         # add create tab button
@@ -174,10 +174,11 @@ class MainWindow(QMainWindow):
         file_menu.addAction(self.save_config_as)
 
     def initialise_config_tabs(self, config):
-        self.initialise_config_tab(config, config.TEMPLATE_TRANSFORMATION_PATH)
-        self.initialise_config_tab(config, config.ACC_TRANSFORMATION_PATH)
-        self.initialise_config_tab(config, config.LOC_TRANSFORMATION_PATH)
+        # add in reverse order as they are inserted into the front of the list
         self.initialise_config_tab(config, config.RI_TRANSFORMATION_PATH)
+        self.initialise_config_tab(config, config.LOC_TRANSFORMATION_PATH)
+        self.initialise_config_tab(config, config.ACC_TRANSFORMATION_PATH)
+        self.initialise_config_tab(config, config.TEMPLATE_TRANSFORMATION_PATH)
 
     def initialise_config_tab(self, config, root_config_path):
         in_config = root_config_path in config
@@ -202,8 +203,8 @@ class MainWindow(QMainWindow):
             force_all_fields=config_path
             == self.config.TEMPLATE_TRANSFORMATION_PATH,
         )
-        self.tabs.addTab(tab, label)
-        self.tabs.currentIndex = self.tabs.count - 1
+        self.tabs.insertTab(0, tab, label)
+        self.tabs.currentIndex = 0
         self.config_tabs[config_path] = tab
 
     def on_close_tab(self, idx):
