@@ -1,8 +1,8 @@
 from typing import List, Type
 
-from PySide6.QtCore import Signal
 from __feature__ import true_property  # noqa
-from PySide6.QtWidgets import QVBoxLayout, QWidget, QPushButton, QSpacerItem
+from PySide6.QtCore import Signal
+from PySide6.QtWidgets import QPushButton, QVBoxLayout, QWidget
 
 from converter.connector import BaseConnector, CsvConnector
 from converter.runner import BaseRunner, DaskRunner, ModinRunner, PandasRunner
@@ -50,13 +50,18 @@ class ConfigTab(QWidget):
         # setup extractor config
         self.layout.addWidget(
             DynamicClassFormBlock(
-                self, "Extractor", f"{root_config_path}.extractor", CONNECTOR_CLASSES
+                self,
+                "Extractor",
+                f"{root_config_path}.extractor",
+                CONNECTOR_CLASSES,
             )
         )
 
         # setup loader config
         self.layout.addWidget(
-            DynamicClassFormBlock(self, "Loader", f"{root_config_path}.loader", CONNECTOR_CLASSES)
+            DynamicClassFormBlock(
+                self, "Loader", f"{root_config_path}.loader", CONNECTOR_CLASSES
+            )
         )
 
         # add runner config
@@ -74,9 +79,15 @@ class ConfigTab(QWidget):
         # add a toggle button to show/hide
         if not force_all_fields:
             self.toggle_all_fields_button = QPushButton("Show all fields")
-            self.toggle_all_fields_button.clicked.connect(self.toggle_all_fields)
-            self.update_show_field_toggle_button_visibility(self.main_window.config)
-            self.main_window.config_changed.connect(self.update_show_field_toggle_button_visibility)
+            self.toggle_all_fields_button.clicked.connect(
+                self.toggle_all_fields
+            )
+            self.update_show_field_toggle_button_visibility(
+                self.main_window.config
+            )
+            self.main_window.config_changed.connect(
+                self.update_show_field_toggle_button_visibility
+            )
             self.layout.addWidget(self.toggle_all_fields_button)
         else:
             self.toggle_all_fields_button = None
@@ -91,7 +102,9 @@ class ConfigTab(QWidget):
     def toggle_all_fields(self):
         self.show_all_fields = not self.show_all_fields
         self.toggle_all_fields_button.text = (
-            "Show all fields" if not self.show_all_fields else "Hide template fields"
+            "Show all fields"
+            if not self.show_all_fields
+            else "Hide template fields"
         )
         self.show_all_updated.emit(self.show_all_fields)
 

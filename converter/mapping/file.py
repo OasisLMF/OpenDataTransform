@@ -405,7 +405,7 @@ class FileMapping(BaseMapping):
     def __init__(
         self,
         config,
-        file_type: str = None,
+        file_type: str,
         search_paths: List[str] = None,
         standard_search_path: str = get_data_path("mappings"),
         search_working_dir=True,

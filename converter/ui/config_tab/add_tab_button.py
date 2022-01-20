@@ -1,4 +1,3 @@
-from PySide6.QtCore import Signal
 from __feature__ import true_property  # noqa
 from PySide6.QtGui import QAction
 from PySide6.QtWidgets import QMenu, QPushButton
@@ -33,19 +32,19 @@ class AddMenu(QMenu):
                     "options": {
                         "write_header": True,
                         "quoting": "nonnumeric",
-                    }
+                    },
                 },
                 "extractor": {
                     "path": "converter.connector.csv.CsvConnector",
                     "options": {
                         "write_header": True,
                         "quoting": "nonnumeric",
-                    }
+                    },
                 },
                 "runner": {
                     "path": "converter.runner.pandas.PandasRunner",
-                }
-            }
+                },
+            },
         )
 
     def add_acc_entry(self):

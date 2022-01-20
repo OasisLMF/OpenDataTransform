@@ -1,7 +1,10 @@
 from __feature__ import true_property  # noqa
 
+
 class BaseFieldMixin:
-    def __init__(self, tab, config_path, *args, defer_initial_ui_update=False, **kwargs):
+    def __init__(
+        self, tab, config_path, *args, defer_initial_ui_update=False, **kwargs
+    ):
         super().__init__(*args, **kwargs)
         self.tab = tab
         self.main_window = tab.main_window
@@ -14,7 +17,9 @@ class BaseFieldMixin:
 
         if hasattr(self.tab, "show_all_updated"):
             self.tab.show_all_updated.connect(self.on_show_all_updated)
-        self.main_window.config_changed.connect(self.on_config_changed_update_visibility)
+        self.main_window.config_changed.connect(
+            self.on_config_changed_update_visibility
+        )
 
     def on_config_changed(self, new_config):
         try:
@@ -40,7 +45,9 @@ class BaseFieldMixin:
         self.update_visibility(show_all, self.tab.main_window.config)
 
     def on_config_changed_update_visibility(self, config):
-        self.update_visibility(getattr(self.tab, "show_all_fields", True), config)
+        self.update_visibility(
+            getattr(self.tab, "show_all_fields", True), config
+        )
 
     def update_visibility(self, show_all, config):
         if show_all or not config.uses_template_value(self.config_path):

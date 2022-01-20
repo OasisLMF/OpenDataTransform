@@ -72,13 +72,13 @@ def test_component_class_paths_are_set___specific_component_classes_are_used():
                             "options": {"first": "Some Mapping Param"},
                         },
                     }
-                }
+                },
             }
         )
 
         controller = Controller(config)
 
-        controller.run(threaded=False)
+        controller.run()
 
         transformer_config = config.get_transformation_configs()[0]
         extractor_ctor_mock.assert_called_once_with(
@@ -89,7 +89,7 @@ def test_component_class_paths_are_set___specific_component_classes_are_used():
             transformer_config, first="Some Loader Param"
         )
         mapping_ctor_mock.assert_called_once_with(
-            transformer_config, first="Some Mapping Param"
+            transformer_config, "acc", first="Some Mapping Param"
         )
         runner_ctor_mock.assert_called_once_with(
             transformer_config, first="Some Runner Param"
@@ -135,13 +135,13 @@ def test_component_class_paths_default___default_component_classes_are_used():
                             "options": {"first": "Some Mapping Param"}
                         },
                     }
-                }
+                },
             }
         )
 
         controller = Controller(config)
 
-        controller.run(threaded=False)
+        controller.run()
 
         transformer_config = config.get_transformation_configs()[0]
         connector_ctor_mock.assert_any_call(
@@ -151,7 +151,7 @@ def test_component_class_paths_default___default_component_classes_are_used():
             transformer_config, first="Some Loader Param"
         )
         mapping_ctor_mock.assert_called_once_with(
-            transformer_config, first="Some Mapping Param"
+            transformer_config, "acc", first="Some Mapping Param"
         )
         runner_ctor_mock.assert_called_once_with(
             transformer_config, first="Some Runner Param"

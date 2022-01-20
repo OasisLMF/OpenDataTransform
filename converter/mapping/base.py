@@ -138,8 +138,12 @@ class BaseMapping:
 
         self.config = config
         default_format_dict = {"name": None, "version": None}
-        self.input_format = MappingFormat(**self.config.get("input_format", default_format_dict))
-        self.output_format = MappingFormat(**self.config.get("output_format", default_format_dict))
+        self.input_format = MappingFormat(
+            **self.config.get("input_format", default_format_dict)
+        )
+        self.output_format = MappingFormat(
+            **self.config.get("output_format", default_format_dict)
+        )
 
         self._options = {
             "file_type": file_type,

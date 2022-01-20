@@ -8,8 +8,8 @@ from PySide6.QtWidgets import (
     QMainWindow,
     QMessageBox,
     QScrollArea,
-    QTabWidget,
     QTabBar,
+    QTabWidget,
 )
 
 from converter.config import Config
@@ -193,7 +193,12 @@ class MainWindow(QMainWindow):
             self.config.RI_TRANSFORMATION_PATH: "Reinsurance",
         }[config_path]
 
-        tab = ConfigTab(self, config_path, force_all_fields=config_path == self.config.TEMPLATE_TRANSFORMATION_PATH)
+        tab = ConfigTab(
+            self,
+            config_path,
+            force_all_fields=config_path
+            == self.config.TEMPLATE_TRANSFORMATION_PATH,
+        )
         self.tabs.addTab(tab, label)
         self.config_tabs[config_path] = tab
 

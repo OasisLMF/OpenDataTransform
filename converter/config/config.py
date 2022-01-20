@@ -348,7 +348,9 @@ class Config:
     def get_transformation_configs(self) -> List["TransformationConfig"]:
         return [
             TransformationConfig(self, file_type)
-            for file_type in self.get(self.TRANSFORMATIONS_PATH, fallback={}).keys()
+            for file_type in self.get(
+                self.TRANSFORMATIONS_PATH, fallback={}
+            ).keys()
         ]
 
     @property
@@ -368,11 +370,16 @@ class Config:
         return self.get(self.RI_TRANSFORMATION_PATH, None) is not None
 
     def uses_template_value(self, property_path):
-        template_property_path = re.sub(r"^transformations\.[^.]+", self.TEMPLATE_TRANSFORMATION_PATH, property_path)
+        template_property_path = re.sub(
+            r"^transformations\.[^.]+",
+            self.TEMPLATE_TRANSFORMATION_PATH,
+            property_path,
+        )
         try:
             template_value = self.get(template_property_path)
         except KeyError:
-            # if the property isn't in the template then we cant be using the template value
+            # if the property isn't in the template then we cant be
+            # using the template value
             return False
 
         try:
@@ -382,7 +389,8 @@ class Config:
             # we must be using the template path
             return True
 
-        # if it is set in both specify we are using the template if the 2 values are the same
+        # if it is set in both specify we are using the template if
+        # the 2 values are the same
         return template_value == config_value
 
     def __contains__(self, item):
@@ -400,8 +408,13 @@ class TransformationConfig:
 
         # merge the template transformation with the overrides
         self.config = deep_merge_dictionary_items(
-            self.root_config.get(self.root_config.TEMPLATE_TRANSFORMATION_PATH, fallback={}),
-            self.root_config.get(f"{self.config.TRANSFORMATIONS_PATH}.{file_type}", fallback={}),
+            self.root_config.get(
+                self.root_config.TEMPLATE_TRANSFORMATION_PATH, fallback={}
+            ),
+            self.root_config.get(
+                f"{self.root_config.TRANSFORMATIONS_PATH}.{file_type}",
+                fallback={},
+            ),
         )
 
     def absolute_path(self, p):

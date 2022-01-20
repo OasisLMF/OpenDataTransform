@@ -1,9 +1,5 @@
 from __feature__ import true_property  # noqa
-from PySide6.QtWidgets import (
-    QFormLayout,
-    QGroupBox,
-    QSizePolicy,
-)
+from PySide6.QtWidgets import QFormLayout, QGroupBox
 
 from converter.ui.fields.checkbox import Checkbox
 from converter.ui.fields.file import FileField
@@ -29,19 +25,34 @@ class DynamicClassFormBlock(QGroupBox):
             tab,
             f"{self.root_config_path}.path",
             [self.get_fully_qualified_classname(cls) for cls in self.classes],
-            labels=[self.get_selectable_class_name(cls) for cls in self.classes],
+            labels=[
+                self.get_selectable_class_name(cls) for cls in self.classes
+            ],
             empty_label="",
         )
-        self.class_selector.currentIndexChanged.connect(self.on_selection_changed)
-        self.layout.addRow(Label("Class:", tab, f"{self.root_config_path}.path"), self.class_selector)
+        self.class_selector.currentIndexChanged.connect(
+            self.on_selection_changed
+        )
+        self.layout.addRow(
+            Label("Class:", tab, f"{self.root_config_path}.path"),
+            self.class_selector,
+        )
 
         # populate initial dynamic fields
-        current_cls_name = self.main_window.config.get(f"{self.root_config_path}.path", None)
-        current_selection = next(
-            (cls for cls in self.classes if self.get_fully_qualified_classname(cls) == current_cls_name),
-            None
+        current_cls_name = self.main_window.config.get(
+            f"{self.root_config_path}.path", None
         )
-        self.dynamic_fields = self.update_dynamic_fields_from_selection(current_selection)
+        current_selection = next(
+            (
+                cls
+                for cls in self.classes
+                if self.get_fully_qualified_classname(cls) == current_cls_name
+            ),
+            None,
+        )
+        self.dynamic_fields = self.update_dynamic_fields_from_selection(
+            current_selection
+        )
 
         self.setLayout(self.layout)
 
@@ -58,7 +69,9 @@ class DynamicClassFormBlock(QGroupBox):
             selected_class = None
         else:
             selected_class = self.classes[value - 1]
-        self.dynamic_fields = self.update_dynamic_fields_from_selection(selected_class)
+        self.dynamic_fields = self.update_dynamic_fields_from_selection(
+            selected_class
+        )
 
     def update_dynamic_fields_from_selection(self, selection):
         for field in self.dynamic_fields:
@@ -79,9 +92,13 @@ class DynamicClassFormBlock(QGroupBox):
         label = schema.get("title", field_name)
 
         if "enum" in schema:
-            field = Select(self.tab, config_path, schema["enum"], empty_label="")
+            field = Select(
+                self.tab, config_path, schema["enum"], empty_label=""
+            )
         elif schema["type"] == "boolean":
-            field = Checkbox(self.tab, config_path, "", schema.get("default", False))
+            field = Checkbox(
+                self.tab, config_path, "", schema.get("default", False)
+            )
         elif schema["type"] == "string" and schema["subtype"] == "path":
             field = FileField(self.tab, config_path)
         else:
