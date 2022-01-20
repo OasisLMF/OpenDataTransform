@@ -6,36 +6,32 @@
 # SOURCE: https://github.com/OasisLMF/OpenDataTransform/
 # COMMENTS: Simple maths example for demonstration, contains forward and reverse.
 
-file_type: acc
+file_type: RI
 input_format:
   name: A
-  version: 1
+  version: "1"
 output_format:
   name: B
-  version: 1
+  version: "1"
 forward:
   types:
-    id:
-      type: int
-    a:
-      type: int
-    b:
-      type: int
+    a_ri:
+      type: float
+    b_ri:
+      type: float
   transform:
-    id:
-      - transformation: id
-    c:
-      - transformation: a * 5
-    d:
-      - transformation: b + 30
+    c_ri:
+      - transformation: a_ri
+    d_ri:
+      - transformation: b_ri
 reverse:
   types:
-    d:
-      type: int
-    f:
-      type: int
+    c_ri:
+      type: float
+    d_ri:
+      type: float
   transform:
-    a:
-      - transformation: d / 5
-    b:
-      - transformation: f - 30
+    a_ri:
+      - transformation: c_ri
+    b-ac:
+      - transformation: d_ri

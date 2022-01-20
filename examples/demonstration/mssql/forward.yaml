@@ -10,8 +10,7 @@ extractor:
     database: TestDb
     user: sa
     password: password
-    select_statement: select.sql
-    insert_statement: insert.sql
+    sql_statement: select.sql
 loader:
   path: converter.connector.SQLServerConnector
   options:
@@ -20,5 +19,4 @@ loader:
     database: TestDb
     user: sa
     password: password
-    select_statement: select.sql
-    insert_statement: insert.sql
+    sql_statement: insert.sql

@@ -10,8 +10,7 @@ extractor:
     database: postgres
     user: postgres
     password: password
-    select_statement: select.sql
-    insert_statement: insert.sql
+    sql_statemen: select.sql
 loader:
   path: converter.connector.PostgresConnector
   options:
@@ -20,5 +19,4 @@ loader:
     database: postgres
     user: postgres
     password: password
-    select_statement: select.sql
-    insert_statement: insert.sql
+    sql_statement: insert.sql

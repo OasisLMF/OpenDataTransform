@@ -1,0 +1,8 @@
+entries:
+  Total:
+    fields:
+      - c_loc
+      - d_loc
+    operator: sum
+  NumRows:
+    operator: count
