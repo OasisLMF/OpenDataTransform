@@ -13,7 +13,7 @@ class RunTab(QWidget):
 
         self.layout = QVBoxLayout(self)
 
-        self.validation_panel = ValidationPanel(self)
+        self.validation_panel = ValidationPanel(self.main_window)
         self.layout.addLayout(self.validation_panel.layout)
 
         self.log_panel = LogPanel(self)

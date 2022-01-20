@@ -7,36 +7,59 @@ from PySide6.QtWidgets import (
     QGroupBox,
     QHBoxLayout,
     QTableWidget,
-    QTableWidgetItem,
+    QTableWidgetItem, QVBoxLayout, QLabel,
 )
 
-from converter.validator.base import ValidationResult
+from converter.validator.base import ValidationResult, ValidationLogEntry
 
 
 class ValidationPanel(logging.Handler):
     table_headers = ["Validator", "Group", "Field", "Value", "Operator"]
 
-    def __init__(self, parent):
+    def __init__(self, main_window):
         super().__init__()
 
-        # switch to track if we are expecting the input validation output
-        self.input = True
+        self.layout = QVBoxLayout()
 
-        self.layout = QHBoxLayout()
+        # setup tables
+        self.tables = {}
+        self.setup_tables(main_window.config)
+        main_window.config_changed.connect(self.setup_tables)
 
-        self.input_table = self.create_table("Input Validation")
-        self.output_table = self.create_table("Output Validation")
+    def setup_tables(self, config):
+        for table in self.tables.values():
+            if table is not None:
+                self.layout.removeWidget(table)
+                table.deleteLater()
+
+        if config.has_acc:
+            self.tables["acc"] = ValidationTable("Account")
+        else:
+            self.tables["acc"] = None
+
+        if config.has_loc:
+            self.tables["loc"] = ValidationTable("Location")
+        else:
+            self.tables["loc"] = None
+
+        if config.has_ri:
+            self.tables["ri"] = ValidationTable("Reinsurance")
+        else:
+            self.tables["ri"] = None
+
+        for table in self.tables.values():
+            if table is not None:
+                self.layout.addWidget(table)
 
     def emit(self, record):
         parsed = yaml.safe_load(record.msg)
         if not isinstance(parsed[0], dict):
             return
 
+        log_entry: ValidationLogEntry = parsed[0]
         validations: ValidationResult = parsed[0][
             "validations"
         ]
-        table = self.input_table if self.input else self.output_table
-        self.input = not self.input
 
         rows = []
         row = ["", "", "", "", ""]
@@ -55,24 +78,47 @@ class ValidationPanel(logging.Handler):
                 rows.append(row)
                 row = ["", "", "", "", ""]
 
-        self.redraw_table(table, rows)
+        self.tables[log_entry["file_type"]].redraw_table(rows)
+
+    def clear(self):
+        for table in self.tables.values():
+            if table is not None:
+                table.clear()
+
+
+class ValidationTable(QGroupBox):
+    table_headers = ["Validator", "Group", "Field", "Value", "Operator"]
+
+    def __init__(self, file_type):
+        super().__init__(file_type)
+
+        # switch to track if we are expecting the input validation output
+        self.input = True
+        self.file_type = file_type
+
+        self.layout = QHBoxLayout()
+        self.setLayout(self.layout)
+
+        self.input_table = self.create_table("Input Validation")
+        self.output_table = self.create_table("Output Validation")
 
     def create_table(self, group_name):
         table = QTableWidget(0, len(self.table_headers))
         table.setHorizontalHeaderLabels(self.table_headers)
         table.resizeColumnsToContents()
 
-        layout = QHBoxLayout()
+        layout = QVBoxLayout()
+        layout.addWidget(QLabel(group_name))
         layout.addWidget(table)
 
-        group_box = QGroupBox(group_name)
-        group_box.setLayout(layout)
-
-        self.layout.addWidget(group_box)
+        self.layout.addLayout(layout)
 
         return table
 
-    def redraw_table(self, table: QTableWidget, data):
+    def redraw_table(self, data):
+        table = self.input_table if self.input else self.output_table
+        self.input = not self.input
+
         # clear the table and resize
         table.clearContents()
         table.rowCount = len(data)  # type: ignore
@@ -90,5 +136,5 @@ class ValidationPanel(logging.Handler):
 
     def clear(self):
         self.input = True
-        self.redraw_table(self.input_table, [])
-        self.redraw_table(self.output_table, [])
+        self.redraw_table([])
+        self.redraw_table([])
