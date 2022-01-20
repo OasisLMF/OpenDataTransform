@@ -21,6 +21,7 @@ class Label(QLabel):
 
     def update_visibility(self, show_all, config):
         if show_all or not config.uses_template_value(self.config_path):
-            self.show()
+            if self.parent():
+                self.show()
         else:
             self.hide()
