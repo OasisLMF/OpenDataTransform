@@ -9,8 +9,9 @@ class Label(QLabel):
         self.config_path = config_path
 
         if hasattr(self.tab, "show_all_updated"):
+            self.on_show_all_updated(self.tab.show_all_fields)
             self.tab.show_all_updated.connect(self.on_show_all_updated)
-            self.tab.main_window.config_changed.connect(self.on_config_changed)
+        self.tab.main_window.config_changed.connect(self.on_config_changed)
 
     def on_show_all_updated(self, show_all):
         self.update_visibility(show_all, self.tab.main_window.config)

@@ -28,7 +28,11 @@ class ValidationPanel(logging.Handler):
         self.output_table = self.create_table("Output Validation")
 
     def emit(self, record):
-        validations: ValidationResult = yaml.safe_load(record.msg)[0][
+        parsed = yaml.safe_load(record.msg)
+        if not isinstance(parsed[0], dict):
+            return
+
+        validations: ValidationResult = parsed[0][
             "validations"
         ]
         table = self.input_table if self.input else self.output_table

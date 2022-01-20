@@ -39,7 +39,7 @@ class DynamicClassFormBlock(QGroupBox):
         )
 
         # populate initial dynamic fields
-        current_cls_name = self.main_window.config.get(
+        current_cls_name = self.main_window.config.get_template_resolved_value(
             f"{self.root_config_path}.path", None
         )
         current_selection = next(
@@ -99,7 +99,7 @@ class DynamicClassFormBlock(QGroupBox):
             field = Checkbox(
                 self.tab, config_path, "", schema.get("default", False)
             )
-        elif schema["type"] == "string" and schema["subtype"] == "path":
+        elif schema["type"] == "string" and schema.get("subtype") == "path":
             field = FileField(self.tab, config_path)
         else:
             field = StringField(self.tab, config_path)

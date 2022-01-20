@@ -4,7 +4,13 @@ from __feature__ import true_property  # noqa
 from PySide6.QtCore import Signal
 from PySide6.QtWidgets import QPushButton, QVBoxLayout, QWidget
 
-from converter.connector import BaseConnector, CsvConnector
+from converter.connector import (
+    BaseConnector,
+    CsvConnector,
+    PostgresConnector,
+    SQLiteConnector,
+    SQLServerConnector,
+)
 from converter.runner import BaseRunner, DaskRunner, ModinRunner, PandasRunner
 from converter.ui.config_tab.mapping import MappingGroupBox
 from converter.ui.fields.dynamic import DynamicClassFormBlock
@@ -14,6 +20,9 @@ CONNECTOR_CLASSES: List[Type[BaseConnector]] = list(
     sorted(
         [
             CsvConnector,
+            PostgresConnector,
+            SQLiteConnector,
+            SQLServerConnector,
         ],
         key=lambda c: c.name,
     )

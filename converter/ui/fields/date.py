@@ -8,7 +8,7 @@ from converter.ui.fields.base import BaseFieldMixin
 
 class DateField(BaseFieldMixin, QCalendarWidget):
     def update_ui_from_config(self, config):
-        conf_date = config.get(self.config_path, None)
+        conf_date = config.get_template_resolved_value(self.config_path, None)
         if conf_date:
             self.setSelectedDate(QDate.fromString(conf_date, Qt.ISODate))
         else:

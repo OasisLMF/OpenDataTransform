@@ -16,6 +16,7 @@ class BaseFieldMixin:
         self.main_window.config_changed.connect(self.on_config_changed)
 
         if hasattr(self.tab, "show_all_updated"):
+            self.on_show_all_updated(self.tab.show_all_fields)
             self.tab.show_all_updated.connect(self.on_show_all_updated)
         self.main_window.config_changed.connect(
             self.on_config_changed_update_visibility

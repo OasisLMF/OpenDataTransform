@@ -33,7 +33,7 @@ class MappingCombo(BaseFieldMixin, QComboBox):
 
     def update_ui_from_config(self, config):
         try:
-            selection = config.get(self.config_path)
+            selection = config.get_template_resolved_value(self.config_path)
             selected_index = self.options.index(
                 MappingFormat(**selection) if selection else None
             )
@@ -90,5 +90,5 @@ class MappingGroupBox(QGroupBox):
     @classmethod
     def get_mapping_formats(cls, config):
         return [None] + list(
-            FileMapping(config, raise_errors=False).mapping_graph.nodes
+            FileMapping(config, "", raise_errors=False).mapping_graph.nodes
         )

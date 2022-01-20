@@ -43,7 +43,7 @@ class FileField(BaseFieldMixin, QHBoxLayout):
         self.main_window.set_working_value(self.config_path, t)
 
     def update_ui_from_config(self, config):
-        self.name_field.setText(config.get(self.config_path, ""))
+        self.name_field.setText(config.get_template_resolved_value(self.config_path, ""))
 
     def show(self):
         self.file_button.show()

@@ -71,19 +71,12 @@ class BaseDBConnector(BaseConnector):
                 "default": "",
                 "title": "Password",
             },
-            "select_statement": {
+            "sql_statement": {
                 "type": "string",
                 "description": "The path to the file which contains the "
-                "select sql",
+                "sql statement to run",
                 "subtype": "path",
                 "title": "Select Statement File",
-            },
-            "insert_statement": {
-                "type": "string",
-                "description": "The path to the file which contains the "
-                "insert sql",
-                "subtype": "path",
-                "title": "Insert Statement File",
             },
         },
         "required": ["database", "select_statement", "insert_statement"],
@@ -100,11 +93,8 @@ class BaseDBConnector(BaseConnector):
             "user": options.get("user", ""),
             "password": options.get("password", ""),
         }
-        self.select_statement_path = config.absolute_path(
-            options["select_statement"]
-        )
-        self.insert_statement_path = config.absolute_path(
-            options["insert_statement"]
+        self.sql_statement_path = config.absolute_path(
+            options["sql_statement"]
         )
 
     def _create_connection(self, database: Dict[str, str]):
@@ -120,7 +110,7 @@ class BaseDBConnector(BaseConnector):
 
         :return: string
         """
-        with open(self.select_statement_path) as f:
+        with open(self.sql_statement_path) as f:
             select_statement = f.read()
 
         return select_statement
@@ -131,7 +121,7 @@ class BaseDBConnector(BaseConnector):
 
         :return: List of sql statements
         """
-        with open(self.insert_statement_path) as f:
+        with open(self.sql_statement_path) as f:
             sql = f.read()
 
         return sqlparse.split(sql)

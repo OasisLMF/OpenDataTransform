@@ -35,7 +35,7 @@ class MultiSelect(BaseFieldMixin, QListWidget):
 
     def update_ui_from_config(self, config):
         self.clearSelection()
-        selected = config.get(self.config_path, [])
+        selected = config.get_template_resolved_value(self.config_path, [])
         for selection in selected:
             try:
                 idx = self.options.index(selection)

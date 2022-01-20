@@ -13,6 +13,28 @@ class SQLiteConnector(BaseDBConnector):
     """
 
     name = "SQLite Connector"
+    options_schema = {
+        "type": "object",
+        "properties": {
+            "database": {
+                "type": "string",
+                "description": (
+                    "The database name or relative path to the file for "
+                    "sqlite3"
+                ),
+                "title": "Database",
+                "subtype": "path",
+            },
+            "sql_statement": {
+                "type": "string",
+                "description": "The path to the file which contains the "
+                "sql statement to run",
+                "subtype": "path",
+                "title": "Select Statement File",
+            },
+        },
+        "required": ["database", "select_statement", "insert_statement"],
+    }
 
     def _create_connection(self, database: Dict[str, str]):
         """

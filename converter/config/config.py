@@ -111,6 +111,8 @@ class Config:
     LOC_TRANSFORMATION_PATH = f"{TRANSFORMATIONS_PATH}.loc"
     RI_TRANSFORMATION_PATH = f"{TRANSFORMATIONS_PATH}.ri"
 
+    TRANSFORMATION_PATH_SUB = re.compile(r"^transformations\.[^.]+")
+
     def __init__(
         self,
         argv: Dict[str, Any] = None,
@@ -263,6 +265,27 @@ class Config:
     def get(self, path: str, fallback: Any = NotFound) -> Any:
         return get_json_path(self.config, path, fallback=fallback)
 
+    def get_template_resolved_value(self, path: str, fallback: Any = NotFound):
+        template_property_path = self.TRANSFORMATION_PATH_SUB.sub(
+            self.TEMPLATE_TRANSFORMATION_PATH,
+            path,
+        )
+
+        try:
+            return self.get(path)
+        except KeyError:
+            pass
+
+        try:
+            return self.get(template_property_path)
+        except KeyError:
+            pass
+
+        if fallback is not NotFound:
+            return fallback
+
+        raise KeyError(path)
+
     def set(self, path: str, value: Any):
         """
         Sets a property in the configuration by it's path in the config.
@@ -370,8 +393,7 @@ class Config:
         return self.get(self.RI_TRANSFORMATION_PATH, None) is not None
 
     def uses_template_value(self, property_path):
-        template_property_path = re.sub(
-            r"^transformations\.[^.]+",
+        template_property_path = self.TRANSFORMATION_PATH_SUB.sub(
             self.TEMPLATE_TRANSFORMATION_PATH,
             property_path,
         )
