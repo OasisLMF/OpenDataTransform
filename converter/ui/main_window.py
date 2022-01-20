@@ -154,14 +154,15 @@ class MainWindow(QMainWindow):
 
     @property
     def config(self):
-        config = self._loaded_config
-        return Config(
-            config_path=config.path,
-            overrides=config.merge_config_sources(
+        config = Config(
+            overrides=Config.merge_config_sources(
+                self._loaded_config,
                 self._default_working_config.config,
                 self._working_config.config,
             ),
         )
+        config.path = self._loaded_config.path
+        return config
 
     def _create_menu_bar(self):
         bar = self.menuBar()
@@ -205,12 +206,12 @@ class MainWindow(QMainWindow):
         self.config_tabs[config_path] = tab
 
     def on_close_tab(self, idx):
-        scroll_scroll: QScrollArea = self.tabs.widget(idx)
-        tab: ConfigTab = scroll_scroll.widget()
+        tab: ConfigTab = self.tabs.widget(idx)
 
         self._loaded_config.delete(tab.root_config_path)
         self._default_working_config.delete(tab.root_config_path)
         self._working_config.delete(tab.root_config_path)
+
         self.config_changed.emit(self.config)
 
         self.tabs.removeTab(idx)

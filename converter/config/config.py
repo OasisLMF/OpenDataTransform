@@ -210,8 +210,9 @@ class Config:
             "_",
         )
 
+    @classmethod
     def merge_config_sources(
-        self,
+        cls,
         first: ConfigSource = None,
         second: ConfigSource = None,
         *others: ConfigSource,
@@ -232,7 +233,7 @@ class Config:
         merged = deep_merge_dictionary_items(first, second)
 
         if others:
-            return self.merge_config_sources(merged, *others)
+            return cls.merge_config_sources(merged, *others)
 
         return merged
 

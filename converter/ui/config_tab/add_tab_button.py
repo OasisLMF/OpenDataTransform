@@ -4,10 +4,11 @@ from PySide6.QtWidgets import QMenu, QPushButton
 
 
 class AddMenu(QMenu):
-    def __init__(self, main_window, button):
+    def __init__(self, main_window, button, config):
         super().__init__(button)
 
         self.main_window = main_window
+        self.config = config
 
         self.add_template_action = QAction("Add template...")
         self.add_template_action.triggered.connect(self.add_template_entry)
@@ -25,7 +26,7 @@ class AddMenu(QMenu):
 
     def add_template_entry(self):
         self.add_config_entry(
-            self.main_window.config.TEMPLATE_TRANSFORMATION_PATH,
+            self.config.TEMPLATE_TRANSFORMATION_PATH,
             {
                 "loader": {
                     "path": "converter.connector.csv.CsvConnector",
@@ -48,28 +49,28 @@ class AddMenu(QMenu):
         )
 
     def add_acc_entry(self):
-        self.add_config_entry(self.main_window.config.ACC_TRANSFORMATION_PATH)
+        self.add_config_entry(self.config.ACC_TRANSFORMATION_PATH)
 
     def add_loc_entry(self):
-        self.add_config_entry(self.main_window.config.LOC_TRANSFORMATION_PATH)
+        self.add_config_entry(self.config.LOC_TRANSFORMATION_PATH)
 
     def add_ri_entry(self):
-        self.add_config_entry(self.main_window.config.RI_TRANSFORMATION_PATH)
+        self.add_config_entry(self.config.RI_TRANSFORMATION_PATH)
 
     def add_config_entry(self, config_path, default_conf=None):
         self.main_window.set_working_value(config_path, default_conf or {})
 
     def setup_available_actions(self):
-        if not self.main_window.config.has_template:
+        if not self.config.has_template:
             self.addAction(self.add_template_action)
 
-        if not self.main_window.config.has_acc:
+        if not self.config.has_acc:
             self.addAction(self.add_acc_action)
 
-        if not self.main_window.config.has_loc:
+        if not self.config.has_loc:
             self.addAction(self.add_loc_action)
 
-        if not self.main_window.config.has_ri:
+        if not self.config.has_ri:
             self.addAction(self.add_ri_action)
 
 
@@ -82,14 +83,14 @@ class AddTabButton(QPushButton):
         self.text = ""
 
         self.context_menu = None
-        self.setup_context_menu()
+        self.setup_context_menu(self.main_window.config)
         self.main_window.config_changed.connect(self.setup_context_menu)
 
         self.setFixedWidth(25)
 
-    def setup_context_menu(self, *args):
+    def setup_context_menu(self, config):
         if self.context_menu:
             self.context_menu.deleteLater()
 
-        self.context_menu = AddMenu(self.main_window, self)
+        self.context_menu = AddMenu(self.main_window, self, config)
         self.setMenu(self.context_menu)
