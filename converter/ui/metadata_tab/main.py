@@ -1,6 +1,6 @@
 import yaml
 from __feature__ import true_property  # noqa
-from PySide6.QtWidgets import QGroupBox, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QGroupBox, QVBoxLayout, QWidget, QLabel
 
 from converter.data import get_data_path
 from converter.ui.fields.date import DateField
@@ -16,6 +16,10 @@ class MetadataTab(QWidget):
 
         self.layout = QVBoxLayout(self)
 
+        self.layout.addWidget(QLabel(
+            "The metadata is used To provide extra context about a performed transformation. "
+            "All fields are optional."
+        ))
         with open(get_data_path("forms", "metadata.yaml")) as f:
             entries = yaml.load(f, yaml.Loader)
 

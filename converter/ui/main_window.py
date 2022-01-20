@@ -35,6 +35,8 @@ class MainWindow(QMainWindow):
         self._create_actions()
         self._create_menu_bar()
 
+        self.minimumWidth = 750
+
         # setup tabs
         self.tabs = QTabWidget()
         self.tabs.tabsClosable = True
