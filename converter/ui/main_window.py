@@ -203,6 +203,7 @@ class MainWindow(QMainWindow):
             == self.config.TEMPLATE_TRANSFORMATION_PATH,
         )
         self.tabs.addTab(tab, label)
+        self.tabs.currentIndex = self.tabs.count - 1
         self.config_tabs[config_path] = tab
 
     def on_close_tab(self, idx):
