@@ -21,7 +21,9 @@ class NotFoundType:
 NotFound = NotFoundType()
 
 
-def deep_merge_dictionary_items(first: Union[Dict, "Config"], second: Union[Dict, "Config"]) -> ConfigSource:
+def deep_merge_dictionary_items(
+    first: Union[Dict, "Config"], second: Union[Dict, "Config"]
+) -> ConfigSource:
     """
     Merges the 2 dictionary entries, the process is as follows:
 

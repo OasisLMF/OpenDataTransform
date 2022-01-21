@@ -11,7 +11,9 @@ class Checkbox(BaseFieldMixin, QCheckBox):
         super().__init__(tab, config_path, label)
 
     def update_ui_from_config(self, config):
-        new_value = config.get_template_resolved_value(self.config_path, self.default)
+        new_value = config.get_template_resolved_value(
+            self.config_path, self.default
+        )
         if new_value != self.checkState:
             self.setChecked(new_value)
 

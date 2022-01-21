@@ -33,7 +33,9 @@ class Select(BaseFieldMixin, QComboBox):
 
     def update_ui_from_config(self, config):
         try:
-            selected = config.get_template_resolved_value(self.config_path, self.default)
+            selected = config.get_template_resolved_value(
+                self.config_path, self.default
+            )
             idx = self.options.index(selected)
             if idx != self.currentIndex:
                 self.setCurrentIndex(idx)

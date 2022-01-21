@@ -6,11 +6,13 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QGroupBox,
     QHBoxLayout,
+    QLabel,
     QTableWidget,
-    QTableWidgetItem, QVBoxLayout, QLabel,
+    QTableWidgetItem,
+    QVBoxLayout,
 )
 
-from converter.validator.base import ValidationResult, ValidationLogEntry
+from converter.validator.base import ValidationLogEntry, ValidationResult
 
 
 class ValidationPanel(logging.Handler):
@@ -57,9 +59,7 @@ class ValidationPanel(logging.Handler):
             return
 
         log_entry: ValidationLogEntry = parsed[0]
-        validations: ValidationResult = parsed[0][
-            "validations"
-        ]
+        validations: ValidationResult = parsed[0]["validations"]
 
         rows = []
         row = ["", "", "", "", ""]
