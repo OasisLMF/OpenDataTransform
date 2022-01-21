@@ -29,6 +29,7 @@ class DynamicClassFormBlock(QGroupBox):
                 self.get_selectable_class_name(cls) for cls in self.classes
             ],
             empty_label="",
+            default=self.get_fully_qualified_classname(self.default_class),
         )
         self.class_selector.currentIndexChanged.connect(
             self.on_selection_changed
