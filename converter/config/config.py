@@ -40,6 +40,12 @@ def deep_merge_dictionary_items(first: Any, second: Any) -> ConfigSource:
 
     :return: The merged result
     """
+    if isinstance(first, Config):
+        first = first.config
+
+    if isinstance(second, Config):
+        second = second.config
+
     if first is NotFound or (
         second is not NotFound and not isinstance(second, dict)
     ):
