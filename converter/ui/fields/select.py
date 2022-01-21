@@ -13,7 +13,9 @@ class Select(BaseFieldMixin, QComboBox):
         empty_label=None,
         empty_value=None,
         labels=None,
+        default=None,
     ):
+        self.default = default
         self.empty_label = empty_label
 
         self.options = options
@@ -31,9 +33,10 @@ class Select(BaseFieldMixin, QComboBox):
 
     def update_ui_from_config(self, config):
         try:
-            selected = config.get_template_resolved_value(self.config_path, None)
+            selected = config.get_template_resolved_value(self.config_path, self.default)
             idx = self.options.index(selected)
-            self.setCurrentIndex(idx)
+            if idx != self.currentIndex:
+                self.setCurrentIndex(idx)
         except ValueError:
             pass
 

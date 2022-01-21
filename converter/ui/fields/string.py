@@ -6,7 +6,9 @@ from converter.ui.fields.base import BaseFieldMixin
 
 class StringField(BaseFieldMixin, QLineEdit):
     def update_ui_from_config(self, config):
-        self.setText(config.get_template_resolved_value(self.config_path, ""))
+        new_value = config.get_template_resolved_value(self.config_path, "")
+        if new_value != self.text:
+            self.setText(new_value)
 
     @property
     def change_signal(self):
@@ -18,7 +20,9 @@ class StringField(BaseFieldMixin, QLineEdit):
 
 class TextAreaField(BaseFieldMixin, QPlainTextEdit):
     def update_ui_from_config(self, config):
-        self.setPlainText(config.get_template_resolved_value(self.config_path, ""))
+        new_value = config.get_template_resolved_value(self.config_path, "")
+        if new_value != self.plainText:
+            self.setPlainText(new_value)
 
     @property
     def change_signal(self):

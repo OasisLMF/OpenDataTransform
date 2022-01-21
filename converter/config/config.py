@@ -2,7 +2,7 @@ import os
 import re
 from functools import reduce
 from itertools import chain
-from typing import Any, Dict, Iterable, List, Tuple, TypeVar
+from typing import Any, Dict, Iterable, List, Tuple, TypeVar, Union
 
 import yaml
 
@@ -21,7 +21,7 @@ class NotFoundType:
 NotFound = NotFoundType()
 
 
-def deep_merge_dictionary_items(first: Any, second: Any) -> ConfigSource:
+def deep_merge_dictionary_items(first: Union[Dict, "Config"], second: Union[Dict, "Config"]) -> ConfigSource:
     """
     Merges the 2 dictionary entries, the process is as follows:
 

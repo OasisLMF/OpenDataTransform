@@ -10,7 +10,8 @@ class DateField(BaseFieldMixin, QCalendarWidget):
     def update_ui_from_config(self, config):
         conf_date = config.get_template_resolved_value(self.config_path, None)
         if conf_date:
-            self.setSelectedDate(QDate.fromString(conf_date, Qt.ISODate))
+            if conf_date != self.selectedDate.toString(Qt.ISODate):
+                self.setSelectedDate(QDate.fromString(conf_date, Qt.ISODate))
         else:
             # if no date is set the default is today so we need to store this
             # in the default working config so that it will be written

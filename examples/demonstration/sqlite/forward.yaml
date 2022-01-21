@@ -1,18 +1,29 @@
+metadata:
+  as_of_date: '2022-01-21T00:00:00'
+  geographic_scope:
+  - Americas
+  - Oceania
+  - Afghanistan
+  - Europe
+  line_of_business:
+  - Industrial
+  - Automotive
+  - Commercial
 transformations:
   acc:
-    input_format:
-      name: A
-      version: 1
-    output_format:
-      name: B
-      version: 1
     extractor:
-      path: converter.connector.db.sqlite.SQLiteConnector
       options:
         database: sqlite.db
         sql_statement: select.sql
-    loader:
       path: converter.connector.db.sqlite.SQLiteConnector
+    input_format:
+      name: A
+      version: 1
+    loader:
       options:
         database: sqlite.db
         sql_statement: insert.sql
+      path: converter.connector.db.sqlite.SQLiteConnector
+    output_format:
+      name: B
+      version: 1

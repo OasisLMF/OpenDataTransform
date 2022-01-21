@@ -13,7 +13,6 @@ class MultiSelect(BaseFieldMixin, QListWidget):
 
         super().__init__(tab, config_path, defer_initial_ui_update=True)
         self.selectionMode = self.MultiSelection
-
         # add options
         for opt in options:
             if isinstance(opt, str):
@@ -34,14 +33,15 @@ class MultiSelect(BaseFieldMixin, QListWidget):
         self.on_config_changed(self.main_window.config)
 
     def update_ui_from_config(self, config):
-        self.clearSelection()
         selected = config.get_template_resolved_value(self.config_path, [])
-        for selection in selected:
-            try:
-                idx = self.options.index(selection)
-                self.item(idx).setSelected(True)
-            except ValueError:
-                pass
+        if selected != [item.text() for item in self.selectedItems()]:
+            self.clearSelection()
+            for idx in range(self.count):
+                try:
+                    item = self.item(idx)
+                    item.setSelected(item.text() in selected)
+                except ValueError:
+                    pass
 
     @property
     def change_signal(self):
