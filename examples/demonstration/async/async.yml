@@ -1,14 +1,13 @@
 transformations:
   acc:
+    input_format:
+      name: A
+      version: "1"
+    output_format:
+      name: B
+      version: "1"
     mapping:
       path: examples.async.Mapping
-      options:
-        input_format:
-          name: A
-          version: "1"
-        output_format:
-          name: B
-          version: "1"
     extractor:
       path: examples.async.RandomExtractor
     loader:

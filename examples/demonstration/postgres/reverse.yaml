@@ -1,13 +1,11 @@
 transformations:
   acc:
-    mapping:
-      options:
-        input_format:
-          name: A
-          version: "1"
-        output_format:
-          name: B
-          version: "1"
+    input_format:
+      name: A
+      version: "1"
+    output_format:
+      name: B
+      version: "1"
     extractor:
       path: converter.connector.PostgresConnector
       options:

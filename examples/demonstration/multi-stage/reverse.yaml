@@ -1,13 +1,11 @@
 transformations:
   acc:
-    mapping:
-      options:
-        input_format:
-          name: C
-          version: "1"
-        output_format:
-          name: A
-          version: "1"
+    input_format:
+      name: C
+      version: "1"
+    output_format:
+      name: A
+      version: "1"
     extractor:
       options:
         path: C.csv
