@@ -272,13 +272,40 @@ class Config:
             return key.lower(), value
 
     def get(self, path: str, fallback: Any = NotFound) -> Any:
+        """
+        Gets a property from the configuration from it's path in the config.
+        The path should be dotted path into the config. For example, with the
+        config::
+
+             {
+                "foo": {
+                    "bar": "baz"
+                }
+             }
+
+        The path `"foo.bar"` would return `"baz"` and the path `"foo"` would
+        return `{"bar": "baz"}`.
+
+        If the path isn't found in the config the `fallback` value is used if
+        one is provided, if no fallback is provided a `KeyError` is raised.
+
+        :param path: The path of the requested value into the config.
+        :param fallback: The value to use if the path isn't found.
+
+        :return: The found path ot fallback if provided
+        """
         return get_json_path(self.config, path, fallback=fallback)
 
     def get_template_resolved_value(self, path: str, fallback: Any = NotFound):
-        template_property_path = self.TRANSFORMATION_PATH_SUB.sub(
-            self.TEMPLATE_TRANSFORMATION_PATH,
-            path,
-        )
+        """
+        Gets the value for a given path reverting to the transformation
+        template if the value is not found.
+
+        :param path: The path of the requested value into the config.
+        :param fallback: The value to use if the path isn't found.
+
+        :return: The found path ot fallback if provided
+        """
 
         try:
             return self.get(path)
@@ -286,6 +313,10 @@ class Config:
             pass
 
         try:
+            template_property_path = self.TRANSFORMATION_PATH_SUB.sub(
+                self.TEMPLATE_TRANSFORMATION_PATH,
+                path,
+            )
             return self.get(template_property_path)
         except KeyError:
             pass
@@ -319,6 +350,11 @@ class Config:
         block[path_parts[-1]] = value
 
     def delete(self, path):
+        """
+        Removes a specific path from the config
+
+        :param path: The path to remove.
+        """
         block = self.config
 
         path_parts = path.lower().split(".")
@@ -378,6 +414,12 @@ class Config:
         return self.config.items()
 
     def get_transformation_configs(self) -> List["TransformationConfig"]:
+        """
+        Generates all the configs for running specific transformations
+        resolved with the template transformation
+
+        :return: A list of transformation configs
+        """
         return [
             TransformationConfig(self, file_type)
             for file_type in self.get(
@@ -386,22 +428,37 @@ class Config:
         ]
 
     @property
-    def has_template(self):
-        return self.get(self.TEMPLATE_TRANSFORMATION_PATH, None) is not None
+    def has_template(self) -> bool:
+        """
+        Checks if the config has a template transformation
+        """
+        return self.TEMPLATE_TRANSFORMATION_PATH in self
 
     @property
     def has_acc(self):
-        return self.get(self.ACC_TRANSFORMATION_PATH, None) is not None
+        """
+        Checks if the config has an account transformation
+        """
+        return self.ACC_TRANSFORMATION_PATH in self
 
     @property
     def has_loc(self):
-        return self.get(self.LOC_TRANSFORMATION_PATH, None) is not None
+        """
+        Checks if the config has a location transformation
+        """
+        return self.LOC_TRANSFORMATION_PATH in self
 
     @property
     def has_ri(self):
-        return self.get(self.RI_TRANSFORMATION_PATH, None) is not None
+        """
+        Checks if the config has a reinsurance transformation
+        """
+        return self.RI_TRANSFORMATION_PATH in self
 
     def uses_template_value(self, property_path):
+        """
+        Checks if a given path uses the value from the template transformation.
+        """
         template_property_path = self.TRANSFORMATION_PATH_SUB.sub(
             self.TEMPLATE_TRANSFORMATION_PATH,
             property_path,
@@ -449,6 +506,15 @@ class TransformationConfig:
         )
 
     def absolute_path(self, p):
+        """
+        Gets the absolute path relative to the config files directory.
+
+        :param p: The path relative to the config file
+
+        :return: The absolute path if both the config path and `p` are set,
+            if `p` is `None`, `None` is returned. If the config path is `None`,
+            `p` is returned without modification
+        """
         return self.root_config.absolute_path(p)
 
     def keys(self):
@@ -465,9 +531,34 @@ class TransformationConfig:
 
     @property
     def path(self):
+        """
+        Returns the path of the root config
+        """
         return self.root_config.path
 
     def get(self, path: str, fallback: Any = NotFound) -> Any:
+        """
+        Gets a property from the configuration from it's path in the config.
+        The path should be dotted path into the config. For example, with the
+        config::
+
+             {
+                "foo": {
+                    "bar": "baz"
+                }
+             }
+
+        The path `"foo.bar"` would return `"baz"` and the path `"foo"` would
+        return `{"bar": "baz"}`.
+
+        If the path isn't found in the config the `fallback` value is used if
+        one is provided, if no fallback is provided a `KeyError` is raised.
+
+        :param path: The path of the requested value into the config.
+        :param fallback: The value to use if the path isn't found.
+
+        :return: The found path ot fallback if provided
+        """
         return get_json_path(self.config, path, fallback=fallback)
 
     def __eq__(self, other):
