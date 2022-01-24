@@ -1,7 +1,6 @@
 import os
 from distutils import cmd
 
-import PyInstaller.building.build_main
 from setuptools import find_packages, setup
 
 
@@ -36,6 +35,7 @@ class BuildExeCommand(cmd.Command):
         pass
 
     def run(self):
+        import PyInstaller.building.build_main
         PyInstaller.building.build_main.main(
             None,
             os.path.join(os.path.dirname(__file__), "exe.spec"),
