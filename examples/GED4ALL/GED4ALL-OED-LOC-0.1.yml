@@ -1,8 +1,13 @@
 # Mapping to convert GED4ALL location data to OED - developed form project-specific mapping created by JBA.
 # types express type for origin format
 # transform expressed OED destination column first.
-input_format: GED4ALL_LOC
-output_format: OED_LOC
+file_type: LOC
+input_format:
+  name: GED4ALL
+  version: "0.11"
+output_format:
+  name: OED
+  version: "1.1.5"
 forward:
   types:
     ExposureSetName:

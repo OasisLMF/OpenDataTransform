@@ -49,7 +49,7 @@ class DynamicClassFormBlock(QGroupBox):
                 for cls in self.classes
                 if self.get_fully_qualified_classname(cls) == current_cls_name
             ),
-            None,
+            self.default_class,
         )
         self.dynamic_fields = self.update_dynamic_fields_from_selection(
             current_selection

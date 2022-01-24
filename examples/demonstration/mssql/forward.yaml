@@ -1,22 +1,28 @@
-mapping:
-  options:
-    input_format: A
-    output_format: B
-extractor:
-  path: converter.connector.SQLServerConnector
-  options:
-    host: localhost
-    port: 1433
-    database: TestDb
-    user: sa
-    password: password
-    sql_statement: select.sql
-loader:
-  path: converter.connector.SQLServerConnector
-  options:
-    host: localhost
-    port: 1433
-    database: TestDb
-    user: sa
-    password: password
-    sql_statement: insert.sql
+transformations:
+  acc:
+    mapping:
+      options:
+        input_format:
+          name: A
+          version: "1"
+        output_format:
+          name: B
+          version: "1"
+    extractor:
+      path: converter.connector.SQLServerConnector
+      options:
+        host: localhost
+        port: 1433
+        database: TestDb
+        user: sa
+        password: password
+        sql_statement: select.sql
+    loader:
+      path: converter.connector.SQLServerConnector
+      options:
+        host: localhost
+        port: 1433
+        database: TestDb
+        user: sa
+        password: password
+        sql_statement: insert.sql

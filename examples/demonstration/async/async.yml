@@ -1,11 +1,17 @@
-mapping:
-  path: examples.async.Mapping
-  options:
-    input_format: A
-    output_format: B
-extractor:
-  path: examples.async.RandomExtractor
-loader:
-  path: examples.async.ConsoleLoader
-runner:
-  path: converter.runner.EagerRunner
+transformations:
+  acc:
+    mapping:
+      path: examples.async.Mapping
+      options:
+        input_format:
+          name: A
+          version: "1"
+        output_format:
+          name: B
+          version: "1"
+    extractor:
+      path: examples.async.RandomExtractor
+    loader:
+      path: examples.async.ConsoleLoader
+    runner:
+      path: converter.runner.EagerRunner

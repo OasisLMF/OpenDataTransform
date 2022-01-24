@@ -5,9 +5,13 @@
 # LICENSE: BSD 3 clause license
 # SOURCE: https://github.com/OasisLMF/OpenDataTransform/
 # COMMENTS:Simple maths example for demonstration, contains forward and reverse. This mapping file is identical to that used in the single-stage demo (a mapping file can be copied and used in more than on transformation).
-
-input_format: A
-output_format: B
+file_type: ACC
+input_format:
+  name: A
+  version: "1"
+output_format:
+  name: B
+  version: "1"
 forward:
   types:
     a:
