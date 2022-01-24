@@ -74,15 +74,19 @@ def test_data_is_passed_to_loader_no_header___data_is_written_to_file():
     with TemporaryDirectory() as p:
         output_path = os.path.join(p, "result.csv")
 
-        CsvConnector(Config(), path=output_path, write_header=False,).load(
-            expected_data
-        )
+        CsvConnector(
+            Config(),
+            path=output_path,
+            write_header=False,
+        ).load(expected_data)
 
         with open(output_path, "r") as f:
             assert (
                 list(
                     csv.DictReader(
-                        f, quoting=csv.QUOTE_NONNUMERIC, fieldnames=["a", "b"],
+                        f,
+                        quoting=csv.QUOTE_NONNUMERIC,
+                        fieldnames=["a", "b"],
                     )
                 )
                 == expected_data

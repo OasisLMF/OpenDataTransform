@@ -6,6 +6,7 @@ from functools import reduce
 from itertools import chain, product
 from typing import Dict, Iterable, List, Reversible, Set, TypedDict, Union
 
+from ..data import get_data_path
 from ..errors import ConverterError
 from ..files.yaml import read_yaml
 from ..transformers import run
@@ -127,7 +128,8 @@ class FileMappingSpec(MappingSpec):
 
         # get the input format from the bases if not set on the current config
         input_format: Union[str, None] = self._resolve_property(
-            *(b.input_format for b in self.bases), config.get("input_format"),
+            *(b.input_format for b in self.bases),
+            config.get("input_format"),
         )
 
         if not input_format:
@@ -209,6 +211,9 @@ class FileMappingSpec(MappingSpec):
                 types=reverse_types,
                 null_values=reverse_null_values,
             ),
+            metadata={
+                "path": path,
+            },
         )
 
         all_found_configs[self.path] = self
@@ -339,7 +344,8 @@ class FileMappingSpec(MappingSpec):
 
         if not config:
             raise InvalidMappingFile(
-                f"Could not find base mapping file ({base_name})", self.path,
+                f"Could not find base mapping file ({base_name})",
+                self.path,
             )
 
         if not isinstance(config, FileMappingSpec):
@@ -364,18 +370,23 @@ class FileMapping(BaseMapping):
         self,
         config,
         search_paths: List[str] = None,
-        standard_search_path: str = os.path.join(
-            os.path.dirname(__file__), "..", "_data", "mappings"
-        ),
+        standard_search_path: str = get_data_path("mappings"),
         search_working_dir=True,
         **options,
     ):
         """
-        :param search_paths: All the paths in the system to check for configs
+        :param search_paths: All the paths in the system to check for
+            mapping configs. If set the path of the conversion config is
+            prepended to this list.
         :param standard_search_path: The path to the standard library of
             mappings
         :param options: Ignored options
         """
+        if config.path:
+            search_paths = [os.path.dirname(config.path)] + (
+                search_paths or []
+            )
+
         super().__init__(
             config,
             search_paths=search_paths,
@@ -440,7 +451,8 @@ class FileMapping(BaseMapping):
 
     @classmethod
     def _get_candidate_paths_from_search_path(
-        cls, search_path: str,
+        cls,
+        search_path: str,
     ) -> Iterable[str]:
         """
         Gets all the possible yaml files from the search path.

@@ -1,0 +1,36 @@
+entries:
+  TotalGroup1:
+    fields:
+      - c
+      - d
+    operator: sum
+    group_by:
+      - g1
+  TotalGroup2:
+    fields:
+      - c
+      - d
+    operator: sum
+    group_by:
+      - g2
+  NumRowsGroup1:
+    operator: count
+    group_by:
+      - g1
+  NumRowsGroup2:
+    operator: count
+    group_by:
+      - g2
+  TotalGroupedBoth:
+    fields:
+      - c
+      - d
+    operator: sum
+    group_by:
+      - g1
+      - g2
+  NumRowsGroupedBoth:
+    operator: count
+    group_by:
+      - g1
+      - g2

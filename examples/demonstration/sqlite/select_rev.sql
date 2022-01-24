@@ -1,0 +1,1 @@
+SELECT B.d, C.f FROM B INNER JOIN C on B.c = C.e;

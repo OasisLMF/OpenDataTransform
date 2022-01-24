@@ -6,9 +6,11 @@ from logging.config import dictConfig as loggingDictConfig
 
 import click
 import yaml
+from PySide6.QtWidgets import QApplication
 
 from converter.config import Config
 from converter.controller import Controller
+from converter.ui.main_window import MainWindow
 
 
 class ColorFormatter(logging.Formatter):
@@ -35,7 +37,8 @@ class ColorFormatter(logging.Formatter):
         :return: The formatted message
         """
         return click.style(
-            super().format(record), fg=self.colors.get(record.levelno),
+            super().format(record),
+            fg=self.colors.get(record.levelno),
         )
 
 
@@ -46,11 +49,12 @@ class ClickEchoHandler(logging.Handler):
 
     def emit(self, record):
         click.echo(
-            self.format(record), err=record.levelno >= logging.WARNING,
+            self.format(record),
+            err=record.levelno >= logging.WARNING,
         )
 
 
-def init_logging(verbosity, no_color):
+def init_logging(verbosity, no_color, config):
     """
     Sets up the logging config for the console and files
 
@@ -59,13 +63,12 @@ def init_logging(verbosity, no_color):
         1 - info
         2 - debug
     :param no_color: Don't add the color to the output
+    :param config: The path to the config file
     """
-    
-    if not os.path.exists('log'):
-        os.mkdir('log')
-
+    config_dir = os.path.abspath(os.path.dirname(config))
     time_string = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    filename_time = os.path.join('log',time_string)
+    log_dir = os.path.join(config_dir, "runs", time_string)
+    os.makedirs(log_dir, exist_ok=True)
 
     console_log_level = [logging.WARNING, logging.INFO, logging.DEBUG][
         min(2, verbosity)  # max verbosity level is 2
@@ -83,6 +86,7 @@ def init_logging(verbosity, no_color):
                     ),
                 },
                 "file": {"format": "%(asctime)s %(levelname)-7s: %(message)s"},
+                "yaml": {"format": "%(message)s"},
             },
             "filters": {"info_only": {"class": "converter.cli.InfoFilter"}},
             "handlers": {
@@ -94,9 +98,35 @@ def init_logging(verbosity, no_color):
                 "log-file": {
                     "class": "logging.FileHandler",
                     "formatter": "file",
-                    "filename": f"{filename_time}-converter.log",
+                    "filename": os.path.join(log_dir, "converter.log"),
                     "level": logging.DEBUG,
                     "mode": "w",
+                },
+                "validation-log-yaml": {
+                    "class": "logging.FileHandler",
+                    "formatter": "yaml",
+                    "filename": os.path.join(log_dir, "validation.yaml"),
+                    "level": logging.INFO,
+                    "mode": "w",
+                },
+                "metadata-log-yaml": {
+                    "class": "logging.FileHandler",
+                    "formatter": "yaml",
+                    "filename": os.path.join(log_dir, "metadata.yaml"),
+                    "level": logging.INFO,
+                    "mode": "w",
+                },
+            },
+            "loggers": {
+                "converter.validator": {
+                    "level": logging.INFO,
+                    "handlers": ["validation-log-yaml"],
+                    "propagate": True,
+                },
+                "converter.metadata": {
+                    "level": logging.INFO,
+                    "handlers": ["metadata-log-yaml"],
+                    "propagate": True,
                 },
             },
             "root": {"level": "DEBUG", "handlers": ["console", "log-file"]},
@@ -105,7 +135,7 @@ def init_logging(verbosity, no_color):
     logging.captureWarnings(True)
 
 
-@click.group()
+@click.group(invoke_without_command=True)
 @click.option(
     "--option",
     "-o",
@@ -145,7 +175,7 @@ def cli(ctx, config, verbose, no_color, option):
     """
     ctx.ensure_object(dict)
 
-    init_logging(verbose, no_color)
+    init_logging(verbose, no_color, config)
 
     options = dict(option)
 
@@ -154,6 +184,14 @@ def cli(ctx, config, verbose, no_color, option):
         argv={k: yaml.load(v, yaml.SafeLoader) for k, v in options.items()},
         env=os.environ,
     )
+
+    if ctx.invoked_subcommand is None:
+        app = QApplication(sys.argv)
+
+        widget = MainWindow(ctx.obj["config"], lambda p: init_logging(verbose, no_color, p))
+        widget.show()
+
+        sys.exit(app.exec_())
 
 
 @cli.command()

@@ -1,0 +1,345 @@
+prtfolio_name:
+    title: Portfolio Name
+    type: string
+entity_company_book:
+    title: Entity/Company/Book
+    type: string
+as_of_date:
+    title: As-Of Date
+    type: date
+perils:
+    title: Perils
+    type: string
+    sub_type: multiselect
+    enum:
+        - Earthquake - Shake only
+        - Fire Following
+        - Tsunami
+        - Sprinkler Leakage
+        - Landslide
+        - Liquefaction
+        - Tropical Cyclone
+        - Extra Tropical Cyclone
+        - Storm Surge
+        - River / Fluvial Flood
+        - Flash / Surface / Pluvial Flood
+        - Straight-line / other convective wind
+        - Tornado
+        - Hail
+        - Snow
+        - Ice
+        - Freeze
+        - NonCat
+        - Wildfire / Bushfire
+        - NBCR Terrorism
+        - Conventional Terrorism
+        - Lightning
+        - Winterstorm Wind
+        - Smoke
+        - Drought Induced Subsidence
+        - Crop Hail (From Convective Storm)
+        - Cyber Security Data and Privacy Breach
+        - Cyber Security Property Damage
+        - Pandemic Flu
+        - Other
+line_of_business:
+    title: Line Of Business
+    type: string
+    sub_type: multiselect
+    enum:
+        - Residential
+        - Commercial
+        - Industrial
+        - Automotive
+        - MH
+geographic_scope:
+    title: Geographic Scope
+    type: string
+    sub_type: multiselect
+    enum:
+        - Global
+        - group: Regions
+          entries:
+            - Africa
+            - Americas
+            - Asia
+            - Europe
+            - Oceania
+        - group: Countries
+          entries:
+            - Abkhazia
+            - Afghanistan
+            - Åland (Finland)
+            - Albania
+            - Algeria
+            - American Samoa (United States)
+            - Andorra
+            - Angola
+            - Anguilla (United Kingdom)
+            - Antigua and Barbuda
+            - Argentina
+            - Armenia
+            - Aruba (Netherlands)
+            - Australia
+            - Austria
+            - Azerbaijan
+            - Bahamas
+            - Bahrain
+            - Bangladesh
+            - Barbados
+            - Belarus
+            - Belgium
+            - Belize
+            - Benin
+            - Bermuda (United Kingdom)
+            - Bhutan
+            - Bolivia
+            - Bosnia and Herzegovina
+            - Botswana
+            - Brazil
+            - British Virgin Islands (United Kingdom)
+            - Brunei
+            - Bulgaria
+            - Burkina Faso
+            - Burundi
+            - Cambodia
+            - Cameroon
+            - Canada
+            - Cape Verde
+            - Cayman Islands (United Kingdom)
+            - Central African Republic
+            - Chad
+            - Chile
+            - China
+            - Christmas Island (Australia)
+            - Cocos (Keeling) Islands (Australia)
+            - Colombia
+            - Comoros
+            - Congo
+            - Cook Islands (New Zealand)
+            - Costa Rica
+            - Croatia
+            - Cuba
+            - Curaçao (Netherlands)
+            - Cyprus
+            - Czech Republic
+            - DR Congo
+            - Denmark
+            - Djibouti
+            - Dominica
+            - Dominican Republic
+            - East Timor
+            - Ecuador
+            - Egypt
+            - El Salvador
+            - Equatorial Guinea
+            - Eritrea
+            - Estonia
+            - Eswatini
+            - Ethiopia
+            - Falkland Islands (United Kingdom)
+            - Faroe Islands (Denmark)
+            - Fiji
+            - Finland
+            - France
+            - French Polynesia (France)
+            - Gabon
+            - Gambia
+            - Georgia
+            - Germany
+            - Ghana
+            - Gibraltar (United Kingdom)
+            - Greece
+            - Greenland (Denmark)
+            - Grenada
+            - Guam (United States)
+            - Guatemala
+            - Guernsey (British Crown Dependency)
+            - Guinea
+            - Guinea-Bissau
+            - Guyana
+            - Haiti
+            - Honduras
+            - Hong Kong (China)
+            - Hungary
+            - Iceland
+            - India
+            - Indonesia
+            - Iran
+            - Iraq
+            - Ireland
+            - Isle of Man (British Crown Dependency)
+            - Israel
+            - Italy
+            - Ivory Coast
+            - Jamaica
+            - Japan
+            - Jersey (British Crown Dependency)
+            - Jordan
+            - Kazakhstan
+            - Kenya
+            - Kiribati
+            - Kosovo
+            - Kuwait
+            - Kyrgyzstan
+            - Laos
+            - Latvia
+            - Lebanon
+            - Lesotho
+            - Liberia
+            - Libya
+            - Liechtenstein
+            - Lithuania
+            - Luxembourg
+            - Macau (China)
+            - Madagascar
+            - Malawi
+            - Malaysia
+            - Maldives
+            - Mali
+            - Malta
+            - Marshall Islands
+            - Mauritania
+            - Mauritius
+            - Mexico
+            - Micronesia
+            - Moldova
+            - Monaco
+            - Mongolia
+            - Montenegro
+            - Montserrat (United Kingdom)
+            - Morocco
+            - Mozambique
+            - Myanmar
+            - Namibia
+            - Nauru
+            - Nepal
+            - Netherlands
+            - New Caledonia (France)
+            - New Zealand
+            - Nicaragua
+            - Niger
+            - Nigeria
+            - Niue (New Zealand)
+            - Norfolk Island (Australia)
+            - North Korea
+            - North Macedonia
+            - Northern Cyprus
+            - Northern Mariana Islands (United States)
+            - Norway
+            - Oman
+            - Pakistan
+            - Palau
+            - Palestine
+            - Panama
+            - Papua New Guinea
+            - Paraguay
+            - Peru
+            - Philippines
+            - Pitcairn Islands (United Kingdom)
+            - Poland
+            - Portugal
+            - Puerto Rico (United States)
+            - Qatar
+            - Republic of Artsakh
+            - Romania
+            - Russia
+            - Rwanda
+            - Saint Barthélemy (France)
+            - Saint Helena, Ascension and Tristan da Cunha (United Kingdom)
+            - Saint Kitts and Nevis
+            - Saint Lucia
+            - Saint Martin (France)
+            - Saint Pierre and Miquelon (France)
+            - Saint Vincent and the Grenadines
+            - Samoa
+            - San Marino
+            - Saudi Arabia
+            - Senegal
+            - Serbia
+            - Seychelles
+            - Sierra Leone
+            - Singapore
+            - Sint Maarten (Netherlands)
+            - Slovakia
+            - Slovenia
+            - Solomon Islands
+            - Somalia
+            - South Africa
+            - South Korea
+            - South Ossetia
+            - South Sudan
+            - Spain
+            - Sri Lanka
+            - Sudan
+            - Suriname
+            - Sweden
+            - Switzerland
+            - Syria
+            - São Tomé and Príncipe
+            - Taiwan
+            - Tajikistan
+            - Tanzania
+            - Thailand
+            - Togo
+            - Tokelau (New Zealand)
+            - Tonga
+            - Transnistria
+            - Trinidad and Tobago
+            - Tunisia
+            - Turkey
+            - Turkmenistan
+            - Turks and Caicos Islands (United Kingdom)
+            - Tuvalu
+            - U.S. Virgin Islands (United States)
+            - Uganda
+            - Ukraine
+            - United Arab Emirates
+            - United Kingdom
+            - United States
+            - Uruguay
+            - Uzbekistan
+            - Vanuatu
+            - Vatican City
+            - Venezuela
+            - Vietnam
+            - Wallis and Futuna (France)
+            - Western Sahara
+            - Yemen
+            - Zambia
+            - Zimbabwe
+contract_features:
+    title: Contract features
+    type: string
+    sub_type: multiselect
+    enum:
+        - Contract features
+        - Excess & Layered policies
+        - CEA mini-policy
+        - Franchise deductibles
+        - min-max deductibles
+        - Sublimits
+        - Facultative
+        - Step policy conditions
+        - Franchise deductibles
+        - Other
+special_conditions:
+    title: Special conditions
+    type: string
+    sub_type: multiselect
+    enum:
+        - JER
+        - Large industrial facilities
+        - Greenhouses
+        - New Zealand Earthquake Commission
+        - Wind farms
+        - Flood mitigation
+        - Builders risk
+        - GoM
+        - Secondary modifiers
+        - Other
+notes:
+    title: Notes
+    type: string
+    sub_type: text_area
+

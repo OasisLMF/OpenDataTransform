@@ -8,6 +8,8 @@ from converter.types.notset import NotSet, NotSetType
 
 
 class EagerRunner(BaseAsyncRunner):
+    name = "Eager"
+
     async def transform(
         self, extractor: BaseConnector, mapping: BaseMapping
     ) -> AsyncIterable[Dict[str, Any]]:

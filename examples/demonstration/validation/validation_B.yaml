@@ -1,0 +1,8 @@
+entries:
+  Total:
+    fields:
+      - c
+      - d
+    operator: sum
+  NumRows:
+    operator: count

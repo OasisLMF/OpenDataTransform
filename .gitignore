@@ -1,9 +1,18 @@
 __pycache__
 
 htmlcov
-.coverage
+.coverage*
 .hypothesis
 
 docs/build
 
-*.log
+**/log/*
+**/runs/*
+
+dask-worker-space
+dist
+dist-exe
+build
+exe
+
+.DS_Store

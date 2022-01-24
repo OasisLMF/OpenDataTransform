@@ -8,7 +8,15 @@ class BaseConnector:
     Connects to the the data source
 
     :param config: The global config for the system
+    :param options_schema: A dictionary representing the
+        schema of field connectors options json schema property
+        types (https://python-jsonschema.readthedocs.io/en/stable/)
+    :param name: The human readable name of the connector for
+        use in the UI
     """
+
+    name = "Base Connector"
+    options_schema = {"type": "object", "properties": {}}
 
     def __init__(self, config: Config, **options):
         self._options = options
@@ -50,3 +58,7 @@ class BaseConnector:
             the data to push to the connected source.
         """
         raise NotImplementedError()
+
+    @classmethod
+    def fully_qualified_name(cls):
+        return f"{cls.__module__}.{cls.__qualname__}"

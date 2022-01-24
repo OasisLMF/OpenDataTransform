@@ -19,11 +19,10 @@ sys.path.insert(0, os.path.abspath(".."))
 # -- Project information -----------------------------------------------------
 
 project = "Open Data Transformation"
-#copyright = ""
+# copyright = ""
 author = "Insurance Development Forum"
 html_title = "Open Data Transformation"
 html_short_title = "Open Data Transformation"
-
 
 
 # -- General configuration ---------------------------------------------------
@@ -42,8 +41,8 @@ templates_path = ["_templates"]
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-#html_theme = "sphinx-material"
-#html_theme = "alabaster"
+# html_theme = "sphinx-material"
+# html_theme = "alabaster"
 html_theme = "sphinx_rtd_theme"
 
 

@@ -69,11 +69,13 @@ class MappingSpec:
         output_format,
         forward: DirectionalMapping = None,
         reverse: DirectionalMapping = None,
+        metadata: Dict = None
     ):
         self.input_format = input_format
         self.output_format = output_format
         self.forward = forward
         self.reverse = reverse
+        self.metadata = metadata or {}
 
     @property
     def can_run_forwards(self):
@@ -115,9 +117,11 @@ class BaseMapping:
         config: Config,
         input_format: str = None,
         output_format: str = None,
+        raise_errors=True,
         **options,
     ):
         self._mapping_graph = None
+        self._path = None
 
         self.config = config
         self._options = {
@@ -127,11 +131,11 @@ class BaseMapping:
         }
 
         self.input_format = input_format
-        if not self.input_format:
+        if not self.input_format and raise_errors:
             raise ConfigurationError("input_format not set for the mapping.")
 
         self.output_format = output_format
-        if not self.output_format:
+        if not self.output_format and raise_errors:
             raise ConfigurationError("output_format not set for the mapping.")
 
     @property
@@ -159,6 +163,7 @@ class BaseMapping:
                     mapping.input_format,
                     mapping.output_format,
                     transform=mapping.forward,
+                    spec=mapping,
                 )
 
             if mapping.can_run_in_reverse:
@@ -166,6 +171,7 @@ class BaseMapping:
                     mapping.output_format,
                     mapping.input_format,
                     transform=mapping.reverse,
+                    spec=mapping,
                 )
 
         return g
@@ -181,6 +187,28 @@ class BaseMapping:
 
         return self._mapping_graph
 
+    @property
+    def path(self):
+        if self._path:
+            return self._path
+
+        try:
+            self._path = nx.shortest_path(
+                self.mapping_graph,
+                self.input_format,
+                self.output_format,
+            )
+            return self._path
+        except (nx.NetworkXNoPath, nx.NodeNotFound):
+            raise NoConversionPathError(self.input_format, self.output_format)
+
+    @property
+    def path_edges(self):
+        return list(map(
+            lambda in_out: self.mapping_graph[in_out[0]][in_out[1]],
+            zip(self.path[:-1], self.path[1:]),
+        ))
+
     def get_transformations(self) -> List[DirectionalMapping]:
         """
         Gets a column transformations and full transformation set for the
@@ -188,22 +216,12 @@ class BaseMapping:
 
         :return: The mappings along the conversion path.
         """
-        try:
-            path = nx.shortest_path(
-                self.mapping_graph, self.input_format, self.output_format,
-            )
-        except (nx.NetworkXNoPath, nx.NodeNotFound):
-            raise NoConversionPathError(self.input_format, self.output_format)
-
+        path = self.path
         get_logger().info(f"Path found {' -> '.join(path)}")
-        edges = map(
-            lambda in_out: self.mapping_graph[in_out[0]][in_out[1]],
-            zip(path[:-1], path[1:]),
-        )
 
         # parse the trees of the path so that is doesnt need
         # to be done for every row
-        transformations = [edge["transform"] for edge in edges]
+        transformations = [edge["transform"] for edge in self.path_edges]
         for mapping in transformations:
             for transform in mapping.transformation_set.values():
                 for case in transform:

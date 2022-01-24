@@ -22,6 +22,40 @@ class CsvConnector(BaseConnector):
       (default: `nonnumeric`).
     """
 
+    name = "CSV Connector"
+    options_schema = {
+        "type": "object",
+        "properties": {
+            "path": {
+                "type": "string",
+                "description": (
+                    "The path to the file to load relative to the config file"
+                ),
+                "subtype": "path",
+                "title": "Path",
+            },
+            "write_header": {
+                "type": "boolean",
+                "description": "Should the header row be written?",
+                "default": True,
+                "title": "Include Header",
+            },
+            "quoting": {
+                "type": "string",
+                "description": (
+                    "The type of quoting to use when "
+                    "reading/writing entries (see "
+                    "https://docs.python.org/3/library/csv.html#csv.QUOTE_ALL "
+                    "for a description of the values)"
+                ),
+                "enum": ["all", "minimal", "none", "nonnumeric"],
+                "default": "nonnumeric",
+                "title": "Quoting",
+            },
+        },
+        "required": ["path"],
+    }
+
     def __init__(self, config, **options):
         super().__init__(config, **options)
 
@@ -49,7 +83,7 @@ class CsvConnector(BaseConnector):
 
         with open(self.file_path, "w", newline="") as f:
             writer = csv.DictWriter(
-                f, fieldnames=first_row.keys(), quoting=self.quoting
+                f, fieldnames=list(first_row.keys()), quoting=self.quoting
             )
 
             if self.write_header:

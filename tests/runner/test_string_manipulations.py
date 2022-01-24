@@ -22,7 +22,9 @@ def test_transform_contains_replace(runner_class):
     mapping = make_simple_mapping(
         {
             "c": [
-                TransformationEntry(transformation="replace(a, 'oo', 'aa')",)
+                TransformationEntry(
+                    transformation="replace(a, 'oo', 'aa')",
+                )
             ],
             "d": [
                 TransformationEntry(
@@ -138,12 +140,14 @@ def test_when_contains_match(runner_class):
         {
             "c": [
                 TransformationEntry(
-                    transformation="a", when="match(a, 'foo a')",
+                    transformation="a",
+                    when="match(a, 'foo a')",
                 )
             ],
             "d": [
                 TransformationEntry(
-                    transformation="a + ' ' + b", when="match(a, re'oo.*')",
+                    transformation="a + ' ' + b",
+                    when="match(a, re'oo.*')",
                 )
             ],
         }
@@ -174,7 +178,8 @@ def test_when_contains_match_on_non_lookup(runner_class):
         {
             "c": [
                 TransformationEntry(
-                    transformation="a", when="match('foo', 'foo')",
+                    transformation="a",
+                    when="match('foo', 'foo')",
                 )
             ],
             "d": [
@@ -213,7 +218,8 @@ def test_when_contains_search(runner_class):
         {
             "c": [
                 TransformationEntry(
-                    transformation="a", when="search(a, 'far')",
+                    transformation="a",
+                    when="search(a, 'far')",
                 )
             ],
             "d": [
@@ -251,7 +257,8 @@ def test_when_contains_search_on_non_lookup(runner_class):
         {
             "c": [
                 TransformationEntry(
-                    transformation="a", when="search('a foo b', 'foo')",
+                    transformation="a",
+                    when="search('a foo b', 'foo')",
                 )
             ],
             "d": [
@@ -321,7 +328,13 @@ def test_transform_contains_join_of_nothing(runner_class):
     ]
 
     mapping = make_simple_mapping(
-        {"c": [TransformationEntry(transformation="join(', ')",)]}
+        {
+            "c": [
+                TransformationEntry(
+                    transformation="join(', ')",
+                )
+            ]
+        }
     )
 
     extractor = FakeConnector(data=input_data)
@@ -348,7 +361,13 @@ def test_transform_contains_join_of_single_element(runner_class):
     ]
 
     mapping = make_simple_mapping(
-        {"c": [TransformationEntry(transformation="join(', ', a)",)]}
+        {
+            "c": [
+                TransformationEntry(
+                    transformation="join(', ', a)",
+                )
+            ]
+        }
     )
 
     extractor = FakeConnector(data=input_data)
