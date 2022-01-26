@@ -15,6 +15,7 @@ sphinx
 sphinx-autoapi
 sphinx_rtd_theme
 types-PyYAML
+types-python-dateutil
 pyinstaller
 sqlparse
 sqlparams

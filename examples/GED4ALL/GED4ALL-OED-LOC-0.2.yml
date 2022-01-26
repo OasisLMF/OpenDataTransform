@@ -5,8 +5,13 @@
 ## Several fields derive from a geometry field or TAXONOMY STRING. These fields may need to be parsed to a text field, as GEM/JBA had done previously, before conversion (mapping functionality to pull from string is difficult, though achievable).
 ## Field names used below are those given in GED4ALL SCHEMA (https://docs.riskdatalibrary.org/exposure.html#buildings).
 ## They differ from those used in JBA MAPPING v0.1, which were taken form a JBA flat file.
-input_format: GED4ALL_LOC
-output_format: OED_LOC
+file_type: LOC
+input_format:
+  name: GED4ALL
+  version: "0.2"
+output_format:
+  name: OED
+  version: "1.1.5"
 forward:
   types:
     ExposureSetName:

@@ -1,0 +1,46 @@
+metadata:
+  perils:
+  - Conventional Terrorism
+  - Hail
+  - Crop Hail (From Convective Storm)
+template_transformation:
+  input_format:
+    name: A
+    version: "1"
+  output_format:
+    name: B
+    version: "1"
+  extractor:
+    options:
+      quoting: nonnumeric
+      write_header: true
+    path: converter.connector.csv.CsvConnector
+  loader:
+    options:
+      quoting: nonnumeric
+      write_header: true
+    path: converter.connector.csv.CsvConnector
+  runner:
+    path: converter.runner.pandas.PandasRunner
+transformations:
+  ACC:
+    extractor:
+      options:
+        path: B-acc.csv
+    loader:
+      options:
+        path: REV-acc.csv
+  LOC:
+    extractor:
+      options:
+        path: B-loc.csv
+    loader:
+      options:
+        path: REV-loc.csv
+  RI:
+    extractor:
+      options:
+        path: B-ri.csv
+    loader:
+      options:
+        path: REV-ri.csv

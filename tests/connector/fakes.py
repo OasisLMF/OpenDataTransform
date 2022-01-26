@@ -1,10 +1,10 @@
-from converter.config import Config
 from converter.connector import BaseConnector
+from tests.config.fakes import fake_transformation_config
 
 
 class FakeConnector(BaseConnector):
     def __init__(self, data=None, **options):
-        super().__init__(Config(), **options)
+        super().__init__(fake_transformation_config(), **options)
         self.data = data or []
 
     def extract(self):

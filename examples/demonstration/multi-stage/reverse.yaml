@@ -1,10 +1,14 @@
-mapping:
-  options:
-    input_format: C
-    output_format: A
-extractor:
-  options:
-    path: C.csv
-loader:
-  options:
-    path: REV.csv
+transformations:
+  acc:
+    input_format:
+      name: C
+      version: "1"
+    output_format:
+      name: A
+      version: "1"
+    extractor:
+      options:
+        path: C.csv
+    loader:
+      options:
+        path: REV.csv

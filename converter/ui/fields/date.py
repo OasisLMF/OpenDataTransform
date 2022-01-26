@@ -1,28 +1,17 @@
 from __feature__ import true_property  # noqa
-from PySide6.QtWidgets import QCalendarWidget
-from PySide6.QtCore import Qt, QDate
 from dateutil.utils import today
+from PySide6.QtCore import QDate, Qt
+from PySide6.QtWidgets import QCalendarWidget
+
+from converter.ui.fields.base import BaseFieldMixin
 
 
-class DateField(QCalendarWidget):
-    def __init__(self, tab, config_path):
-        super().__init__()
-
-        self.tab = tab
-        self.main_window = tab.main_window
-        self.config_path = config_path
-
-        self.on_config_loaded(tab.main_window.config)
-        self.selectionChanged.connect(self.on_changed)
-
-        self.main_window.config_changed.connect(self.on_config_loaded)
-
-    def on_config_loaded(self, new_config):
-        conf_date = new_config.get(self.config_path, None)
+class DateField(BaseFieldMixin, QCalendarWidget):
+    def update_ui_from_config(self, config):
+        conf_date = config.get_template_resolved_value(self.config_path, None)
         if conf_date:
-            self.setSelectedDate(
-                QDate.fromString(conf_date, Qt.ISODate)
-            )
+            if conf_date != self.selectedDate.toString(Qt.ISODate):
+                self.setSelectedDate(QDate.fromString(conf_date, Qt.ISODate))
         else:
             # if no date is set the default is today so we need to store this
             # in the default working config so that it will be written
@@ -31,8 +20,11 @@ class DateField(QCalendarWidget):
                 today().isoformat(),
             )
 
-    def on_changed(self):
+    def on_change(self):
         self.main_window.set_working_value(
-            self.config_path,
-            self.selectedDate.toString(Qt.ISODate)
+            self.config_path, self.selectedDate.toString(Qt.ISODate)
         )
+
+    @property
+    def change_signal(self):
+        return self.selectionChanged

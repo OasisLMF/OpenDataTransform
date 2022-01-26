@@ -6,8 +6,13 @@
 # SOURCE: https://github.com/OasisLMF/OpenDataTransform/
 # COMMENTS: Simple maths example for demonstration, contains forward and reverse.
 
-input_format: A
-output_format: B
+type: ACC
+input_format:
+  name: A
+  version: "1"
+output_format:
+  name: B
+  version: "1"
 forward:
   types:
     id:

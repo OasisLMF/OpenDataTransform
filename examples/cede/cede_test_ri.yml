@@ -1,14 +1,27 @@
-mapping:
-  options:
-    input_format: AIR_RI_v3
-    output_format: OED_RI
-runner:
-  path: converter.runner.PandasRunner
-extractor:
-  options:
-    path: reinsurance.csv
-    quoting: minimal
-loader:
-  options:
-    path: oed_reinsurance.csv
-    quoting: minimal
+transformation_template:
+  mapping:
+    options:
+      input_format:
+        name: AIR
+        version: "3"
+      output_format:
+        name: OED
+        version: "2"
+  runner:
+    path: converter.runner.pandas.PandasRunner
+  extractor:
+    options:
+      quoting: minimal
+    path: converter.connector.csv.CsvConnector
+  loader:
+    options:
+      quoting: minimal
+    path: converter.connector.csv.CsvConnector
+transformations:
+  loc:
+    extractor:
+      options:
+        path: reinsurance.csv
+    loader:
+      options:
+        path: oed_reinsurance.csv

@@ -1,11 +1,19 @@
 import logging
-from typing import Dict, List, NamedTuple, Reversible, Set, Union
+from typing import (
+    Dict,
+    Iterable,
+    List,
+    NamedTuple,
+    Optional,
+    Reversible,
+    Set,
+    Union,
+)
 
 import networkx as nx
 from lark import Tree
 
-from converter.config import Config
-from converter.config.errors import ConfigurationError
+from converter.config.config import TransformationConfig
 from converter.mapping.errors import NoConversionPathError
 from converter.transformers.transform import parse
 
@@ -50,9 +58,14 @@ class ColumnConversion(NamedTuple):
 ColumnConversions = Dict[str, ColumnConversion]
 
 
+class MappingFormat(NamedTuple):
+    name: str
+    version: str
+
+
 class DirectionalMapping(NamedTuple):
-    input_format: str
-    output_format: str
+    input_format: MappingFormat
+    output_format: MappingFormat
     transformation_set: TransformationSet
     types: Dict[str, ColumnConversion] = dict()
     null_values: Set = set()
@@ -65,12 +78,14 @@ class MappingSpec:
 
     def __init__(
         self,
-        input_format,
-        output_format,
+        file_type: str,
+        input_format: MappingFormat,
+        output_format: MappingFormat,
         forward: DirectionalMapping = None,
         reverse: DirectionalMapping = None,
-        metadata: Dict = None
+        metadata: Dict = None,
     ):
+        self.file_type = file_type
         self.input_format = input_format
         self.output_format = output_format
         self.forward = forward
@@ -108,35 +123,36 @@ class BaseMapping:
     output formats.
 
     :param config: The global config for the system
-    :param input_format: The start of the conversion path
-    :param output_format: The end of the conversion path
+    :param input: The start of the conversion path
+    :param output: The end of the conversion path
     """
 
     def __init__(
         self,
-        config: Config,
-        input_format: str = None,
-        output_format: str = None,
-        raise_errors=True,
+        config: TransformationConfig,
+        file_type: str,
         **options,
     ):
-        self._mapping_graph = None
+        self._mapping_graph: Optional[Dict[str, nx.DiGraph]] = None
         self._path = None
 
         self.config = config
+        default_format_dict = {"name": None, "version": None}
+        self.input_format = MappingFormat(
+            **self.config.get("input_format", default_format_dict)
+        )
+        self.output_format = MappingFormat(
+            **self.config.get("output_format", default_format_dict)
+        )
+
         self._options = {
-            "input_format": input_format,
-            "output_format": output_format,
+            "file_type": file_type,
+            "input_format": self.input_format,
+            "output_format": self.output_format,
             **options,
         }
 
-        self.input_format = input_format
-        if not self.input_format and raise_errors:
-            raise ConfigurationError("input_format not set for the mapping.")
-
-        self.output_format = output_format
-        if not self.output_format and raise_errors:
-            raise ConfigurationError("output_format not set for the mapping.")
+        self.file_type = file_type
 
     @property
     def mapping_specs(self) -> Reversible[MappingSpec]:
@@ -157,7 +173,15 @@ class BaseMapping:
         # the mapping config is in order from first search path to last
         # if we build it in reverse order we will store the most preferable
         # mapping on each edge
-        for mapping in reversed(self.mapping_specs):
+        if self.file_type:
+            specs: Iterable[MappingSpec] = filter(
+                lambda s: s.file_type.lower() == self.file_type.lower(),
+                reversed(self.mapping_specs),
+            )
+        else:
+            specs = reversed(self.mapping_specs)
+
+        for mapping in specs:
             if mapping.can_run_forwards:
                 g.add_edge(
                     mapping.input_format,
@@ -204,10 +228,12 @@ class BaseMapping:
 
     @property
     def path_edges(self):
-        return list(map(
-            lambda in_out: self.mapping_graph[in_out[0]][in_out[1]],
-            zip(self.path[:-1], self.path[1:]),
-        ))
+        return list(
+            map(
+                lambda in_out: self.mapping_graph[in_out[0]][in_out[1]],
+                zip(self.path[:-1], self.path[1:]),
+            )
+        )
 
     def get_transformations(self) -> List[DirectionalMapping]:
         """
@@ -217,7 +243,9 @@ class BaseMapping:
         :return: The mappings along the conversion path.
         """
         path = self.path
-        get_logger().info(f"Path found {' -> '.join(path)}")
+        get_logger().info(
+            f"Path found {' -> '.join(f'{n.name} v{n.version}' for n in path)}"
+        )
 
         # parse the trees of the path so that is doesnt need
         # to be done for every row

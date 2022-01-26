@@ -9,7 +9,7 @@ from converter.cli import cli
 from converter.config import Config
 from converter.mapping import BaseMapping
 from converter.runner import BaseRunner
-from tests.config.test_config import config_file
+from tests.config.fakes import config_file
 
 
 class FakeRunner(BaseRunner):

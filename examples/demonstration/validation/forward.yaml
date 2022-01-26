@@ -1,23 +1,27 @@
-extractor:
-  options:
-    path: A.csv
-    quoting: nonnumeric
-    write_header: true
-  path: converter.connector.csv.CsvConnector
-loader:
-  options:
-    path: B.csv
-    quoting: nonnumeric
-    write_header: true
-  path: converter.connector.csv.CsvConnector
-mapping:
-  options:
-    input_format: A
-    output_format: B
 metadata:
   perils:
   - Conventional Terrorism
   - Hail
   - Crop Hail (From Convective Storm)
-runner:
-  path: converter.runner.pandas.PandasRunner
+transformations:
+  ACC:
+    input_format:
+      name: A
+      version: "1"
+    output_format:
+      name: B
+      version: "1"
+    extractor:
+      options:
+        path: A.csv
+        quoting: nonnumeric
+        write_header: true
+      path: converter.connector.csv.CsvConnector
+    loader:
+      options:
+        path: B.csv
+        quoting: nonnumeric
+        write_header: true
+      path: converter.connector.csv.CsvConnector
+    runner:
+      path: converter.runner.pandas.PandasRunner

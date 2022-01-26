@@ -1,5 +1,6 @@
-import pyodbc
 from typing import Dict
+
+import pyodbc
 
 from .base import BaseDBConnector
 from .errors import DBConnectionError
@@ -9,6 +10,7 @@ class SQLServerConnector(BaseDBConnector):
     """
     Connects to an Microsoft SQL Server for reading and writing data.
     """
+
     name = "SQL Server Connector"
     driver = "{ODBC Driver 17 for SQL Server}"
 
@@ -22,15 +24,16 @@ class SQLServerConnector(BaseDBConnector):
 
         try:
             conn = pyodbc.connect(
-                'DRIVER={};SERVER={};PORT={};DATABASE={};UID={};PWD={}'.format(
+                "DRIVER={};SERVER={};PORT={};DATABASE={};UID={};PWD={}".format(
                     self.driver,
                     database["host"],
                     database["port"],
                     database["database"],
                     database["user"],
-                    database["password"]
-                ))
-        except Exception as e:
+                    database["password"],
+                )
+            )
+        except Exception:
             raise DBConnectionError()
 
         return conn

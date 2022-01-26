@@ -4,12 +4,12 @@ from tempfile import TemporaryDirectory
 import pytest
 from hypothesis import given, settings
 
-from converter.config import Config
 from converter.connector import BaseConnector
 from converter.files.yaml import write_yaml
 from converter.mapping import BaseMapping, FileMapping
 from converter.runner import BaseRunner
 from converter.runner.base import BaseAsyncRunner
+from tests.config.fakes import fake_transformation_config
 from tests.connector.fakes import FakeConnector
 from tests.runner.stategies import runners
 
@@ -30,8 +30,9 @@ def test_mapping_applies_to_all_cols___forward_and_reverse_gets_to_the_input(
         write_yaml(
             os.path.join(search, "A-B.yml"),
             {
-                "input_format": "A",
-                "output_format": "B",
+                "file_type": "ACC",
+                "input_format": {"name": "A", "version": "1"},
+                "output_format": {"name": "B", "version": "1"},
                 "forward": {
                     "transform": {
                         "c": [{"transformation": "a * 2"}],
@@ -49,16 +50,15 @@ def test_mapping_applies_to_all_cols___forward_and_reverse_gets_to_the_input(
 
         # run forward
         forward_mapping = FileMapping(
-            Config(),
-            input_format="A",
-            output_format="B",
+            fake_transformation_config(),
+            "ACC",
             standard_search_path=search,
             search_working_dir=False,
         )
         forward_extractor = FakeConnector(data=input_data)
         forward_loader = FakeConnector()
 
-        runner_class(Config()).run(
+        runner_class(fake_transformation_config()).run(
             forward_extractor, forward_mapping, forward_loader
         )
 
@@ -71,16 +71,30 @@ def test_mapping_applies_to_all_cols___forward_and_reverse_gets_to_the_input(
 
         # reverse runner
         reverse_mapping = FileMapping(
-            Config(),
-            input_format="B",
-            output_format="A",
+            fake_transformation_config(
+                {
+                    "transformations": {
+                        "ACC": {
+                            "input_format": {
+                                "name": "B",
+                                "version": "1",
+                            },
+                            "output_format": {
+                                "name": "A",
+                                "version": "1",
+                            },
+                        }
+                    }
+                }
+            ),
+            "ACC",
             standard_search_path=search,
             search_working_dir=False,
         )
         reverse_extractor = forward_loader
         reverse_loader = FakeConnector()
 
-        runner_class(Config()).run(
+        runner_class(fake_transformation_config()).run(
             reverse_extractor, reverse_mapping, reverse_loader
         )
 
@@ -103,8 +117,9 @@ def test_multiple_mapping_steps___forward_and_reverse_gets_to_the_input(
         write_yaml(
             os.path.join(search, "A-B.yml"),
             {
-                "input_format": "A",
-                "output_format": "B",
+                "file_type": "ACC",
+                "input_format": {"name": "A", "version": "1"},
+                "output_format": {"name": "B", "version": "1"},
                 "forward": {
                     "transform": {
                         "c": [{"transformation": "a * 2"}],
@@ -122,8 +137,9 @@ def test_multiple_mapping_steps___forward_and_reverse_gets_to_the_input(
         write_yaml(
             os.path.join(search, "B-C.yml"),
             {
-                "input_format": "B",
-                "output_format": "C",
+                "file_type": "ACC",
+                "input_format": {"name": "B", "version": "1"},
+                "output_format": {"name": "C", "version": "1"},
                 "forward": {
                     "transform": {
                         "e": [{"transformation": "c * 3"}],
@@ -141,16 +157,30 @@ def test_multiple_mapping_steps___forward_and_reverse_gets_to_the_input(
 
         # run forward
         forward_mapping = FileMapping(
-            Config(),
-            input_format="A",
-            output_format="C",
+            fake_transformation_config(
+                {
+                    "transformations": {
+                        "ACC": {
+                            "input_format": {
+                                "name": "A",
+                                "version": "1",
+                            },
+                            "output_format": {
+                                "name": "C",
+                                "version": "1",
+                            },
+                        }
+                    }
+                }
+            ),
+            "ACC",
             standard_search_path=search,
             search_working_dir=False,
         )
         forward_extractor = FakeConnector(data=input_data)
         forward_loader = FakeConnector()
 
-        runner_class(Config()).run(
+        runner_class(fake_transformation_config()).run(
             forward_extractor, forward_mapping, forward_loader
         )
 
@@ -163,16 +193,30 @@ def test_multiple_mapping_steps___forward_and_reverse_gets_to_the_input(
 
         # reverse runner
         reverse_mapping = FileMapping(
-            Config(),
-            input_format="C",
-            output_format="A",
+            fake_transformation_config(
+                {
+                    "transformations": {
+                        "ACC": {
+                            "input_format": {
+                                "name": "C",
+                                "version": "1",
+                            },
+                            "output_format": {
+                                "name": "A",
+                                "version": "1",
+                            },
+                        }
+                    }
+                }
+            ),
+            "ACC",
             standard_search_path=search,
             search_working_dir=False,
         )
         reverse_extractor = forward_loader
         reverse_loader = FakeConnector()
 
-        runner_class(Config()).run(
+        runner_class(fake_transformation_config()).run(
             reverse_extractor, reverse_mapping, reverse_loader
         )
 
@@ -195,8 +239,9 @@ def test_multiple_transforms_could_apply___first_is_applied(
         write_yaml(
             os.path.join(search, "A-B.yml"),
             {
-                "input_format": "A",
-                "output_format": "B",
+                "file_type": "ACC",
+                "input_format": {"name": "A", "version": "1"},
+                "output_format": {"name": "B", "version": "1"},
                 "forward": {
                     "transform": {
                         "c": [
@@ -217,16 +262,15 @@ def test_multiple_transforms_could_apply___first_is_applied(
 
         # run forward
         forward_mapping = FileMapping(
-            Config(),
-            input_format="A",
-            output_format="B",
+            fake_transformation_config(),
+            "ACC",
             standard_search_path=search,
             search_working_dir=False,
         )
         forward_extractor = FakeConnector(data=input_data)
         forward_loader = FakeConnector()
 
-        runner_class(Config()).run(
+        runner_class(fake_transformation_config()).run(
             forward_extractor, forward_mapping, forward_loader
         )
 
@@ -239,16 +283,30 @@ def test_multiple_transforms_could_apply___first_is_applied(
 
         # reverse runner
         reverse_mapping = FileMapping(
-            Config(),
-            input_format="B",
-            output_format="A",
+            fake_transformation_config(
+                {
+                    "transformations": {
+                        "ACC": {
+                            "input_format": {
+                                "name": "B",
+                                "version": "1",
+                            },
+                            "output_format": {
+                                "name": "A",
+                                "version": "1",
+                            },
+                        }
+                    }
+                }
+            ),
+            "ACC",
             standard_search_path=search,
             search_working_dir=False,
         )
         reverse_extractor = forward_loader
         reverse_loader = FakeConnector()
 
-        runner_class(Config()).run(
+        runner_class(fake_transformation_config()).run(
             reverse_extractor, reverse_mapping, reverse_loader
         )
 
@@ -271,8 +329,9 @@ def test_row_is_value___value_is_set_on_all_columns(
         write_yaml(
             os.path.join(search, "A-B.yml"),
             {
-                "input_format": "A",
-                "output_format": "B",
+                "file_type": "ACC",
+                "input_format": {"name": "A", "version": "1"},
+                "output_format": {"name": "B", "version": "1"},
                 "forward": {
                     "transform": {
                         "c": [{"transformation": "a * 2"}],
@@ -291,16 +350,15 @@ def test_row_is_value___value_is_set_on_all_columns(
 
         # run forward
         forward_mapping = FileMapping(
-            Config(),
-            input_format="A",
-            output_format="B",
+            fake_transformation_config(),
+            "ACC",
             standard_search_path=search,
             search_working_dir=False,
         )
         forward_extractor = FakeConnector(data=input_data)
         forward_loader = FakeConnector()
 
-        runner_class(Config()).run(
+        runner_class(fake_transformation_config()).run(
             forward_extractor, forward_mapping, forward_loader
         )
 
@@ -313,16 +371,30 @@ def test_row_is_value___value_is_set_on_all_columns(
 
         # reverse runner
         reverse_mapping = FileMapping(
-            Config(),
-            input_format="B",
-            output_format="A",
+            fake_transformation_config(
+                {
+                    "transformations": {
+                        "ACC": {
+                            "input_format": {
+                                "name": "B",
+                                "version": "1",
+                            },
+                            "output_format": {
+                                "name": "A",
+                                "version": "1",
+                            },
+                        }
+                    }
+                }
+            ),
+            "ACC",
             standard_search_path=search,
             search_working_dir=False,
         )
         reverse_extractor = forward_loader
         reverse_loader = FakeConnector()
 
-        runner_class(Config()).run(
+        runner_class(fake_transformation_config()).run(
             reverse_extractor, reverse_mapping, reverse_loader
         )
 
@@ -331,9 +403,12 @@ def test_row_is_value___value_is_set_on_all_columns(
 
 def test_base_transform_raises():
     with pytest.raises(NotImplementedError):
-        BaseRunner(Config()).transform(
-            BaseConnector(Config()),
-            BaseMapping(Config(), input_format="A", output_format="B"),
+        BaseRunner(fake_transformation_config()).transform(
+            BaseConnector(fake_transformation_config()),
+            BaseMapping(
+                fake_transformation_config(),
+                "ACC",
+            ),
         )
 
 
@@ -342,8 +417,13 @@ async def test_base_async_transform_raises():
     with pytest.raises(NotImplementedError):
         [
             row
-            async for row in BaseAsyncRunner(Config()).transform(
-                BaseConnector(Config()),
-                BaseMapping(Config(), input_format="A", output_format="B"),
+            async for row in BaseAsyncRunner(
+                fake_transformation_config()
+            ).transform(
+                BaseConnector(fake_transformation_config()),
+                BaseMapping(
+                    fake_transformation_config(),
+                    "ACC",
+                ),
             )
         ]

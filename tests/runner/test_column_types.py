@@ -1,7 +1,7 @@
 from hypothesis import given, settings
 
-from converter.config import Config
 from converter.mapping.base import ColumnConversion, TransformationEntry
+from tests.config.fakes import fake_transformation_config
 from tests.connector.fakes import FakeConnector
 from tests.mapping.fakes import make_simple_mapping
 from tests.runner.stategies import runners
@@ -28,7 +28,7 @@ def test_column_is_specified_as_int___values_are_changed_bad_are_excluded(
     extractor = FakeConnector(data=input_data)
     loader = FakeConnector()
 
-    runner_class(Config()).run(extractor, mapping, loader)
+    runner_class(fake_transformation_config()).run(extractor, mapping, loader)
 
     assert list(loader.data) == [
         {"b": 1},
@@ -61,7 +61,7 @@ def test_column_is_specified_as_float___values_are_changed_bad_are_excluded(
     extractor = FakeConnector(data=input_data)
     loader = FakeConnector()
 
-    runner_class(Config()).run(extractor, mapping, loader)
+    runner_class(fake_transformation_config()).run(extractor, mapping, loader)
 
     assert list(loader.data) == [
         {"b": 1},
@@ -94,7 +94,7 @@ def test_column_is_specified_as_string___values_are_changed_bad_are_excluded(
     extractor = FakeConnector(data=input_data)
     loader = FakeConnector()
 
-    runner_class(Config()).run(extractor, mapping, loader)
+    runner_class(fake_transformation_config()).run(extractor, mapping, loader)
 
     assert list(loader.data) == [
         {"b": "1"},

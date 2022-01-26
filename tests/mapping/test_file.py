@@ -6,15 +6,19 @@ import pytest
 from hypothesis import given
 from hypothesis.strategies import booleans, lists, sampled_from, text
 
-from converter.config import Config
 from converter.files.yaml import write_yaml
-from converter.mapping.base import ColumnConversion, TransformationEntry
+from converter.mapping.base import (
+    ColumnConversion,
+    MappingFormat,
+    TransformationEntry,
+)
 from converter.mapping.errors import NoConversionPathError
 from converter.mapping.file import (
     FileMapping,
     FileMappingSpec,
     InvalidMappingFile,
 )
+from tests.config.fakes import fake_transformation_config
 
 
 #
@@ -25,8 +29,9 @@ from converter.mapping.file import (
 def test_mapping_file_has_no_base___mapping_is_loaded_as_expected():
     config_path = os.path.abspath("config.yml")
     config = {
-        "input_format": "foo",
-        "output_format": "bar",
+        "file_type": "ACC",
+        "input_format": {"name": "foo", "version": "1"},
+        "output_format": {"name": "bar", "version": "1"},
         "forward": {"transform": {"a": [{"transformation": "b"}]}},
         "reverse": {"transform": {"b": [{"transformation": "a"}]}},
     }
@@ -37,8 +42,9 @@ def test_mapping_file_has_no_base___mapping_is_loaded_as_expected():
     )
 
     assert mapping.path == config_path
-    assert mapping.input_format == "foo"
-    assert mapping.output_format == "bar"
+    assert mapping.file_type == "ACC"
+    assert mapping.input_format == MappingFormat(name="foo", version="1")
+    assert mapping.output_format == MappingFormat(name="bar", version="1")
     assert mapping.forward.transformation_set == {
         "a": [TransformationEntry(transformation="b")]
     }
@@ -48,10 +54,31 @@ def test_mapping_file_has_no_base___mapping_is_loaded_as_expected():
     assert all_found_configs[config_path] == mapping
 
 
+def test_mapping_is_missing_file_type___error_is_raised():
+    config_path = os.path.abspath("config.yml")
+    config = {
+        "input_format": {"name": "foo", "version": "1"},
+        "output_format": {"name": "bar", "version": "1"},
+        "forward": {"transform": {"a": [{"transformation": "b"}]}},
+        "reverse": {"transform": {"b": [{"transformation": "a"}]}},
+    }
+    all_found_configs = {config_path: config}
+
+    with pytest.raises(
+        InvalidMappingFile,
+        match=f"{config_path}: file_type not found in the config file or "
+        f"its bases",
+    ):
+        FileMappingSpec(
+            config_path, config, all_found_configs, [os.path.abspath(".")]
+        )
+
+
 def test_mapping_is_missing_input_format___error_is_raised():
     config_path = os.path.abspath("config.yml")
     config = {
-        "output_format": "bar",
+        "file_type": "ACC",
+        "output_format": {"name": "bar", "version": "1"},
         "forward": {"transform": {"a": [{"transformation": "b"}]}},
         "reverse": {"transform": {"b": [{"transformation": "a"}]}},
     }
@@ -70,7 +97,8 @@ def test_mapping_is_missing_input_format___error_is_raised():
 def test_mapping_is_missing_output_format___error_is_raised():
     config_path = os.path.abspath("config.yml")
     config = {
-        "input_format": "foo",
+        "file_type": "ACC",
+        "input_format": {"name": "foo", "version": "1"},
         "forward": {"transform": {"a": [{"transformation": "b"}]}},
         "reverse": {"transform": {"b": [{"transformation": "a"}]}},
     }
@@ -90,8 +118,9 @@ def test_base_cannot_be_found___error_is_raised():
     config_path = os.path.abspath("config.yml")
     config = {
         "bases": ["missingBase"],
-        "input_format": "foo",
-        "output_format": "bar",
+        "file_type": "ACC",
+        "input_format": {"name": "foo", "version": "1"},
+        "output_format": {"name": "bar", "version": "1"},
         "forward": {"transform": {"a": [{"transformation": "b"}]}},
         "reverse": {"transform": {"b": [{"transformation": "a"}]}},
     }
@@ -111,8 +140,9 @@ def test_base_cannot_be_found___error_is_raised():
 def test_mapping_has_base_and_no_input_format___base_format_is_used():
     base_path = os.path.abspath("base.yml")
     base_config = {
-        "input_format": "foo",
-        "output_format": "far",
+        "file_type": "ACC",
+        "input_format": {"name": "foo", "version": "1"},
+        "output_format": {"name": "far", "version": "1"},
         "forward": {"transform": {"a": [{"transformation": "c"}]}},
         "reverse": {"transform": {"b": [{"transformation": "d"}]}},
     }
@@ -120,7 +150,7 @@ def test_mapping_has_base_and_no_input_format___base_format_is_used():
     config_path = os.path.abspath("config.yml")
     config = {
         "bases": ["base"],
-        "output_format": "bar",
+        "output_format": {"name": "bar", "version": "1"},
         "forward": {"transform": {"a": [{"transformation": "b"}]}},
         "reverse": {"transform": {"b": [{"transformation": "a"}]}},
     }
@@ -131,8 +161,9 @@ def test_mapping_has_base_and_no_input_format___base_format_is_used():
     )
 
     assert mapping.path == config_path
-    assert mapping.input_format == "foo"
-    assert mapping.output_format == "bar"
+    assert mapping.file_type == "ACC"
+    assert mapping.input_format == MappingFormat(name="foo", version="1")
+    assert mapping.output_format == MappingFormat(name="bar", version="1")
     assert mapping.forward.transformation_set == {
         "a": [TransformationEntry(transformation="b")]
     }
@@ -145,8 +176,9 @@ def test_mapping_has_base_and_no_input_format___base_format_is_used():
 def test_mapping_has_base_and_no_bar_format___base_format_is_used():
     base_path = os.path.abspath("base.yml")
     base_config = {
-        "input_format": "boo",
-        "output_format": "bar",
+        "file_type": "ACC",
+        "input_format": {"name": "boo", "version": "1"},
+        "output_format": {"name": "bar", "version": "1"},
         "forward": {"transform": {"a": [{"transformation": "c"}]}},
         "reverse": {"transform": {"b": [{"transformation": "d"}]}},
     }
@@ -154,7 +186,7 @@ def test_mapping_has_base_and_no_bar_format___base_format_is_used():
     config_path = os.path.abspath("config.yml")
     config = {
         "bases": ["base"],
-        "input_format": "foo",
+        "input_format": {"name": "foo", "version": "1"},
         "forward": {"transform": {"a": [{"transformation": "b"}]}},
         "reverse": {"transform": {"b": [{"transformation": "a"}]}},
     }
@@ -165,8 +197,9 @@ def test_mapping_has_base_and_no_bar_format___base_format_is_used():
     )
 
     assert mapping.path == config_path
-    assert mapping.input_format == "foo"
-    assert mapping.output_format == "bar"
+    assert mapping.file_type == "ACC"
+    assert mapping.input_format == MappingFormat(name="foo", version="1")
+    assert mapping.output_format == MappingFormat(name="bar", version="1")
     assert mapping.forward.transformation_set == {
         "a": [TransformationEntry(transformation="b")]
     }
@@ -179,8 +212,9 @@ def test_mapping_has_base_and_no_bar_format___base_format_is_used():
 def test_mapping_has_base___forward_transforms_are_merged():
     base_path = os.path.abspath("base.yml")
     base_config = {
-        "input_format": "boo",
-        "output_format": "bar",
+        "file_type": "ACC",
+        "input_format": {"name": "boo", "version": "1"},
+        "output_format": {"name": "bar", "version": "1"},
         "forward": {"transform": {"c": [{"transformation": "d"}]}},
         "reverse": {"transform": {"b": [{"transformation": "d"}]}},
     }
@@ -188,7 +222,7 @@ def test_mapping_has_base___forward_transforms_are_merged():
     config_path = os.path.abspath("config.yml")
     config = {
         "bases": ["base"],
-        "input_format": "foo",
+        "input_format": {"name": "foo", "version": "1"},
         "forward": {"transform": {"a": [{"transformation": "b"}]}},
         "reverse": {"transform": {"b": [{"transformation": "a"}]}},
     }
@@ -199,8 +233,9 @@ def test_mapping_has_base___forward_transforms_are_merged():
     )
 
     assert mapping.path == config_path
-    assert mapping.input_format == "foo"
-    assert mapping.output_format == "bar"
+    assert mapping.file_type == "ACC"
+    assert mapping.input_format == MappingFormat(name="foo", version="1")
+    assert mapping.output_format == MappingFormat(name="bar", version="1")
     assert mapping.forward.transformation_set == {
         "a": [TransformationEntry(transformation="b")],
         "c": [TransformationEntry(transformation="d")],
@@ -214,8 +249,9 @@ def test_mapping_has_base___forward_transforms_are_merged():
 def test_mapping_has_base___reverse_transforms_are_merged():
     base_path = os.path.abspath("base.yml")
     base_config = {
-        "input_format": "boo",
-        "output_format": "bar",
+        "file_type": "ACC",
+        "input_format": {"name": "boo", "version": "1"},
+        "output_format": {"name": "bar", "version": "1"},
         "forward": {"transform": {"a": [{"transformation": "d"}]}},
         "reverse": {
             "transform": {
@@ -228,7 +264,7 @@ def test_mapping_has_base___reverse_transforms_are_merged():
     config_path = os.path.abspath("config.yml")
     config = {
         "bases": ["base"],
-        "input_format": "foo",
+        "input_format": {"name": "foo", "version": "1"},
         "forward": {"transform": {"a": [{"transformation": "b"}]}},
         "reverse": {"transform": {"b": [{"transformation": "a"}]}},
     }
@@ -239,8 +275,9 @@ def test_mapping_has_base___reverse_transforms_are_merged():
     )
 
     assert mapping.path == config_path
-    assert mapping.input_format == "foo"
-    assert mapping.output_format == "bar"
+    assert mapping.file_type == "ACC"
+    assert mapping.input_format == MappingFormat(name="foo", version="1")
+    assert mapping.output_format == MappingFormat(name="bar", version="1")
     assert mapping.forward.transformation_set == {
         "a": [TransformationEntry(transformation="b")],
     }
@@ -255,8 +292,9 @@ def test_mapping_has_base___reverse_transforms_are_merged():
 def test_mapping_has_path_base___base_is_used(ext):
     base_path = os.path.abspath(f"base.{ext}")
     base_config = {
-        "input_format": "foo",
-        "output_format": "far",
+        "file_type": "ACC",
+        "input_format": {"name": "foo", "version": "1"},
+        "output_format": {"name": "far", "version": "1"},
         "forward": {"transform": {"a": [{"transformation": "c"}]}},
         "reverse": {"transform": {"b": [{"transformation": "d"}]}},
     }
@@ -264,7 +302,7 @@ def test_mapping_has_path_base___base_is_used(ext):
     config_path = os.path.abspath("config.yml")
     config = {
         "bases": [f"base.{ext}"],
-        "output_format": "bar",
+        "output_format": {"name": "bar", "version": "1"},
         "forward": {"transform": {"a": [{"transformation": "b"}]}},
         "reverse": {"transform": {"b": [{"transformation": "a"}]}},
     }
@@ -275,8 +313,9 @@ def test_mapping_has_path_base___base_is_used(ext):
     )
 
     assert mapping.path == config_path
-    assert mapping.input_format == "foo"
-    assert mapping.output_format == "bar"
+    assert mapping.file_type == "ACC"
+    assert mapping.input_format == MappingFormat(name="foo", version="1")
+    assert mapping.output_format == MappingFormat(name="bar", version="1")
     assert mapping.forward.transformation_set == {
         "a": [TransformationEntry(transformation="b")]
     }
@@ -289,8 +328,9 @@ def test_mapping_has_path_base___base_is_used(ext):
 def test_mapping_has_multiple_base___later_bases_are_preferred():
     first_base_path = os.path.abspath("first.yml")
     first_base_config = {
-        "input_format": "boo",
-        "output_format": "bash",
+        "file_type": "ACC",
+        "input_format": {"name": "boo", "version": "1"},
+        "output_format": {"name": "bash", "version": "1"},
         "forward": {
             "transform": {
                 "a": [TransformationEntry(transformation="b")],
@@ -307,8 +347,9 @@ def test_mapping_has_multiple_base___later_bases_are_preferred():
 
     second_base_path = os.path.abspath("second.yaml")
     second_base_config = {
-        "input_format": "fish",
-        "output_format": "far",
+        "file_type": "ACC",
+        "input_format": {"name": "fish", "version": "1"},
+        "output_format": {"name": "far", "version": "1"},
         "forward": {
             "transform": {
                 "c": [TransformationEntry(transformation="d")],
@@ -326,8 +367,8 @@ def test_mapping_has_multiple_base___later_bases_are_preferred():
     config_path = os.path.abspath("config.yml")
     config = {
         "bases": ["first", "second"],
-        "input_format": "foo",
-        "output_format": "bar",
+        "input_format": {"name": "foo", "version": "1"},
+        "output_format": {"name": "bar", "version": "1"},
         "forward": {"transform": {"e": [{"transformation": "f"}]}},
         "reverse": {"transform": {"f": [{"transformation": "e"}]}},
     }
@@ -342,8 +383,9 @@ def test_mapping_has_multiple_base___later_bases_are_preferred():
     )
 
     assert mapping.path == config_path
-    assert mapping.input_format == "foo"
-    assert mapping.output_format == "bar"
+    assert mapping.file_type == "ACC"
+    assert mapping.input_format == MappingFormat(name="foo", version="1")
+    assert mapping.output_format == MappingFormat(name="bar", version="1")
     assert mapping.forward.transformation_set == {
         "a": [TransformationEntry(transformation="b")],
         "c": [TransformationEntry(transformation="d")],
@@ -363,8 +405,9 @@ def test_mapping_has_multiple_base___later_bases_are_preferred():
 def test_mapping_has_base_with_base___grand_parent_bases_are_loaded():
     first_base_path = os.path.abspath("first.yml")
     first_base_config = {
-        "input_format": "boo",
-        "output_format": "bash",
+        "file_type": "ACC",
+        "input_format": {"name": "boo", "version": "1"},
+        "output_format": {"name": "bash", "version": "1"},
         "forward": {
             "transform": {
                 "a": [TransformationEntry(transformation="b")],
@@ -382,7 +425,7 @@ def test_mapping_has_base_with_base___grand_parent_bases_are_loaded():
     second_base_path = os.path.abspath("second.yaml")
     second_base_config = {
         "bases": ["first"],
-        "output_format": "far",
+        "output_format": {"name": "far", "version": "1"},
         "forward": {
             "transform": {
                 "c": [TransformationEntry(transformation="d")],
@@ -400,8 +443,8 @@ def test_mapping_has_base_with_base___grand_parent_bases_are_loaded():
     config_path = os.path.abspath("config.yml")
     config = {
         "bases": ["second"],
-        "input_format": "foo",
-        "output_format": "bar",
+        "input_format": {"name": "foo", "version": "1"},
+        "output_format": {"name": "bar", "version": "1"},
         "forward": {"transform": {"e": [{"transformation": "f"}]}},
         "reverse": {"transform": {"f": [{"transformation": "e"}]}},
     }
@@ -416,8 +459,9 @@ def test_mapping_has_base_with_base___grand_parent_bases_are_loaded():
     )
 
     assert mapping.path == config_path
-    assert mapping.input_format == "foo"
-    assert mapping.output_format == "bar"
+    assert mapping.file_type == "ACC"
+    assert mapping.input_format == MappingFormat(name="foo", version="1")
+    assert mapping.output_format == MappingFormat(name="bar", version="1")
     assert mapping.forward.transformation_set == {
         "a": [TransformationEntry(transformation="b")],
         "c": [TransformationEntry(transformation="d")],
@@ -438,8 +482,9 @@ def test_mapping_has_base_in_different_search_path___bases_is_loaded():
     other_search_path = "/somepath/"
     base_path = os.path.join(other_search_path, "base.yml")
     base_config = {
-        "input_format": "boo",
-        "output_format": "bar",
+        "file_type": "ACC",
+        "input_format": {"name": "boo", "version": "1"},
+        "output_format": {"name": "bar", "version": "1"},
         "forward": {"transform": {"a": [{"transformation": "d"}]}},
         "reverse": {
             "transform": {
@@ -452,7 +497,7 @@ def test_mapping_has_base_in_different_search_path___bases_is_loaded():
     config_path = os.path.abspath("config.yml")
     config = {
         "bases": ["base"],
-        "input_format": "foo",
+        "input_format": {"name": "foo", "version": "1"},
         "forward": {"transform": {"a": [{"transformation": "b"}]}},
         "reverse": {"transform": {"b": [{"transformation": "a"}]}},
     }
@@ -466,8 +511,9 @@ def test_mapping_has_base_in_different_search_path___bases_is_loaded():
     )
 
     assert mapping.path == config_path
-    assert mapping.input_format == "foo"
-    assert mapping.output_format == "bar"
+    assert mapping.file_type == "ACC"
+    assert mapping.input_format == MappingFormat(name="foo", version="1")
+    assert mapping.output_format == MappingFormat(name="bar", version="1")
     assert mapping.forward.transformation_set == {
         "a": [TransformationEntry(transformation="b")],
     }
@@ -481,8 +527,9 @@ def test_mapping_has_base_in_different_search_path___bases_is_loaded():
 def test_mapping_file_has_forward_transform___can_run_forward_is_true():
     config_path = os.path.abspath("config.yml")
     config = {
-        "input_format": "foo",
-        "output_format": "bar",
+        "file_type": "ACC",
+        "input_format": {"name": "foo", "version": "1"},
+        "output_format": {"name": "bar", "version": "1"},
         "forward": {"transform": {"a": [{"transformation": "b"}]}},
         "reverse": {"transform": {"b": [{"transformation": "a"}]}},
     }
@@ -498,8 +545,9 @@ def test_mapping_file_has_forward_transform___can_run_forward_is_true():
 def test_mapping_file_has_no_forward_transform___can_run_forward_is_false():
     config_path = os.path.abspath("config.yml")
     config = {
-        "input_format": "foo",
-        "output_format": "bar",
+        "file_type": "ACC",
+        "input_format": {"name": "foo", "version": "1"},
+        "output_format": {"name": "bar", "version": "1"},
         "reverse": {"transform": {"b": [{"transformation": "a"}]}},
     }
     all_found_configs = {config_path: config}
@@ -514,8 +562,9 @@ def test_mapping_file_has_no_forward_transform___can_run_forward_is_false():
 def test_mapping_file_has_reverse_transform___can_run_in_reverse_is_true():
     config_path = os.path.abspath("config.yml")
     config = {
-        "input_format": "foo",
-        "output_format": "bar",
+        "file_type": "ACC",
+        "input_format": {"name": "foo", "version": "1"},
+        "output_format": {"name": "bar", "version": "1"},
         "forward": {"transform": {"a": [{"transformation": "b"}]}},
         "reverse": {"transform": {"b": [{"transformation": "a"}]}},
     }
@@ -531,8 +580,9 @@ def test_mapping_file_has_reverse_transform___can_run_in_reverse_is_true():
 def test_mapping_file_has_no_reverse_transform___can_run_in_reverse_is_false():
     config_path = os.path.abspath("config.yml")
     config = {
-        "input_format": "foo",
-        "output_format": "bar",
+        "file_type": "ACC",
+        "input_format": {"name": "foo", "version": "1"},
+        "output_format": {"name": "bar", "version": "1"},
         "forward": {"transform": {"a": [{"transformation": "b"}]}},
     }
     all_found_configs = {config_path: config}
@@ -559,15 +609,18 @@ def test_standard_and_current_path_is_added_to_the_abs_search_paths(paths):
         )
     )
 
+    config = fake_transformation_config()
     mapping = FileMapping(
-        Config(),
-        input_format="A",
-        output_format="B",
+        config,
+        file_type="ACC",
+        input_format=MappingFormat(name="A", version="1"),
+        output_format=MappingFormat(name="B", version="1"),
         search_paths=paths,
     )
 
     assert mapping.search_paths == [
         os.path.abspath("."),
+        os.path.dirname(config.path),
         *(os.path.abspath(p) for p in paths),
         os.path.join(
             package_root_dir,
@@ -582,60 +635,102 @@ def test_multiple_search_paths_contain_files___all_are_loaded():
     with TemporaryDirectory() as first, TemporaryDirectory() as second:
         write_yaml(
             os.path.join(first, "A-B.yml"),
-            {"input_format": "A", "output_format": "B"},
+            {
+                "file_type": "ACC",
+                "input_format": {"name": "A", "version": "1"},
+                "output_format": {"name": "B", "version": "1"},
+            },
         )
         write_yaml(
             os.path.join(first, "B-C.yaml"),
-            {"input_format": "B", "output_format": "C"},
+            {
+                "file_type": "ACC",
+                "input_format": {"name": "B", "version": "1"},
+                "output_format": {"name": "C", "version": "1"},
+            },
         )
         write_yaml(
             os.path.join(second, "C-D.yml"),
-            {"input_format": "C", "output_format": "D"},
+            {
+                "file_type": "ACC",
+                "input_format": {"name": "C", "version": "1"},
+                "output_format": {"name": "D", "version": "1"},
+            },
         )
         write_yaml(
             os.path.join(second, "D-E.yaml"),
-            {"input_format": "D", "output_format": "E"},
+            {
+                "file_type": "ACC",
+                "input_format": {"name": "D", "version": "1"},
+                "output_format": {"name": "E", "version": "1"},
+            },
         )
 
         mapping = FileMapping(
-            Config(),
-            input_format="A",
-            output_format="B",
+            fake_transformation_config(),
+            file_type="ACC",
+            input_format=MappingFormat(name="A", version="1"),
+            output_format=MappingFormat(name="B", version="1"),
             search_paths=[first],
             standard_search_path=second,
         )
 
         loaded = {c.path: c for c in mapping.mapping_specs}
 
-        assert loaded[os.path.join(first, "A-B.yml")].input_format == "A"
-        assert loaded[os.path.join(first, "A-B.yml")].output_format == "B"
+        assert loaded[
+            os.path.join(first, "A-B.yml")
+        ].input_format == MappingFormat(name="A", version="1")
+        assert loaded[
+            os.path.join(first, "A-B.yml")
+        ].output_format == MappingFormat(name="B", version="1")
 
-        assert loaded[os.path.join(first, "B-C.yaml")].input_format == "B"
-        assert loaded[os.path.join(first, "B-C.yaml")].output_format == "C"
+        assert loaded[
+            os.path.join(first, "B-C.yaml")
+        ].input_format == MappingFormat(name="B", version="1")
+        assert loaded[
+            os.path.join(first, "B-C.yaml")
+        ].output_format == MappingFormat(name="C", version="1")
 
-        assert loaded[os.path.join(second, "C-D.yml")].input_format == "C"
-        assert loaded[os.path.join(second, "C-D.yml")].output_format == "D"
+        assert loaded[
+            os.path.join(second, "C-D.yml")
+        ].input_format == MappingFormat(name="C", version="1")
+        assert loaded[
+            os.path.join(second, "C-D.yml")
+        ].output_format == MappingFormat(name="D", version="1")
 
-        assert loaded[os.path.join(second, "D-E.yaml")].input_format == "D"
-        assert loaded[os.path.join(second, "D-E.yaml")].output_format == "E"
+        assert loaded[
+            os.path.join(second, "D-E.yaml")
+        ].input_format == MappingFormat(name="D", version="1")
+        assert loaded[
+            os.path.join(second, "D-E.yaml")
+        ].output_format == MappingFormat(name="E", version="1")
 
 
 def test_yaml_files_with_non_mapping_fields_in_search_paths_are_excluded():
     with TemporaryDirectory() as first:
         write_yaml(
             os.path.join(first, "A-B.yml"),
-            {"input_format": "A", "output_format": "B"},
+            {
+                "file_type": "ACC",
+                "input_format": {"name": "A", "version": "1"},
+                "output_format": {"name": "B", "version": "1"},
+            },
         )
         write_yaml(
             os.path.join(first, "B-C.yaml"),
-            {"input_format": "B", "output_format": "C"},
+            {
+                "file_type": "ACC",
+                "input_format": {"name": "B", "version": "1"},
+                "output_format": {"name": "C", "version": "1"},
+            },
         )
         write_yaml(os.path.join(first, "other.yaml"), {"other_field": "foo"})
 
         mapping = FileMapping(
-            Config(),
-            input_format="A",
-            output_format="B",
+            fake_transformation_config(),
+            file_type="ACC",
+            input_format=MappingFormat(name="A", version="1"),
+            output_format=MappingFormat(name="B", version="1"),
             standard_search_path=first,
         )
 
@@ -650,20 +745,35 @@ def test_invalid_mapping_exists___its_excluded_and_warning_is_written():
     with TemporaryDirectory() as first:
         write_yaml(
             os.path.join(first, "A-B.yml"),
-            {"input_format": "A", "output_format": "B"},
+            {
+                "file_type": "ACC",
+                "input_format": {"name": "A", "version": "1"},
+                "output_format": {"name": "B", "version": "1"},
+            },
         )
         write_yaml(
             os.path.join(first, "B-C.yaml"),
-            {"input_format": "B", "output_format": "C"},
+            {
+                "file_type": "ACC",
+                "input_format": {"name": "B", "version": "1"},
+                "output_format": {"name": "C", "version": "1"},
+            },
         )
-        write_yaml(os.path.join(first, "invalid.yaml"), {"output_format": "D"})
+        write_yaml(
+            os.path.join(first, "invalid.yaml"),
+            {
+                "file_type": "ACC",
+                "output_format": {"name": "D", "version": "1"},
+            },
+        )
 
         log_mock = Mock()
         with patch("converter.mapping.file.get_logger", return_value=log_mock):
             mapping = FileMapping(
-                Config(),
-                input_format="A",
-                output_format="B",
+                fake_transformation_config(),
+                file_type="ACC",
+                input_format=MappingFormat(name="A", version="1"),
+                output_format=MappingFormat(name="B", version="1"),
                 standard_search_path=first,
             )
 
@@ -685,17 +795,17 @@ def test_mapping_file_has_forward_and_reverse_trans___both_paths_are_valid():
         write_yaml(
             os.path.join(first, "A-B.yml"),
             {
-                "input_format": "A",
-                "output_format": "B",
+                "file_type": "ACC",
+                "input_format": {"name": "A", "version": "1"},
+                "output_format": {"name": "B", "version": "1"},
                 "forward": {"transform": {"b": [{"transformation": "a"}]}},
                 "reverse": {"transform": {"a": [{"transformation": "b"}]}},
             },
         )
 
         ab_mapping = FileMapping(
-            Config(),
-            input_format="A",
-            output_format="B",
+            fake_transformation_config(),
+            file_type="ACC",
             standard_search_path=first,
             search_working_dir=False,
         )
@@ -705,9 +815,23 @@ def test_mapping_file_has_forward_and_reverse_trans___both_paths_are_valid():
         ] == [{"b": [TransformationEntry(transformation="a", when="True")]}]
 
         ba_mapping = FileMapping(
-            Config(),
-            input_format="B",
-            output_format="A",
+            fake_transformation_config(
+                {
+                    "transformations": {
+                        "ACC": {
+                            "input_format": {
+                                "name": "B",
+                                "version": "1",
+                            },
+                            "output_format": {
+                                "name": "A",
+                                "version": "1",
+                            },
+                        }
+                    }
+                }
+            ),
+            "ACC",
             standard_search_path=first,
             search_working_dir=False,
         )
@@ -722,16 +846,16 @@ def test_mapping_file_has_no_reverse___reverse_path_is_not_possible():
         write_yaml(
             os.path.join(first, "A-B.yml"),
             {
-                "input_format": "A",
-                "output_format": "B",
+                "file_type": "ACC",
+                "input_format": {"name": "A", "version": "1"},
+                "output_format": {"name": "B", "version": "1"},
                 "forward": {"transform": {"b": [{"transformation": "a"}]}},
             },
         )
 
         ab_mapping = FileMapping(
-            Config(),
-            input_format="A",
-            output_format="B",
+            fake_transformation_config(),
+            file_type="ACC",
             standard_search_path=first,
             search_working_dir=False,
         )
@@ -741,12 +865,27 @@ def test_mapping_file_has_no_reverse___reverse_path_is_not_possible():
         ] == [{"b": [TransformationEntry(transformation="a", when="True")]}]
 
         with pytest.raises(
-            NoConversionPathError, match="No conversion path from B to A."
+            NoConversionPathError,
+            match="No conversion path from B v1 to A v1.",
         ):
             ba_mapping = FileMapping(
-                Config(),
-                input_format="B",
-                output_format="A",
+                fake_transformation_config(
+                    {
+                        "transformations": {
+                            "ACC": {
+                                "input_format": {
+                                    "name": "B",
+                                    "version": "1",
+                                },
+                                "output_format": {
+                                    "name": "A",
+                                    "version": "1",
+                                },
+                            }
+                        }
+                    }
+                ),
+                file_type="ACC",
                 standard_search_path=first,
                 search_working_dir=False,
             )
@@ -759,19 +898,20 @@ def test_mapping_file_has_no_forward___forward_path_is_not_possible():
         write_yaml(
             os.path.join(first, "A-B.yml"),
             {
-                "input_format": "A",
-                "output_format": "B",
+                "file_type": "ACC",
+                "input_format": {"name": "A", "version": "1"},
+                "output_format": {"name": "B", "version": "1"},
                 "reverse": {"transform": {"a": [{"transformation": "b"}]}},
             },
         )
 
         with pytest.raises(
-            NoConversionPathError, match="No conversion path from A to B."
+            NoConversionPathError,
+            match="No conversion path from A v1 to B v1.",
         ):
             ab_mapping = FileMapping(
-                Config(),
-                input_format="A",
-                output_format="B",
+                fake_transformation_config(),
+                file_type="ACC",
                 standard_search_path=first,
                 search_working_dir=False,
             )
@@ -783,9 +923,23 @@ def test_mapping_file_has_no_forward___forward_path_is_not_possible():
             ]
 
         ba_mapping = FileMapping(
-            Config(),
-            input_format="B",
-            output_format="A",
+            fake_transformation_config(
+                {
+                    "transformations": {
+                        "ACC": {
+                            "input_format": {
+                                "name": "B",
+                                "version": "1",
+                            },
+                            "output_format": {
+                                "name": "A",
+                                "version": "1",
+                            },
+                        }
+                    }
+                }
+            ),
+            file_type="ACC",
             standard_search_path=first,
             search_working_dir=False,
         )
@@ -800,8 +954,9 @@ def test_forward_is_provided_in_preferred_directory___forward_from_preferred():
         write_yaml(
             os.path.join(first, "A-B.yml"),
             {
-                "input_format": "A",
-                "output_format": "B",
+                "file_type": "ACC",
+                "input_format": {"name": "A", "version": "1"},
+                "output_format": {"name": "B", "version": "1"},
                 "forward": {"transform": {"b": [{"transformation": "a"}]}},
                 "reverse": {"transform": {"a": [{"transformation": "b"}]}},
             },
@@ -809,16 +964,16 @@ def test_forward_is_provided_in_preferred_directory___forward_from_preferred():
         write_yaml(
             os.path.join(second, "preferred.yml"),
             {
-                "input_format": "A",
-                "output_format": "B",
+                "file_type": "ACC",
+                "input_format": {"name": "A", "version": "1"},
+                "output_format": {"name": "B", "version": "1"},
                 "forward": {"transform": {"c": [{"transformation": "d"}]}},
             },
         )
 
         ab_mapping = FileMapping(
-            Config(),
-            input_format="A",
-            output_format="B",
+            fake_transformation_config(),
+            file_type="ACC",
             search_paths=[second],
             standard_search_path=first,
             search_working_dir=False,
@@ -829,9 +984,23 @@ def test_forward_is_provided_in_preferred_directory___forward_from_preferred():
         ] == [{"c": [TransformationEntry(transformation="d", when="True")]}]
 
         ba_mapping = FileMapping(
-            Config(),
-            input_format="B",
-            output_format="A",
+            fake_transformation_config(
+                {
+                    "transformations": {
+                        "ACC": {
+                            "input_format": {
+                                "name": "B",
+                                "version": "1",
+                            },
+                            "output_format": {
+                                "name": "A",
+                                "version": "1",
+                            },
+                        }
+                    }
+                }
+            ),
+            file_type="ACC",
             search_paths=[second],
             standard_search_path=first,
             search_working_dir=False,
@@ -847,8 +1016,9 @@ def test_reverse_is_provided_in_prefered_directory___reverse_from_preferred():
         write_yaml(
             os.path.join(first, "A-B.yml"),
             {
-                "input_format": "A",
-                "output_format": "B",
+                "file_type": "ACC",
+                "input_format": {"name": "A", "version": "1"},
+                "output_format": {"name": "B", "version": "1"},
                 "forward": {"transform": {"b": [{"transformation": "a"}]}},
                 "reverse": {"transform": {"a": [{"transformation": "b"}]}},
             },
@@ -856,16 +1026,16 @@ def test_reverse_is_provided_in_prefered_directory___reverse_from_preferred():
         write_yaml(
             os.path.join(second, "preferred.yml"),
             {
-                "input_format": "A",
-                "output_format": "B",
+                "file_type": "ACC",
+                "input_format": {"name": "A", "version": "1"},
+                "output_format": {"name": "B", "version": "1"},
                 "reverse": {"transform": {"c": [{"transformation": "d"}]}},
             },
         )
 
         ab_mapping = FileMapping(
-            Config(),
-            input_format="A",
-            output_format="B",
+            fake_transformation_config(),
+            file_type="ACC",
             search_paths=[second],
             standard_search_path=first,
             search_working_dir=False,
@@ -876,9 +1046,23 @@ def test_reverse_is_provided_in_prefered_directory___reverse_from_preferred():
         ] == [{"b": [TransformationEntry(transformation="a", when="True")]}]
 
         ba_mapping = FileMapping(
-            Config(),
-            input_format="B",
-            output_format="A",
+            fake_transformation_config(
+                {
+                    "transformations": {
+                        "ACC": {
+                            "input_format": {
+                                "name": "B",
+                                "version": "1",
+                            },
+                            "output_format": {
+                                "name": "A",
+                                "version": "1",
+                            },
+                        }
+                    }
+                }
+            ),
+            file_type="ACC",
             search_paths=[second],
             standard_search_path=first,
             search_working_dir=False,
@@ -894,8 +1078,9 @@ def test_multiple_steps_are_in_the_conversion___all_steps_are_returned():
         write_yaml(
             os.path.join(first, "A-B.yml"),
             {
-                "input_format": "A",
-                "output_format": "B",
+                "file_type": "ACC",
+                "input_format": {"name": "A", "version": "1"},
+                "output_format": {"name": "B", "version": "1"},
                 "forward": {"transform": {"b": [{"transformation": "a"}]}},
                 "reverse": {"transform": {"a": [{"transformation": "b"}]}},
             },
@@ -903,17 +1088,32 @@ def test_multiple_steps_are_in_the_conversion___all_steps_are_returned():
         write_yaml(
             os.path.join(first, "B-C.yml"),
             {
-                "input_format": "B",
-                "output_format": "C",
+                "file_type": "ACC",
+                "input_format": {"name": "B", "version": "1"},
+                "output_format": {"name": "C", "version": "1"},
                 "forward": {"transform": {"c": [{"transformation": "b"}]}},
                 "reverse": {"transform": {"b": [{"transformation": "c"}]}},
             },
         )
 
         ab_mapping = FileMapping(
-            Config(),
-            input_format="A",
-            output_format="C",
+            fake_transformation_config(
+                {
+                    "transformations": {
+                        "ACC": {
+                            "input_format": {
+                                "name": "A",
+                                "version": "1",
+                            },
+                            "output_format": {
+                                "name": "C",
+                                "version": "1",
+                            },
+                        }
+                    }
+                }
+            ),
+            file_type="ACC",
             standard_search_path=first,
             search_working_dir=False,
         )
@@ -926,9 +1126,23 @@ def test_multiple_steps_are_in_the_conversion___all_steps_are_returned():
         ]
 
         ba_mapping = FileMapping(
-            Config(),
-            input_format="C",
-            output_format="A",
+            fake_transformation_config(
+                {
+                    "transformations": {
+                        "ACC": {
+                            "input_format": {
+                                "name": "C",
+                                "version": "1",
+                            },
+                            "output_format": {
+                                "name": "A",
+                                "version": "1",
+                            },
+                        }
+                    }
+                }
+            ),
+            "ACC",
             standard_search_path=first,
             search_working_dir=False,
         )
@@ -951,8 +1165,9 @@ def test_types_have_null_values_set___processed_null_values_are_loaded():
         write_yaml(
             os.path.join(d, "A-B.yml"),
             {
-                "input_format": "A",
-                "output_format": "B",
+                "file_type": "ACC",
+                "input_format": {"name": "A", "version": "1"},
+                "output_format": {"name": "B", "version": "1"},
                 "forward": {
                     "transform": {"b": [{"transformation": "a"}]},
                     "types": {
@@ -966,9 +1181,8 @@ def test_types_have_null_values_set___processed_null_values_are_loaded():
         )
 
         transformation = FileMapping(
-            Config(),
-            input_format="A",
-            output_format="B",
+            fake_transformation_config(),
+            file_type="ACC",
             standard_search_path=d,
             search_working_dir=False,
         ).get_transformations()[0]
@@ -988,8 +1202,9 @@ def test_nullable_is_set___nullable_on_field_is_correct(nullable):
         write_yaml(
             os.path.join(d, "A-B.yml"),
             {
-                "input_format": "A",
-                "output_format": "B",
+                "file_type": "ACC",
+                "input_format": {"name": "A", "version": "1"},
+                "output_format": {"name": "B", "version": "1"},
                 "forward": {
                     "transform": {"b": [{"transformation": "a"}]},
                     "types": {
@@ -1004,9 +1219,8 @@ def test_nullable_is_set___nullable_on_field_is_correct(nullable):
         )
 
         transformation = FileMapping(
-            Config(),
-            input_format="A",
-            output_format="B",
+            fake_transformation_config(),
+            file_type="ACC",
             standard_search_path=d,
             search_working_dir=False,
         ).get_transformations()[0]
@@ -1025,8 +1239,9 @@ def test_null_values_are_set_on_forward___forward_values_are_loaded_into_col():
         write_yaml(
             os.path.join(d, "A-B.yml"),
             {
-                "input_format": "A",
-                "output_format": "B",
+                "file_type": "ACC",
+                "input_format": {"name": "A", "version": "1"},
+                "output_format": {"name": "B", "version": "1"},
                 "forward": {
                     "transform": {"b": [{"transformation": "a"}]},
                     "types": {"a": {"type": "int"}},
@@ -1036,9 +1251,8 @@ def test_null_values_are_set_on_forward___forward_values_are_loaded_into_col():
         )
 
         transformation = FileMapping(
-            Config(),
-            input_format="A",
-            output_format="B",
+            fake_transformation_config(),
+            file_type="ACC",
             standard_search_path=d,
             search_working_dir=False,
         ).get_transformations()[0]
