@@ -53,7 +53,9 @@
 
     
     <link rel="index" title="Index" href="../../../genindex.html" />
-    <link rel="search" title="Search" href="../../../search.html" /> 
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Runners" href="../runners/index.html" />
+    <link rel="prev" title="Further Developer information" href="../index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -102,14 +104,23 @@
             
             
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../userguide_index.html">User Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../mappings/index.html">Mappings</a></li>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../1_setup/1_install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../1_setup/2_structure.html">Framework Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../1_setup/3_inputs.html">Inputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../1_setup/4_outputs.html">Outputs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../execute/index.html">Executing a data transformation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../reporting/index.html">Reporting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../knownissues/index.html">Known Issues</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../knownissues/index.html">Known Issues and feedback</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releaseNotes/index.html">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../testing/index.html">Testing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../index.html">Developer information</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Further Developer information</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Data Connections</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#creating-data-connections">Creating Data Connections</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../runners/index.html">Runners</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../../package/index.html">API Reference</a></li>
 </ul>
 
@@ -159,6 +170,8 @@
     
       <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
         
+          <li><a href="../index.html">Further Developer information</a> &raquo;</li>
+        
       <li>Data Connections</li>
     
     
@@ -189,11 +202,27 @@ for connection to csv files on the local machine.</p></li>
 </ul>
 <p>Each connection object has it’s own set of configuration options taken from the
 systems configuration.</p>
-<div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="creating-data-connections.html">Creating Data Connections</a></li>
-</ul>
+<div class="section" id="creating-data-connections">
+<h2>Creating Data Connections<a class="headerlink" href="#creating-data-connections" title="Permalink to this headline">¶</a></h2>
+<p>Each data connection should implement 3 methods, a constructor, <code class="code docutils literal notranslate"><span class="pre">extract</span></code> and
+<code class="code docutils literal notranslate"><span class="pre">load</span></code>.</p>
+<p>A <code class="code docutils literal notranslate"><span class="pre">BaseConnector</span></code> exists at <code class="code docutils literal notranslate"><span class="pre">converter.connector.BaseConnector</span></code> which
+should be used as a base class for all data connections. This implements a
+constructor for the connector that takes the provided options and stores them in
+the <code class="code docutils literal notranslate"><span class="pre">options</span></code> property but this method should be overridden for handling
+specific options and providing default values.</p>
+<p>The <code class="code docutils literal notranslate"><span class="pre">extract</span></code> accepts no arguments. It takes data from the source and passes it
+into the system. It should return an iterable where each entry is a row of data
+represented as a dictionary of key value pairs. If multiple data sources need to
+br joined together to produce an entry for a single row this should be handled
+in the connector. To allow for large data sets this should be a python generator
+object rather than returning a list containing all elements.</p>
+<p>The <code class="code docutils literal notranslate"><span class="pre">load</span></code> method takes one argument which is an iterable of data rows
+represented by dictionaries of key value pairs. It should take each row and add
+them to the target. The input data may be a list or any other iterable and you
+should not assume the inbound can be iterated over multiple times. The
+<code class="code docutils literal notranslate"><span class="pre">load</span></code> method just handle receiving <code class="code docutils literal notranslate"><span class="pre">NotSet</span></code>, <code class="code docutils literal notranslate"><span class="pre">None</span></code> and
+<code class="code docutils literal notranslate"><span class="pre">NaN</span></code> values.</p>
 </div>
 </div>
 
@@ -202,6 +231,10 @@ systems configuration.</p>
            
           </div>
           <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="../runners/index.html" class="btn btn-neutral float-right" title="Runners" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../index.html" class="btn btn-neutral float-left" title="Further Developer information" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
 
   <hr/>
 

@@ -54,8 +54,8 @@
     
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Running ODTF via User Interface" href="ui.html" />
-    <link rel="prev" title="Transformer Language" href="../mappings/transformer-language.html" /> 
+    <link rel="next" title="Configuration" href="../developer/config/index.html" />
+    <link rel="prev" title="Outputs" href="../1_setup/4_outputs.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -105,18 +105,24 @@
             
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../../userguide_index.html">User Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../mappings/index.html">Mappings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../1_setup/1_install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../1_setup/2_structure.html">Framework Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../1_setup/3_inputs.html">Inputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../1_setup/4_outputs.html">Outputs</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Executing a data transformation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ui.html">Running ODTF via User Interface</a></li>
-<li class="toctree-l2"><a class="reference internal" href="config.html">Running ODTF via Command Line</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dbConnection.html">Running ODTF via database connection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-odtf-via-user-interface">Running ODTF via User Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-odtf-via-command-line">Running ODTF via Command Line</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer/config/index.html">Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer/config/index.html#debugging">Debugging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer/cli/index.html">CLI</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html">Reporting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../knownissues/index.html">Known Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../knownissues/index.html">Known Issues and feedback</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../releaseNotes/index.html">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../testing/index.html">Testing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../dev-info_index.html">Developer information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer/index.html">Further Developer information</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/index.html">API Reference</a></li>
 </ul>
 
@@ -187,23 +193,57 @@
             
   <div class="section" id="executing-a-data-transformation">
 <h1>Executing a data transformation<a class="headerlink" href="#executing-a-data-transformation" title="Permalink to this headline">¶</a></h1>
-<p>A data transformation can be executed via:</p>
-<ol class="arabic simple">
-<li><p>The User Interface</p></li>
-<li><p>The Command Line</p></li>
-</ol>
-<p>Either method will allow to use flat file input data, or a database connection.</p>
-<p><strong>Flat files</strong> should be in the source format, with a csv file for each of the account, location, and when relevant the reinsurance data. The path to these source files will be given in the configuration information (either the config file or the user interface).</p>
-<p><strong>Database connection</strong> is a new feature. It will be described in full, in due course.</p>
+<p>A data transformation can be executed via the <strong>User Interface</strong> or the <strong>Command Line</strong>. Either method will allow to use flat file input data, or a database connection.</p>
+<p>Either method will allow transformation of flat file data, or via SQL database connection.</p>
+<div class="section" id="running-odtf-via-user-interface">
+<h2>Running ODTF via User Interface<a class="headerlink" href="#running-odtf-via-user-interface" title="Permalink to this headline">¶</a></h2>
+<p>The user interface is accessed by running the executable file <cite>… .exe</cite></p>
+<p>A user can load a configuration .yaml file, which will populate the fields in the UI.</p>
+<p>Alternatively, you can configure the transformation entirely in the UI. These settings can be saved to a text config file for reference.</p>
+<p>Enter on the <cite>Location</cite>, <cite>Account</cite>, and <cite>Reinsurance</cite> tabs:
+* Mapping: the source and destination mapping
+* Extractor: source data path or database connection
+* Loader: destination data path or database connection
+* Runner: pandas is used as the default</p>
+<p>Enter portfolio metadata on the <cite>Metadata</cite> tab, and execute the transformation on the <cite>Run</cite> tab.</p>
+<a class="reference internal image-reference" href="../../_images/UI_Jan2022.png"><img alt="The ODTF user interface" src="../../_images/UI_Jan2022.png" style="width: 600px;" /></a>
+</div>
+<div class="section" id="running-odtf-via-command-line">
+<h2>Running ODTF via Command Line<a class="headerlink" href="#running-odtf-via-command-line" title="Permalink to this headline">¶</a></h2>
+<p>The most basic command is <code class="docutils literal notranslate"><span class="pre">converter</span> <span class="pre">-c</span> <span class="pre">&lt;path</span> <span class="pre">to</span> <span class="pre">config</span> <span class="pre">file&gt;</span> <span class="pre">run</span></code>.</p>
+<p>Command line usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Usage</span><span class="p">:</span> <span class="n">converter</span> <span class="p">[</span><span class="n">OPTIONS</span><span class="p">]</span> <span class="n">COMMAND</span> <span class="p">[</span><span class="n">ARGS</span><span class="p">]</span><span class="o">...</span>
+
+  <span class="n">Initialises</span> <span class="n">the</span> <span class="n">cli</span> <span class="n">grouping</span> <span class="k">with</span> <span class="n">default</span> <span class="n">options</span><span class="o">.</span>
+
+<span class="n">Options</span><span class="p">:</span>
+  <span class="o">-</span><span class="n">o</span><span class="p">,</span> <span class="o">--</span><span class="n">option</span> <span class="n">TEXT</span><span class="o">...</span>  <span class="n">Sets</span> <span class="n">a</span> <span class="n">configuration</span> <span class="n">option</span><span class="p">,</span> <span class="n">a</span> <span class="n">path</span> <span class="ow">and</span> <span class="n">value</span> <span class="n">are</span>
+                        <span class="n">required</span> <span class="n">eg</span> <span class="o">-</span><span class="n">o</span> <span class="n">extractor</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">foo</span><span class="o">.</span><span class="n">bar</span> <span class="n">bash</span>
+
+  <span class="o">-</span><span class="n">c</span><span class="p">,</span> <span class="o">--</span><span class="n">config</span> <span class="n">TEXT</span>     <span class="n">Path</span> <span class="n">to</span> <span class="n">the</span> <span class="n">configuration</span> <span class="n">file</span><span class="o">.</span>
+  <span class="o">-</span><span class="n">v</span><span class="p">,</span> <span class="o">--</span><span class="n">verbose</span>         <span class="n">Specifies</span> <span class="n">the</span> <span class="n">verbosity</span> <span class="n">level</span><span class="p">,</span> <span class="k">if</span> <span class="n">used</span> <span class="n">multiple</span> <span class="n">times</span>
+                        <span class="n">the</span> <span class="n">verbosity</span> <span class="ow">is</span> <span class="n">increased</span> <span class="n">further</span>
+
+  <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">color</span>            <span class="n">Disables</span> <span class="n">colorised</span> <span class="n">output</span><span class="o">.</span>
+  <span class="o">--</span><span class="n">help</span>                <span class="n">Show</span> <span class="n">this</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span><span class="o">.</span>
+
+<span class="n">Commands</span><span class="p">:</span>
+  <span class="n">run</span>          <span class="n">Runs</span> <span class="n">the</span> <span class="n">data</span> <span class="n">conversion</span>
+  <span class="n">show</span><span class="o">-</span><span class="n">config</span>  <span class="n">Prints</span> <span class="n">the</span> <span class="n">resolved</span> <span class="n">config</span> <span class="n">to</span> <span class="n">the</span> <span class="n">console</span>
+</pre></div>
+</div>
 <div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Further information on configuration and command line use:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="ui.html">Running ODTF via User Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="config.html">Running ODTF via Command Line</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="config.html#configuring-the-transformation-tool-for-use-in-command-line-interface">Configuring the transformation tool for use in command line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer/config/index.html">Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../developer/config/index.html#environment-configuration">Environment Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developer/config/index.html#cli-configuration">CLI Configuration</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="dbConnection.html">Running ODTF via database connection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer/config/index.html#debugging">Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer/cli/index.html">CLI</a></li>
 </ul>
+</div>
 </div>
 </div>
 
@@ -213,8 +253,8 @@
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="ui.html" class="btn btn-neutral float-right" title="Running ODTF via User Interface" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="../mappings/transformer-language.html" class="btn btn-neutral float-left" title="Transformer Language" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../developer/config/index.html" class="btn btn-neutral float-right" title="Configuration" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../1_setup/4_outputs.html" class="btn btn-neutral float-left" title="Outputs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

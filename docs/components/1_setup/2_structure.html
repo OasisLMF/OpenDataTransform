@@ -1,0 +1,243 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Framework Structure &mdash; Open Data Transformation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/c" type="text/css" />
+  <link rel="stylesheet" href="../../_static/u" type="text/css" />
+  <link rel="stylesheet" href="../../_static/s" type="text/css" />
+  <link rel="stylesheet" href="../../_static/t" type="text/css" />
+  <link rel="stylesheet" href="../../_static/o" type="text/css" />
+  <link rel="stylesheet" href="../../_static/m" type="text/css" />
+  <link rel="stylesheet" href="../../_static/." type="text/css" />
+  <link rel="stylesheet" href="../../_static/c" type="text/css" />
+  <link rel="stylesheet" href="../../_static/s" type="text/css" />
+  <link rel="stylesheet" href="../../_static/s" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/idf_square.ico"/>
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Inputs" href="3_inputs.html" />
+    <link rel="prev" title="Installation" href="1_install.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Open Data Transformation
+          
+
+          
+            
+            <img src="../../_static/IDF_Original.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="1_install.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Framework Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3_inputs.html">Inputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4_outputs.html">Outputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../execute/index.html">Executing a data transformation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../knownissues/index.html">Known Issues and feedback</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../releaseNotes/index.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing/index.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer/index.html">Further Developer information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../package/index.html">API Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Open Data Transformation</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Framework Structure</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../_sources/components/1_setup/2_structure.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="framework-structure">
+<h1>Framework Structure<a class="headerlink" href="#framework-structure" title="Permalink to this headline">¶</a></h1>
+<p>The Open Data Transformation Framework structure is shown below</p>
+<a class="reference internal image-reference" href="../../_images/ODTF_structure_updatedJan2022.png"><img alt="Open Data Transformation Framework structure" src="../../_images/ODTF_structure_updatedJan2022.png" style="width: 600px;" /></a>
+<p>An <em>extractor</em> module reads the <em>input</em> data. Extractors are available to read flat files (e.g., .csv) and from SQL databases. New extractors can be developed to read other data types.</p>
+<p>A <em>runner</em> perform the transformation, using the <em>mapping</em> file as a reference. Runners can use various packages. The framework currently provides runners using pandas, MODIN, and DASK. Performance (i.e., speed) of transformation can very between each program.</p>
+<p>A <em>loader</em> writes the <em>output</em> data in the defined format and location. Loaders are available to write to flat files and to SQL databases. New loaders can be developed to write other data types.</p>
+<p>A <em>configuration file</em> is used to define the extractor, loader and runner, as well as file paths of input and output data, the mapping file, the data validation file, and log file.</p>
+<p><em>Validator files</em> are used to summarise the data being processed by the extractor and loader, to check the data before and after transformation. This summary is written to a <em>validation report</em>.</p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="3_inputs.html" class="btn btn-neutral float-right" title="Inputs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="1_install.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

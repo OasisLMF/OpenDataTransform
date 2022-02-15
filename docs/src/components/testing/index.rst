@@ -1,7 +1,7 @@
 Testing
 ================
 
-Testing guidelines and processes are currently under preparation, in collaboration with the Catastrophe Resiliency Council (coordinated by The Institutes).
+Testing guidelines and processes are currently being prepared in collaboration with the Catastrophe Resiliency Council (coordinated by The Institutes) .
 
 These will include:
 

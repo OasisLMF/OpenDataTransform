@@ -1,5 +1,5 @@
-The Open Data Transformation Framework
-================================================
+The Open Data Transformation Framework - User guide
+====================================================
 
 The Open Data Transformation Framework provides an open-source, free, and model-agnostic framework to improve the efficiency and transparency of catastrophe modelling data transformations in the insurance market. 
 
@@ -54,14 +54,15 @@ OED is curated by OASIS, along with ORD (Open Results Data), under the `Open Dat
    :maxdepth: 3
    :caption: Contents:
 
-   userguide_index.rst
-   components/mappings/index.rst
+   components/1_setup/1_install.rst
+   components/1_setup/2_structure.rst
+   components/1_setup/3_inputs.rst
+   components/1_setup/4_outputs.rst
    components/execute/index.rst
-   components/reporting/index.rst
    components/knownissues/index.rst
+   components/releaseNotes/index.rst
    components/testing/index.rst
    components/developer/index.rst
-   components/releaseNotes/releaseNotes_index.rst
    package/index.rst
    
 

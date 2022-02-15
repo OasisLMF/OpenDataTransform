@@ -1,4 +1,8 @@
-Known Issues
-------------
+Known Issues and feedback
+============================
 
-This page is under development, it will list known issues for the transformation in general, and for each model-pair mapping.
+Known issues are listed on the `GitHub project page <https://github.com/OasisLMF/OpenDataTransform/issues>`_.
+
+Users are encouraged to submit bugs and feedback at the same page.
+
+

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>The Open Data Transformation Framework &mdash; Open Data Transformation</title>
+  <title>The Open Data Transformation Framework - User guide &mdash; Open Data Transformation</title>
   
 
   
@@ -54,7 +54,7 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="User Guide" href="userguide_index.html" /> 
+    <link rel="next" title="Installation" href="components/1_setup/1_install.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -104,13 +104,15 @@
             
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="userguide_index.html">User Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="components/mappings/index.html">Mappings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components/1_setup/1_install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components/1_setup/2_structure.html">Framework Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components/1_setup/3_inputs.html">Inputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components/1_setup/4_outputs.html">Outputs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="components/execute/index.html">Executing a data transformation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="components/reporting/index.html">Reporting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="components/knownissues/index.html">Known Issues</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components/knownissues/index.html">Known Issues and feedback</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components/releaseNotes/index.html">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="components/testing/index.html">Testing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="components/developer/index.html">Developer information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components/developer/index.html">Further Developer information</a></li>
 <li class="toctree-l1"><a class="reference internal" href="package/index.html">API Reference</a></li>
 </ul>
 
@@ -160,7 +162,7 @@
     
       <li><a href="#" class="icon icon-home"></a> &raquo;</li>
         
-      <li>The Open Data Transformation Framework</li>
+      <li>The Open Data Transformation Framework - User guide</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -179,8 +181,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="the-open-data-transformation-framework">
-<h1>The Open Data Transformation Framework<a class="headerlink" href="#the-open-data-transformation-framework" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="the-open-data-transformation-framework-user-guide">
+<h1>The Open Data Transformation Framework - User guide<a class="headerlink" href="#the-open-data-transformation-framework-user-guide" title="Permalink to this headline">¶</a></h1>
 <p>The Open Data Transformation Framework provides an open-source, free, and model-agnostic framework to improve the efficiency and transparency of catastrophe modelling data transformations in the insurance market.</p>
 <p>It is maintained through an industry collaboration coordinated by The Insurance Development Forum (IDF) <a class="reference external" href="https://www.insdevforum.org/working-groups/rmsg/">Risk Modelling Steering Group (RMSG)</a>. Technical development has been led by OASIS in partnership with model vendors and users. The project is managed under the IDF RMSG Interoperability Technical Working Group (ITWG) whose members, represent over 30 organisations, have collaborated in the vision and design of this framework.</p>
 <p>A steering committee comprising industry experts is responsible for the direction of the project and considers feedback made via the GitHub issues or RMSG and ITWG forums. The steering committee is chaired by IDF RMSG and has industry representation from AIR, AON, Chubb, the Catastrophe Resiliency Council, Guy Carpenter, RenaissanceRe, SCOR, and Oasis.</p>
@@ -207,61 +209,49 @@
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="userguide_index.html">User Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="userguide_index.html#installing-the-package">Installing the package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="userguide_index.html#inputs">Inputs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="userguide_index.html#outputs">Outputs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="userguide_index.html#mappings">Mappings</a></li>
-<li class="toctree-l2"><a class="reference internal" href="userguide_index.html#executing-a-data-transformation">Executing a data transformation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="userguide_index.html#reporting">Reporting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components/1_setup/1_install.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="components/1_setup/1_install.html#pre-requisites">Pre-requisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="components/1_setup/1_install.html#download-and-install">Download and install</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="components/mappings/index.html">Mappings</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="components/mappings/mapping-files.html">Mapping Files</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="components/mappings/mapping-files.html#bases"><cite>bases</cite></a></li>
-<li class="toctree-l3"><a class="reference internal" href="components/mappings/mapping-files.html#input-format-output-format"><cite>input_format</cite>/<cite>output_format</cite></a></li>
-<li class="toctree-l3"><a class="reference internal" href="components/mappings/mapping-files.html#forward-reverse"><cite>forward</cite>/<cite>reverse</cite></a></li>
+<li class="toctree-l1"><a class="reference internal" href="components/1_setup/2_structure.html">Framework Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components/1_setup/3_inputs.html">Inputs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="components/1_setup/3_inputs.html#configuration-file">Configuration File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="components/1_setup/3_inputs.html#input-data">Input data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="components/1_setup/3_inputs.html#mapping-files">Mapping files</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="components/1_setup/mapping-files.html">More information on Mapping File Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="components/1_setup/transformer-language.html">More information on Transformer Language</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="components/mappings/transformer-language.html">Transformer Language</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="components/mappings/transformer-language.html#primitive-types">Primitive Types</a></li>
-<li class="toctree-l3"><a class="reference internal" href="components/mappings/transformer-language.html#column-lookup">Column Lookup</a></li>
-<li class="toctree-l3"><a class="reference internal" href="components/mappings/transformer-language.html#operations">Operations</a></li>
-<li class="toctree-l3"><a class="reference internal" href="components/mappings/transformer-language.html#groupings">Groupings</a></li>
-<li class="toctree-l3"><a class="reference internal" href="components/mappings/transformer-language.html#string-manipulations">String Manipulations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="components/1_setup/3_inputs.html#data-validation-definition">Data validation definition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="components/1_setup/3_inputs.html#portfolio-metadata">Portfolio metadata</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="components/1_setup/4_outputs.html">Outputs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="components/1_setup/4_outputs.html#output-data">Output data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="components/1_setup/4_outputs.html#log-file">Log file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="components/1_setup/4_outputs.html#data-validation-files">Data validation files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="components/1_setup/4_outputs.html#portfolio-metadata">Portfolio metadata</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="components/execute/index.html">Executing a data transformation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="components/execute/ui.html">Running ODTF via User Interface</a></li>
-<li class="toctree-l2"><a class="reference internal" href="components/execute/config.html">Running ODTF via Command Line</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="components/execute/config.html#configuring-the-transformation-tool-for-use-in-command-line-interface">Configuring the transformation tool for use in command line interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="components/execute/index.html#running-odtf-via-user-interface">Running ODTF via User Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="components/execute/index.html#running-odtf-via-command-line">Running ODTF via Command Line</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="components/developer/config/index.html">Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="components/developer/config/index.html#debugging">Debugging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="components/developer/cli/index.html">CLI</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="components/execute/dbConnection.html">Running ODTF via database connection</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="components/reporting/index.html">Reporting</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="components/reporting/index.html#portfolio-metadata">Portfolio metadata</a></li>
-<li class="toctree-l2"><a class="reference internal" href="components/reporting/index.html#data-validation">Data validation</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="components/knownissues/index.html">Known Issues</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components/knownissues/index.html">Known Issues and feedback</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components/releaseNotes/index.html">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="components/testing/index.html">Testing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="components/developer/index.html">Developer information</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="components/developer/config/index.html">Configuration</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="components/developer/config/index.html#environment-configuration">Environment Configuration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="components/developer/config/index.html#cli-configuration">CLI Configuration</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="components/developer/config/index.html#debugging">Debugging</a></li>
-<li class="toctree-l2"><a class="reference internal" href="components/developer/cli/index.html">CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components/developer/index.html">Further Developer information</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="components/developer/data-connections/index.html">Data Connections</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="components/developer/data-connections/creating-data-connections.html">Creating Data Connections</a></li>
+<li class="toctree-l3"><a class="reference internal" href="components/developer/data-connections/index.html#creating-data-connections">Creating Data Connections</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="components/developer/data-connections/creating-data-connections.html">Creating Data Connections</a></li>
 <li class="toctree-l2"><a class="reference internal" href="components/developer/runners/index.html">Runners</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="components/developer/runners/index.html#coercing-data-types">Coercing data types</a></li>
 </ul>
@@ -287,7 +277,7 @@
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="userguide_index.html" class="btn btn-neutral float-right" title="User Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="components/1_setup/1_install.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
