@@ -65,6 +65,9 @@ These fields are required if no :code:`bases` are set or if no bases provide a v
 The input and output format are strings that tell the system which formats are
 handled by the conversion.
 
+The `input_format` and `output_format` fields must be referenced in the config file, for that config file to recognise and use the mapping.
+
+
 `forward`/`reverse`
 -------------------
 

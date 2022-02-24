@@ -11,7 +11,7 @@ Either method will allow transformation of flat file data, or via SQL database c
 Running ODTF via User Interface
 ---------------------------------
 
-The user interface is accessed by running the executable file `... .exe`
+The user interface is accessed by running an executable file (forthcoming)
 
 A user can load a configuration .yaml file, which will populate the fields in the UI. 
 

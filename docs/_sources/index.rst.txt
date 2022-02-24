@@ -7,18 +7,15 @@ It is maintained through an industry collaboration coordinated by The Insurance 
 
 A steering committee comprising industry experts is responsible for the direction of the project and considers feedback made via the GitHub issues or RMSG and ITWG forums. The steering committee is chaired by IDF RMSG and has industry representation from AIR, AON, Chubb, the Catastrophe Resiliency Council, Guy Carpenter, RenaissanceRe, SCOR, and Oasis.
 
-There is currently an exposure data transformation available to convert data from AIR CEDE to OED and vice versa.
+There is currently an exposure data transformation available to convert data from AIR CEDE to OED and vice versa. An exposure data transformation is under development to convert data between OED and GED4ALL (and open exposure data format used in the development sector), providing easier cross-sector sharing of exposure data for catastrophe (disaster risk) analysis.
 
-An exposure data transformation is under development to convert data between OED and GED4ALL (and open exposure data format used in the development sector), providing easier cross-sector sharing of exposure data for catastrophe (disaster risk) analysis.
-
-There is potential to apply the framework to the transformation of results data, via the ORD (Open Results Data) Standard.
-
+There is potential to apply the framework to the transformation of results data, via the ORD (Open Results Data) Standard and to extend its capacity to non-property lines of business.
 
 
 
 
 Benefits of the Framework
--------------------------------------------------------
+-----------------------------
 
 * Mapping files can be trusted. They provide 'industry accepted' transformations between model formats. They are developed, reviewed and tested through collaboration of model vendors and experts users, and are peer reviewed by members of the ITWG. 
 
@@ -35,6 +32,20 @@ Benefits of the Framework
 * Mapping files can be provided as a set, with one mapping file for each of the account, location, and reinsurance files.
 
 
+
+Contributing to the project
+---------------------------------
+
+We encourage experts in catastrophe data transformation to contribute actively to testing this tool and improving its functionality over time. Future applications may include to transformation of catastrophe results data, a greater number of model-pair mapping files, and capability to transform data for non-property lines of business.
+
+Contributions are welcomed directly via GitHub or through the IDF RMSG and Interoperability Working Group. Contact the IDF RMSG for more information.
+
+
+
+License
+---------
+
+ODTF code is provided under the BSD 3-Clause License. This license permits commercial use, modification and distribution without notification, provided the License and copyright notice are retained. See the `licence terms `BSD 3-Clause License <https://github.com/OasisLMF/OpenDataTransform/blob/master/LICENSE>`_ for more detail.
 
 
 

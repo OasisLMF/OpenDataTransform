@@ -18,10 +18,13 @@ One configuration file is required for each transformation: one per account, loc
   :alt: An example config file
 
 
-The fields `mapping: input_format` and `mapping: output_format` are used to identify which mapping is used in the transformation. The field value must match the value given for `input_format` and `output_format` in the mapping files.
+The fields `mapping: input_format` and `mapping: output_format` are used to identify which mapping is used in the transformation. The field value must match the value given for `input_format` and `output_format` in the mapping files (it does not reference the filename of the mapping file. In this example, the file is set up to transform data from AIR to OED format.
 
-A config file can be used in command line execution, or loaded into the user interface.
-Alternatively the information can be prepared in the user interface and saved to a text file. 
+Mapping files do not need to reside in the same folder as the config file. The code will look for the mapping in the same folder as the config file, but also in the local `OpenDataTransform/converter/data/mappings` folder - The files in this folder are published mapping files, for community use. If your local folder containing config files and input data files but does not contain mapping files, the code will search these files for a mapping containing the matching input_format and output_format contained in your config file. 
+
+The fields `extractor: path` and `loader: path` refer tot he source file, and destination file, respectively. The fields can accept a full file path, but if the source and destination files refer to locations in the same folder as the config file, only the filename is needed (as shown).
+
+A config file can be used in command line execution, or loaded into the user interface. Alternatively the information can be prepared in the user interface and saved to a text file. 
 
 
 
@@ -54,10 +57,10 @@ The mapping file defines the source field data types and the transformations to 
   :alt: An example mapping file
 
 
-**Mapping file templates** are available in the GitHub project: CEDE to OED conversion for `account files <https://github.com/OasisLMF/OpenDataTransform/blob/master/examples/cede_test_v3/AIR-OED-ACC_v3.yml>`_ and `location files <https://github.com/OasisLMF/OpenDataTransform/blob/master/examples/cede_test_v3/AIR-OED-LOC_v3.yml>`_.
+**Mapping file templates** are available in the GitHub project `default mappings folder <https://github.com/OasisLMF/OpenDataTransform/tree/master/converter/data/mappings>`_. These are published mapping files, for community use; they can be copied and edited to create your own versions. 
 
-These act as 'default' mappings for direct use in the current form, or as a base from which to create new mappings. By copying and editing these, a user can tailor the mapping for a specific case (a portfolio or user may require a specific match-up of occupancy code in the source and destination formats, which is not used in the default file). 
-The templates can be updated to reflect changes in model formats as they are updated by model vendors.
+By copying and editing these, a user can tailor the mapping for a specific case (a portfolio or user may require a specific match-up of occupancy code in the source and destination formats, which is not used in the default file), or to accommodate a model version update. We encourage you to share new mappings via this GitHub repo (with update headers to describe the new version and your changes).
+
 
 .. toctree::
    :maxdepth: 1
