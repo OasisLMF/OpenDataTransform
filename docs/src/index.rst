@@ -65,7 +65,6 @@ OED is curated by OASIS, along with ORD (Open Results Data), under the `Open Dat
    :maxdepth: 3
    :caption: Contents:
 
-   components/1_setup/1_install.rst
    components/1_setup/2_structure.rst
    components/1_setup/3_inputs.rst
    components/1_setup/4_outputs.rst

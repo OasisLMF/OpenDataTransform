@@ -105,7 +105,6 @@
             
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../1_setup/1_install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../1_setup/2_structure.html">Framework Structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../1_setup/3_inputs.html">Inputs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../1_setup/4_outputs.html">Outputs</a></li>
@@ -197,7 +196,7 @@
 <p>Either method will allow transformation of flat file data, or via SQL database connection.</p>
 <div class="section" id="running-odtf-via-user-interface">
 <h2>Running ODTF via User Interface<a class="headerlink" href="#running-odtf-via-user-interface" title="Permalink to this headline">¶</a></h2>
-<p>The user interface is accessed by running an executable file (forthcoming)</p>
+<p>The user interface is accessed by running a <a class="reference external" href="https://github.com/OasisLMF/OpenDataTransform/tree/develop/apps">Windows-compatible executable file</a>.</p>
 <p>A user can load a configuration .yaml file, which will populate the fields in the UI.</p>
 <p>Alternatively, you can configure the transformation entirely in the UI. These settings can be saved to a text config file for reference.</p>
 <p>Enter on the <cite>Location</cite>, <cite>Account</cite>, and <cite>Reinsurance</cite> tabs:
@@ -206,11 +205,27 @@
 * Loader: destination data path or database connection
 * Runner: pandas is used as the default</p>
 <p>Enter portfolio metadata on the <cite>Metadata</cite> tab, and execute the transformation on the <cite>Run</cite> tab.</p>
+<p>Template config, mapping and validation files are not provided in the executable package, and should be downloaded from GitHub and saved on your local machine.</p>
 <a class="reference internal image-reference" href="../../_images/UI_Jan2022.png"><img alt="The ODTF user interface" src="../../_images/UI_Jan2022.png" style="width: 600px;" /></a>
 </div>
 <div class="section" id="running-odtf-via-command-line">
 <h2>Running ODTF via Command Line<a class="headerlink" href="#running-odtf-via-command-line" title="Permalink to this headline">¶</a></h2>
-<p>The most basic command is <code class="docutils literal notranslate"><span class="pre">converter</span> <span class="pre">-c</span> <span class="pre">&lt;path</span> <span class="pre">to</span> <span class="pre">config</span> <span class="pre">file&gt;</span> <span class="pre">run</span></code>.</p>
+<p>Running via the command line interface requires installation of the converter package from GitHub:</p>
+<p>Pre-requisites:</p>
+<p>To use the ODTF you will require:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.python.org/">Python</a> version 3.8 or higher. To install Python, follow instructions at the <a class="reference external" href="https://www.python.org/about/gettingstarted/">Python For Beginners</a> page.</p></li>
+<li><p>To install the package via command line, you will require: the package <a class="reference external" href="https://pypi.org/project/pip/">pip</a>.</p></li>
+</ul>
+<p>It is recommended to install the package in a clean virtual environment.</p>
+<p>Download and install:</p>
+<p>The tool operates on a local installation only.</p>
+<p>To install the package via command line (Mac OS, Linux, Windows):</p>
+<ol class="arabic simple">
+<li><p>Download the Python package from the project GitHub pages at <a class="reference external" href="https://github.com/OasisLMF/OpenDataTransform/">github.com/OasisLMF/OpenDataTransform</a>.</p></li>
+<li><p>Install the Python package using <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">git+https://github.com/OasisLMF/OpenDataTransform.git</span></code></p></li>
+</ol>
+<p>The most basic command to run a transformation is <code class="docutils literal notranslate"><span class="pre">converter</span> <span class="pre">-c</span> <span class="pre">&lt;path</span> <span class="pre">to</span> <span class="pre">config</span> <span class="pre">file&gt;</span> <span class="pre">run</span></code>.</p>
 <p>Command line usage:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Usage</span><span class="p">:</span> <span class="n">converter</span> <span class="p">[</span><span class="n">OPTIONS</span><span class="p">]</span> <span class="n">COMMAND</span> <span class="p">[</span><span class="n">ARGS</span><span class="p">]</span><span class="o">...</span>
 
