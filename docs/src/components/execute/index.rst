@@ -8,6 +8,9 @@ A data transformation can be executed via the **User Interface** or the **Comman
 Either method will allow transformation of flat file data, or via SQL database connection.
 
 
+In addition to this written user guide, a `video tutorial <https://vimeo.com/user14948183/review/676071546/cb29739687>`_ on how to use the ODTF is also available. 
+
+
 
 Running ODTF via User Interface
 ---------------------------------
