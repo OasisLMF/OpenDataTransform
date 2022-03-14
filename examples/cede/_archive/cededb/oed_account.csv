@@ -1,0 +1,2 @@
+PortNumber,AccNumber,LocNumber,CountryCode,LocPerilsCovered,BuildingTIV,ContentsTIV,BITIV,LocCurrency
+ExposureSet1,Contract1,Location1,US,TC,1000000.0,500000.0,0.0,USD

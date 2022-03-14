@@ -1,0 +1,72 @@
+# MAPPING VERSION: OED-AIR-ri-default-3.0
+# CREATOR: IDF Open Data Transformation steering committee
+# MODEL VERSIONS: OED 1.1.5 | AIR CEDE (flat file) v8
+# MAP FILETYPE: Reinsurance
+# LICENSE: BSD 3 clause license
+# SOURCE: https://github.com/OasisLMF/OpenDataTransform/
+# COMMENTS: Header for mapping file to transform reinsurance conditions. Update May 2021.
+type: RI
+input:
+  name: AIR
+  version: 3
+output_format:
+  name: OED
+  version: 2
+forward:
+  types:
+    ContractID:
+      type: string
+    ReinsuranceID:
+      type: string
+    ReinsuranceType:
+      type: string
+    ExposureID:
+      type: string
+    ExposureType:
+      type: string
+    CededPercentage:
+      type: float
+    ReinsuranceLimit:
+      type: float
+    AttachmentAmount:
+      type: float
+    ReinsurerName:
+      type: string
+    CedantName:
+      type: string
+    Currency:
+      type: string
+    ReinsurancePerils:
+      type: string
+  null_values:
+      - "''"
+  transform:
+    PortNumber:
+      - transformation: "1"
+    AccNumber:
+      - transformation: ContractID
+    ReinsNumber:
+      - transformation: ReinsuranceID
+    ReinsLayerNumber:
+      - transformation: "1"
+    ReinsPeril:
+      - transformation: ReinsurancePerils
+    CededPercent:
+      - transformation: CededPercentage
+    RiskLimit:
+      - transformation: ReinsuranceLimit
+    RiskAttachment:
+      - transformation: AttachmentAmount
+    ReinsName:
+      - transformation: ReinsurerName
+    CedantName:
+      - transformation: CedantName   
+    ReinsCurrency:
+      - transformation: Currency
+    ReinsType:
+      - transformation: ReinsuranceType
+    LocNumber:
+      - transformation: ExposureID
+        when: ExposureType is 'LOC'
+    RiskLevel:
+      - transformation: ExposureType

@@ -1,0 +1,9 @@
+config:
+  location_file: location.csv
+  account_file: contract.csv
+  reinsurance_file: reinsurance.csv
+  location_config_file: cede_test_loc.yml
+  account_config_file: cede_test_acc.yml
+  reinsurance_config_file: cede_test_ri.yml
+  input_file_encoding: UTF-8
+  ara_locperilscovered_adjustment: True
