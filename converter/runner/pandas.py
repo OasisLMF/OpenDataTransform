@@ -428,7 +428,12 @@ class PandasRunner(BaseRunner):
                 [os.path.dirname(self.config.path)] if self.config.path else []
             ),
         )
-        validator.run(df, mapping.input_format or "")
+        validator.run(
+            df,
+            mapping.input_format.name,
+            mapping.input_format.version,
+            mapping.file_type,
+        )
 
         transformed = reduce(
             self.apply_transformation_set,
@@ -436,6 +441,11 @@ class PandasRunner(BaseRunner):
             df,
         )
 
-        validator.run(transformed, mapping.output_format or "")
+        validator.run(
+            transformed,
+            mapping.output_format.name,
+            mapping.output_format.version,
+            mapping.file_type,
+        )
 
         return (r.to_dict() for idx, r in transformed.iterrows())

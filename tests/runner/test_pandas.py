@@ -1,11 +1,11 @@
 import os
 from tempfile import TemporaryDirectory
 
-from converter.config import Config
 from converter.files.yaml import write_yaml
 from converter.mapping import FileMapping
 from converter.runner import PandasRunner
 from converter.types.notset import NotSet
+from tests.config.fakes import fake_transformation_config
 from tests.runner.test_base import FakeConnector
 
 
@@ -21,8 +21,9 @@ def test_when_is_false___other_transforms_are_performed_warning_is_written():
         write_yaml(
             os.path.join(search, "A-B.yml"),
             {
-                "input_format": "A",
-                "output_format": "B",
+                "file_type": "ACC",
+                "input_format": {"name": "A", "version": "1"},
+                "output_format": {"name": "B", "version": "1"},
                 "forward": {
                     "transform": {
                         "c": [{"transformation": "a * 2", "when": "False"}],
@@ -34,16 +35,15 @@ def test_when_is_false___other_transforms_are_performed_warning_is_written():
 
         # run forward
         forward_mapping = FileMapping(
-            Config(),
-            input_format="A",
-            output_format="B",
+            fake_transformation_config(),
+            "ACC",
             standard_search_path=search,
             search_working_dir=False,
         )
         forward_extractor = FakeConnector(data=input_data)
         forward_loader = FakeConnector()
 
-        PandasRunner(Config()).run(
+        PandasRunner(fake_transformation_config()).run(
             forward_extractor, forward_mapping, forward_loader
         )
 
@@ -67,8 +67,9 @@ def test_runner_handles_when_secondary_cases_are_false():
         write_yaml(
             os.path.join(search, "A-B.yml"),
             {
-                "input_format": "A",
-                "output_format": "B",
+                "file_type": "ACC",
+                "input_format": {"name": "A", "version": "1"},
+                "output_format": {"name": "B", "version": "1"},
                 "forward": {
                     "transform": {
                         "c": [
@@ -83,16 +84,15 @@ def test_runner_handles_when_secondary_cases_are_false():
 
         # run forward
         forward_mapping = FileMapping(
-            Config(),
-            input_format="A",
-            output_format="B",
+            fake_transformation_config(),
+            "ACC",
             standard_search_path=search,
             search_working_dir=False,
         )
         forward_extractor = FakeConnector(data=input_data)
         forward_loader = FakeConnector()
 
-        PandasRunner(Config()).run(
+        PandasRunner(fake_transformation_config()).run(
             forward_extractor, forward_mapping, forward_loader
         )
 

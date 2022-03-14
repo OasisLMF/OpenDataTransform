@@ -188,7 +188,9 @@ def cli(ctx, config, verbose, no_color, option):
     if ctx.invoked_subcommand is None:
         app = QApplication(sys.argv)
 
-        widget = MainWindow(ctx.obj["config"], lambda p: init_logging(verbose, no_color, p))
+        widget = MainWindow(
+            ctx.obj["config"], lambda p: init_logging(verbose, no_color, p)
+        )
         widget.show()
 
         sys.exit(app.exec_())

@@ -36,6 +36,7 @@ class BuildExeCommand(cmd.Command):
 
     def run(self):
         import PyInstaller.building.build_main
+
         PyInstaller.building.build_main.main(
             None,
             os.path.join(os.path.dirname(__file__), "exe.spec"),

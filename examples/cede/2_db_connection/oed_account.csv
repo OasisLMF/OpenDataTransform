@@ -1,0 +1,2 @@
+PortNumber,AccNumber,AccCurrency,PolNumber,PolPerilsCovered,LayerAttachment,LayerLimit,LayerParticipation
+ExposureSet1,Contract1,USD,Layer1,WTC,10000000.0,20000000.0,0.5

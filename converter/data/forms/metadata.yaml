@@ -7,6 +7,10 @@ entity_company_book:
 as_of_date:
     title: As-Of Date
     type: date
+notes:
+    title: Notes
+    type: string
+    sub_type: text_area
 perils:
     title: Perils
     type: string
@@ -338,8 +342,3 @@ special_conditions:
         - GoM
         - Secondary modifiers
         - Other
-notes:
-    title: Notes
-    type: string
-    sub_type: text_area
-

@@ -11,7 +11,7 @@ def write_yaml(path: str, content: Union[Dict, List]):
     :param content: The data to write
     """
     with open(path, "w") as f:
-        yaml.dump(content, f)
+        yaml.safe_dump(content, f)
 
 
 def read_yaml(path):

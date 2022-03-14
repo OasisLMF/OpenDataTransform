@@ -1,10 +1,8 @@
+from typing import Dict
+
 import psycopg2
 import psycopg2.extras
-import re
-import sqlparse
-from typing import Any, Dict, Iterable, List
 
-from converter.types.notset import NotSetType
 from .base import BaseDBConnector
 from .errors import DBConnectionError
 
@@ -13,6 +11,7 @@ class PostgresConnector(BaseDBConnector):
     """
     Connects to a Postgres database for reading and writing data.
     """
+
     name = "Postgres Connector"
     sql_params_output = "pyformat"
 
@@ -25,7 +24,7 @@ class PostgresConnector(BaseDBConnector):
         """
         try:
             conn = psycopg2.connect(**database)
-        except:
+        except Exception:
             raise DBConnectionError()
 
         return conn

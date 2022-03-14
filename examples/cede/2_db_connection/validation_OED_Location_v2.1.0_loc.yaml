@@ -1,0 +1,15 @@
+entries:
+  TotalTIV:
+    fields:
+      - BuildingTIV
+      - ContentsTIV
+      - BITIV
+    operator: sum
+  TIVByOccupancy:
+    fields:
+      - BuildingTIV
+    operator: sum
+    group_by:
+      - OccupancyCode
+  NumRows:
+    operator: count

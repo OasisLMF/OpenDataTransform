@@ -1,4 +1,10 @@
+from typing import TYPE_CHECKING
+
 from converter.errors import ConverterError
+
+
+if TYPE_CHECKING:
+    from converter.mapping.base import MappingFormat
 
 
 class NoConversionPathError(ConverterError):
@@ -9,10 +15,14 @@ class NoConversionPathError(ConverterError):
     :param output_format: The end path in the requested path.
     """
 
-    def __init__(self, input_format, output_format):
+    def __init__(
+        self, input_format: "MappingFormat", output_format: "MappingFormat"
+    ):
         self.input_format = input_format
         self.output_format = output_format
 
         super().__init__(
-            f"No conversion path from {input_format} to {output_format}."
+            f"No conversion path from {input_format.name} "
+            f"v{input_format.version} to {output_format.name} "
+            f"v{input_format.version}."
         )

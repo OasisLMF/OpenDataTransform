@@ -1,9 +1,9 @@
 from hypothesis import given, settings
 
-from converter.config import Config
 from converter.mapping.base import ColumnConversion, TransformationEntry
 from converter.types.notset import NotSet
 
+from ..config.fakes import fake_transformation_config
 from ..connector.fakes import FakeConnector
 from ..mapping.fakes import make_simple_mapping
 from .stategies import runners
@@ -39,7 +39,7 @@ def test_transform_contains_replace(runner_class):
     extractor = FakeConnector(data=input_data)
     loader = FakeConnector()
 
-    runner_class(Config()).run(extractor, mapping, loader)
+    runner_class(fake_transformation_config()).run(extractor, mapping, loader)
 
     assert list(loader.data) == [
         {"c": "faa a", "d": "faa fbb"},
@@ -77,7 +77,7 @@ def test_transform_contains_replace_on_non_lookup(runner_class):
     extractor = FakeConnector(data=input_data)
     loader = FakeConnector()
 
-    runner_class(Config()).run(extractor, mapping, loader)
+    runner_class(fake_transformation_config()).run(extractor, mapping, loader)
 
     assert list(loader.data) == [
         {"c": "faa", "d": "faa, bee"},
@@ -116,7 +116,7 @@ def test_transform_contains_replace_with_multiple_pairs(runner_class):
     extractor = FakeConnector(data=input_data)
     loader = FakeConnector()
 
-    runner_class(Config()).run(extractor, mapping, loader)
+    runner_class(fake_transformation_config()).run(extractor, mapping, loader)
 
     assert list(loader.data) == [
         {"c": "faa a faa b"},
@@ -156,7 +156,7 @@ def test_when_contains_match(runner_class):
     extractor = FakeConnector(data=input_data)
     loader = FakeConnector()
 
-    runner_class(Config()).run(extractor, mapping, loader)
+    runner_class(fake_transformation_config()).run(extractor, mapping, loader)
 
     assert list(loader.data) == [
         {"c": "foo a", "d": NotSet},
@@ -194,7 +194,7 @@ def test_when_contains_match_on_non_lookup(runner_class):
     extractor = FakeConnector(data=input_data)
     loader = FakeConnector()
 
-    runner_class(Config()).run(extractor, mapping, loader)
+    runner_class(fake_transformation_config()).run(extractor, mapping, loader)
 
     assert list(loader.data) == [
         {"c": "foo a", "d": "foo a foo b"},
@@ -234,7 +234,7 @@ def test_when_contains_search(runner_class):
     extractor = FakeConnector(data=input_data)
     loader = FakeConnector()
 
-    runner_class(Config()).run(extractor, mapping, loader)
+    runner_class(fake_transformation_config()).run(extractor, mapping, loader)
 
     assert list(loader.data) == [
         {"c": NotSet, "d": "foo a foo b"},
@@ -273,7 +273,7 @@ def test_when_contains_search_on_non_lookup(runner_class):
     extractor = FakeConnector(data=input_data)
     loader = FakeConnector()
 
-    runner_class(Config()).run(extractor, mapping, loader)
+    runner_class(fake_transformation_config()).run(extractor, mapping, loader)
 
     assert list(loader.data) == [
         {"c": "foo a", "d": "foo a foo b"},
@@ -307,7 +307,7 @@ def test_transform_contains_join_of_lookups_str_and_non_str(runner_class):
     extractor = FakeConnector(data=input_data)
     loader = FakeConnector()
 
-    runner_class(Config()).run(extractor, mapping, loader)
+    runner_class(fake_transformation_config()).run(extractor, mapping, loader)
 
     assert list(loader.data) == [
         {"c": "bar, foo a, 5, 1, 0"},
@@ -340,7 +340,7 @@ def test_transform_contains_join_of_nothing(runner_class):
     extractor = FakeConnector(data=input_data)
     loader = FakeConnector()
 
-    runner_class(Config()).run(extractor, mapping, loader)
+    runner_class(fake_transformation_config()).run(extractor, mapping, loader)
 
     assert list(loader.data) == [
         {"c": ""},
@@ -373,7 +373,7 @@ def test_transform_contains_join_of_single_element(runner_class):
     extractor = FakeConnector(data=input_data)
     loader = FakeConnector()
 
-    runner_class(Config()).run(extractor, mapping, loader)
+    runner_class(fake_transformation_config()).run(extractor, mapping, loader)
 
     assert list(loader.data) == [
         {"c": "foo a"},

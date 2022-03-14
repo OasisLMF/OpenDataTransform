@@ -1,16 +1,29 @@
-mapping:
-  options:
-    input_format: A
-    output_format: B
-extractor:
-  path: converter.connector.SQLiteConnector
-  options:
-    database: sqlite.db
-    select_statement: select.sql
-    insert_statement: insert.sql
-loader:
-  path: converter.connector.SQLiteConnector
-  options:
-    database: sqlite.db
-    select_statement: select.sql
-    insert_statement: insert.sql
+metadata:
+  as_of_date: '2022-01-21T00:00:00'
+  geographic_scope:
+  - Americas
+  - Oceania
+  - Afghanistan
+  - Europe
+  line_of_business:
+  - Industrial
+  - Automotive
+  - Commercial
+transformations:
+  acc:
+    extractor:
+      options:
+        database: sqlite.db
+        sql_statement: select.sql
+      path: converter.connector.db.sqlite.SQLiteConnector
+    input_format:
+      name: A
+      version: 1
+    loader:
+      options:
+        database: sqlite.db
+        sql_statement: insert.sql
+      path: converter.connector.db.sqlite.SQLiteConnector
+    output_format:
+      name: B
+      version: 1

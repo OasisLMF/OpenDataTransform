@@ -3,9 +3,17 @@ import os
 from __feature__ import true_property  # noqa
 from PySide6.QtCore import Signal
 from PySide6.QtGui import QAction
-from PySide6.QtWidgets import QFileDialog, QMainWindow, QMessageBox, QTabWidget, QScrollArea
+from PySide6.QtWidgets import (
+    QFileDialog,
+    QMainWindow,
+    QMessageBox,
+    QScrollArea,
+    QTabBar,
+    QTabWidget,
+)
 
 from converter.config import Config
+from converter.ui.config_tab.add_tab_button import AddTabButton
 from converter.ui.config_tab.main import ConfigTab
 from converter.ui.metadata_tab.main import MetadataTab
 from converter.ui.run_tab.main import RunTab
@@ -27,25 +35,32 @@ class MainWindow(QMainWindow):
         self._create_actions()
         self._create_menu_bar()
 
-        # setup tabs
-        tabs = QTabWidget()
+        self.minimumWidth = 750
 
-        self.config_tab = ConfigTab(self)
-        config_scroll_wrapper = QScrollArea()
-        config_scroll_wrapper.setWidget(self.config_tab)
-        tabs.addTab(config_scroll_wrapper, "Config")
+        # setup tabs
+        self.tabs = QTabWidget()
+        self.tabs.tabsClosable = True
+        self.tabs.tabCloseRequested.connect(self.on_close_tab)
 
         self.metadata_tab = MetadataTab(self)
         meta_scroll_wrapper = QScrollArea()
         meta_scroll_wrapper.setWidget(self.metadata_tab)
-        tabs.addTab(meta_scroll_wrapper, "Metadata")
+        self.tabs.addTab(meta_scroll_wrapper, "Metadata")
+        self.tabs.tabBar().setTabButton(0, QTabBar.RightSide, None)
 
         self.run_tab = RunTab(self)
-        run_scroll_wrapper = QScrollArea()
-        run_scroll_wrapper.setWidget(self.run_tab)
-        tabs.addTab(run_scroll_wrapper, "Run")
+        self.tabs.addTab(self.run_tab, "Run")
+        self.tabs.tabBar().setTabButton(1, QTabBar.RightSide, None)
 
-        self.setCentralWidget(tabs)
+        # add create tab button
+        self.tab_button = AddTabButton(self)
+        self.tabs.setCornerWidget(self.tab_button)
+
+        self.config_tabs = {}
+        self.initialise_config_tabs(self.config)
+        self.config_changed.connect(self.initialise_config_tabs)
+
+        self.setCentralWidget(self.tabs)
 
         self.running_changed.connect(
             lambda b: self.menuBar().setEnabled(not b)
@@ -92,6 +107,9 @@ class MainWindow(QMainWindow):
             # update the new log location
             self.update_log_paths(file_path)
 
+            # setup the config tabs
+            self.initialise_config_tabs(self.config)
+
     def _handle_file_save(self, overwrite=False):
         if not overwrite or not self._loaded_config.path:
             file_path = QFileDialog.getSaveFileName(
@@ -116,30 +134,35 @@ class MainWindow(QMainWindow):
         )
         self._working_config = Config()
         self._default_working_config = Config()
-        self.config_changed.emit(self._loaded_config)
+        self.config_changed.emit(self.config)
 
     @property
     def config_has_changes(self):
         return bool(self._working_config)
 
     def set_working_value(self, path, v):
-        if self._working_config.get(path, None) == v:
+        current = self.config.get(path, None)
+
+        if current == v:
             return
+
         self._working_config.set(path, v)
+        self.config_changed.emit(self.config)
 
     def set_default_working_value(self, path, v):
         self._default_working_config.set(path, v)
 
     @property
     def config(self):
-        config = self._loaded_config
-        return Config(
-            config_path=config.path,
-            overrides=config.merge_config_sources(
+        config = Config(
+            overrides=Config.merge_config_sources(
+                self._loaded_config,
                 self._default_working_config.config,
                 self._working_config.config,
             ),
         )
+        config.path = self._loaded_config.path
+        return config
 
     def _create_menu_bar(self):
         bar = self.menuBar()
@@ -149,3 +172,48 @@ class MainWindow(QMainWindow):
         file_menu.addAction(self.open_config)
         file_menu.addAction(self.save_config)
         file_menu.addAction(self.save_config_as)
+
+    def initialise_config_tabs(self, config):
+        # add in reverse order as they are inserted into the front of the list
+        self.initialise_config_tab(config, config.RI_TRANSFORMATION_PATH)
+        self.initialise_config_tab(config, config.LOC_TRANSFORMATION_PATH)
+        self.initialise_config_tab(config, config.ACC_TRANSFORMATION_PATH)
+        self.initialise_config_tab(config, config.TEMPLATE_TRANSFORMATION_PATH)
+
+    def initialise_config_tab(self, config, root_config_path):
+        in_config = root_config_path in config
+
+        if in_config and root_config_path not in self.config_tabs:
+            self.create_tab(root_config_path)
+        elif not in_config and root_config_path in self.config_tabs:
+            self.config_tabs[root_config_path].deleteLater()
+            del self.config_tabs[root_config_path]
+
+    def create_tab(self, config_path):
+        label = {
+            self.config.TEMPLATE_TRANSFORMATION_PATH: "Template",
+            self.config.ACC_TRANSFORMATION_PATH: "Account",
+            self.config.LOC_TRANSFORMATION_PATH: "Location",
+            self.config.RI_TRANSFORMATION_PATH: "Reinsurance",
+        }[config_path]
+
+        tab = ConfigTab(
+            self,
+            config_path,
+            force_all_fields=config_path
+            == self.config.TEMPLATE_TRANSFORMATION_PATH,
+        )
+        self.tabs.insertTab(0, tab, label)
+        self.tabs.currentIndex = 0
+        self.config_tabs[config_path] = tab
+
+    def on_close_tab(self, idx):
+        tab: ConfigTab = self.tabs.widget(idx)
+
+        self._loaded_config.delete(tab.root_config_path)
+        self._default_working_config.delete(tab.root_config_path)
+        self._working_config.delete(tab.root_config_path)
+
+        self.config_changed.emit(self.config)
+
+        self.tabs.removeTab(idx)

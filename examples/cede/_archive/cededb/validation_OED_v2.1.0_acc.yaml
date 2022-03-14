@@ -1,0 +1,9 @@
+entries:
+  Total:
+    fields:
+      - BuildingTIV
+      - ContentsTIV
+      - BITIV
+    operator: sum
+  NumRows:
+    operator: count

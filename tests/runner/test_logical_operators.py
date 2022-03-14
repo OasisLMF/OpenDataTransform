@@ -1,9 +1,9 @@
 from hypothesis import given, settings
 
-from converter.config import Config
 from converter.mapping.base import TransformationEntry
 from converter.types.notset import NotSet
 
+from ..config.fakes import fake_transformation_config
 from ..connector.fakes import FakeConnector
 from ..mapping.fakes import make_simple_mapping
 from .stategies import runners
@@ -39,7 +39,7 @@ def test_filter_contains_and(runner_class):
     extractor = FakeConnector(data=input_data)
     loader = FakeConnector()
 
-    runner_class(Config()).run(extractor, mapping, loader)
+    runner_class(fake_transformation_config()).run(extractor, mapping, loader)
 
     assert list(loader.data) == [
         {"c": 2, "d": NotSet},
@@ -77,7 +77,7 @@ def test_filter_contains_or(runner_class):
     extractor = FakeConnector(data=input_data)
     loader = FakeConnector()
 
-    runner_class(Config()).run(extractor, mapping, loader)
+    runner_class(fake_transformation_config()).run(extractor, mapping, loader)
 
     assert list(loader.data) == [
         {"c": 2, "d": 5},
@@ -115,7 +115,7 @@ def test_filter_contains_in___lhs_is_lookup_rhs_is_list_of_ints(runner_class):
     extractor = FakeConnector(data=input_data)
     loader = FakeConnector()
 
-    runner_class(Config()).run(extractor, mapping, loader)
+    runner_class(fake_transformation_config()).run(extractor, mapping, loader)
 
     assert list(loader.data) == [
         {"c": 2, "d": 5},
@@ -153,7 +153,7 @@ def test_filter_contains_in___lhs_is_int_rhs_is_list_of_lookups(runner_class):
     extractor = FakeConnector(data=input_data)
     loader = FakeConnector()
 
-    runner_class(Config()).run(extractor, mapping, loader)
+    runner_class(fake_transformation_config()).run(extractor, mapping, loader)
 
     assert list(loader.data) == [
         {"c": 2, "d": NotSet},
@@ -191,7 +191,7 @@ def test_filter_contains_in___lhs_is_int_rhs_is_list_of_ints(runner_class):
     extractor = FakeConnector(data=input_data)
     loader = FakeConnector()
 
-    runner_class(Config()).run(extractor, mapping, loader)
+    runner_class(fake_transformation_config()).run(extractor, mapping, loader)
 
     assert list(loader.data) == [
         {"c": 2, "d": NotSet},
@@ -233,7 +233,7 @@ def test_filter_contains_in___lhs_is_lookup_rhs_is_list_of_lookups(
     extractor = FakeConnector(data=input_data)
     loader = FakeConnector()
 
-    runner_class(Config()).run(extractor, mapping, loader)
+    runner_class(fake_transformation_config()).run(extractor, mapping, loader)
 
     assert list(loader.data) == [
         {"c": 2, "d": NotSet},
@@ -275,7 +275,7 @@ def test_filter_contains_not_in___lhs_is_lookup_rhs_is_list_of_ints(
     extractor = FakeConnector(data=input_data)
     loader = FakeConnector()
 
-    runner_class(Config()).run(extractor, mapping, loader)
+    runner_class(fake_transformation_config()).run(extractor, mapping, loader)
 
     assert list(loader.data) == [
         {"c": 6, "d": 7},
@@ -315,7 +315,7 @@ def test_filter_contains_not_in___lhs_is_int_rhs_is_list_of_lookups(
     extractor = FakeConnector(data=input_data)
     loader = FakeConnector()
 
-    runner_class(Config()).run(extractor, mapping, loader)
+    runner_class(fake_transformation_config()).run(extractor, mapping, loader)
 
     assert list(loader.data) == [
         {"c": NotSet, "d": 5},
@@ -355,7 +355,7 @@ def test_filter_contains_not_in___lhs_is_int_rhs_is_list_of_ints(runner_class):
     extractor = FakeConnector(data=input_data)
     loader = FakeConnector()
 
-    runner_class(Config()).run(extractor, mapping, loader)
+    runner_class(fake_transformation_config()).run(extractor, mapping, loader)
 
     assert list(loader.data) == [
         {"c": NotSet, "d": 5},
@@ -397,7 +397,7 @@ def test_filter_contains_not_in___lhs_is_lookup_rhs_is_list_of_lookups(
     extractor = FakeConnector(data=input_data)
     loader = FakeConnector()
 
-    runner_class(Config()).run(extractor, mapping, loader)
+    runner_class(fake_transformation_config()).run(extractor, mapping, loader)
 
     assert list(loader.data) == [
         {"c": NotSet, "d": 5},
@@ -437,7 +437,7 @@ def test_filter_contains_not___value_is_lookup(runner_class):
     extractor = FakeConnector(data=input_data)
     loader = FakeConnector()
 
-    runner_class(Config()).run(extractor, mapping, loader)
+    runner_class(fake_transformation_config()).run(extractor, mapping, loader)
 
     assert list(loader.data) == [
         {"c": NotSet, "d": 5},
@@ -477,7 +477,7 @@ def test_filter_contains_not___value_is_bool(runner_class):
     extractor = FakeConnector(data=input_data)
     loader = FakeConnector()
 
-    runner_class(Config()).run(extractor, mapping, loader)
+    runner_class(fake_transformation_config()).run(extractor, mapping, loader)
 
     assert list(loader.data) == [
         {"c": 2, "d": NotSet},
@@ -516,7 +516,7 @@ def test_filter_contains_any_is_in(runner_class):
     extractor = FakeConnector(data=input_data)
     loader = FakeConnector()
 
-    runner_class(Config()).run(extractor, mapping, loader)
+    runner_class(fake_transformation_config()).run(extractor, mapping, loader)
 
     assert list(loader.data) == [
         {"c": 2},
@@ -548,7 +548,7 @@ def test_filter_contains_any_is_not_in(runner_class):
     extractor = FakeConnector(data=input_data)
     loader = FakeConnector()
 
-    runner_class(Config()).run(extractor, mapping, loader)
+    runner_class(fake_transformation_config()).run(extractor, mapping, loader)
 
     assert list(loader.data) == [
         {"c": 6},
@@ -585,7 +585,7 @@ def test_filter_contains_all_is_not_in(runner_class):
     extractor = FakeConnector(data=input_data)
     loader = FakeConnector()
 
-    runner_class(Config()).run(extractor, mapping, loader)
+    runner_class(fake_transformation_config()).run(extractor, mapping, loader)
 
     assert list(loader.data) == [
         {"c": 2},
@@ -617,7 +617,7 @@ def test_filter_contains_all_is_in(runner_class):
     extractor = FakeConnector(data=input_data)
     loader = FakeConnector()
 
-    runner_class(Config()).run(extractor, mapping, loader)
+    runner_class(fake_transformation_config()).run(extractor, mapping, loader)
 
     assert list(loader.data) == [
         {"c": 6},
@@ -652,7 +652,7 @@ def test_filter_contains_fallback(runner_class):
     extractor = FakeConnector(data=input_data)
     loader = FakeConnector()
 
-    runner_class(Config()).run(extractor, mapping, loader)
+    runner_class(fake_transformation_config()).run(extractor, mapping, loader)
 
     assert list(loader.data) == [
         {"c": -1},

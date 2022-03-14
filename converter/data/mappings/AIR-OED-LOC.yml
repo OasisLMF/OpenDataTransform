@@ -5,8 +5,13 @@
 # LICENSE: BSD 3 clause license
 # SOURCE: https://github.com/OasisLMF/OpenDataTransform/
 # COMMENTS: Mapping to convert AIR CEDE location data to OED.
-input_format: AIR_LOC
-output_format: OED_LOC
+file_type: loc
+input_format:
+  name: AIR
+  version: "8"
+output_format:
+  name: OED
+  version: "1.1.5"
 forward:
   types:
     ExposureSetName:

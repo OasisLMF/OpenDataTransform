@@ -1,7 +1,9 @@
 import importlib
+import threading
 from typing import Any, Type
 
 from ..config import Config
+from ..config.config import TransformationConfig
 from ..connector.base import BaseConnector
 from ..mapping.base import BaseMapping
 from ..runner.base import BaseRunner
@@ -27,40 +29,61 @@ class Controller:
         Generates the converter components from the config and runs the
         transformation
         """
+        transformation_configs = self.config.get_transformation_configs()
+        if self.config.get("parallel", True):
+            threads = list(
+                map(
+                    lambda c: threading.Thread(
+                        target=lambda: self._run_transformation(c)
+                    ),
+                    transformation_configs,
+                )
+            )
+
+            for thread in threads:
+                thread.start()
+
+            for thread in threads:
+                thread.join()
+        else:
+            for c in transformation_configs:
+                self._run_transformation(c)
+
+    def _run_transformation(self, config: TransformationConfig):
         mapping_class: Type[BaseMapping] = self._load_from_module(
-            self.config.get(
+            config.get(
                 "mapping.path", fallback="converter.mapping.FileMapping"
             )
         )
         mapping: BaseMapping = mapping_class(
-            self.config, **self.config.get("mapping.options", fallback={})
+            config,
+            config.file_type,
+            **config.get("mapping.options", fallback={}),
         )
 
         extractor_class: Type[BaseConnector] = self._load_from_module(
-            self.config.get(
+            config.get(
                 "extractor.path", fallback="converter.connector.CsvConnector"
             )
         )
         extractor: BaseConnector = extractor_class(
-            self.config, **self.config.get("extractor.options", fallback={})
+            config, **config.get("extractor.options", fallback={})
         )
 
         loader_class: Type[BaseConnector] = self._load_from_module(
-            self.config.get(
+            config.get(
                 "loader.path", fallback="converter.connector.CsvConnector"
             )
         )
         loader: BaseConnector = loader_class(
-            self.config, **self.config.get("loader.options", fallback={})
+            config, **config.get("loader.options", fallback={})
         )
 
         runner_class: Type[BaseRunner] = self._load_from_module(
-            self.config.get(
-                "runner.path", fallback="converter.runner.PandasRunner"
-            )
+            config.get("runner.path", fallback="converter.runner.PandasRunner")
         )
         runner: BaseRunner = runner_class(
-            self.config, **self.config.get("runner.options", fallback={})
+            config, **config.get("runner.options", fallback={})
         )
 
         runner.run(extractor, mapping, loader)

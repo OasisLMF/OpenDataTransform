@@ -1,4 +1,5 @@
 import os
+from itertools import chain
 from tempfile import TemporaryDirectory
 from typing import Type
 from unittest.mock import Mock, patch
@@ -21,11 +22,21 @@ def test_config_does_not_exist___warning_is_raised(
 
     log_mock = Mock()
     with patch("converter.validator.base.get_logger", return_value=log_mock):
-        validator.load_config("missing_format")
+        validator.load_config("missing_format", "1", "ACC")
 
-        candidate_paths = map(
-            lambda s: os.path.join(s, "validation_missing_format.yaml"),
-            validator.search_paths,
+        candidate_paths = chain(
+            map(
+                lambda s: os.path.join(
+                    s, "validation_missing_format_v1_ACC.yaml"
+                ),
+                validator.search_paths,
+            ),
+            map(
+                lambda s: os.path.join(
+                    s, "validation_missing_format_ACC.yaml"
+                ),
+                validator.search_paths,
+            ),
         )
 
         log_mock.warning.assert_called_once_with(
@@ -46,13 +57,13 @@ def test_config_exists_in_standard_dir___standard_file_is_used(
         validator = validator_class(standard_search_path=std_dir)
 
         with open(
-            os.path.join(std_dir, "validation_test_format.yaml"), "w"
+            os.path.join(std_dir, "validation_test_format_v1_ACC.yaml"), "w"
         ) as f:
             yaml.dump(std_val_config, f)
 
-        assert validator.load_config("test_format") == ValidatorConfig(
-            raw_config=std_val_config
-        )
+        assert validator.load_config(
+            "test_format", "1", "ACC"
+        ) == ValidatorConfig(raw_config=std_val_config)
 
 
 @given(
@@ -74,18 +85,18 @@ def test_config_exists_in_working_dir___working_dir_file_is_used(
         )
 
         with open(
-            os.path.join(std_dir, "validation_test_format.yaml"), "w"
+            os.path.join(std_dir, "validation_test_format_v1_ACC.yaml"), "w"
         ) as f:
             yaml.dump(std_val_config, f)
 
         with open(
-            os.path.join(cw_dir, "validation_test_format.yaml"), "w"
+            os.path.join(cw_dir, "validation_test_format_v1_ACC.yaml"), "w"
         ) as f:
             yaml.dump(cwd_val_config, f)
 
-        assert validator.load_config("test_format") == ValidatorConfig(
-            raw_config=cwd_val_config
-        )
+        assert validator.load_config(
+            "test_format", "1", "ACC"
+        ) == ValidatorConfig(raw_config=cwd_val_config)
 
 
 @given(
@@ -112,20 +123,20 @@ def test_config_exists_in_search_dir___search_dir_file_is_used(
         )
 
         with open(
-            os.path.join(std_dir, "validation_test_format.yaml"), "w"
+            os.path.join(std_dir, "validation_test_format_v1_ACC.yaml"), "w"
         ) as f:
             yaml.dump(std_val_config, f)
 
         with open(
-            os.path.join(cw_dir, "validation_test_format.yaml"), "w"
+            os.path.join(cw_dir, "validation_test_format_v1_ACC.yaml"), "w"
         ) as f:
             yaml.dump(cwd_val_config, f)
 
         with open(
-            os.path.join(search_dir, "validation_test_format.yaml"), "w"
+            os.path.join(search_dir, "validation_test_format_v1_ACC.yaml"), "w"
         ) as f:
             yaml.dump(search_dir_val_config, f)
 
-        assert validator.load_config("test_format") == ValidatorConfig(
-            raw_config=search_dir_val_config
-        )
+        assert validator.load_config(
+            "test_format", "1", "ACC"
+        ) == ValidatorConfig(raw_config=search_dir_val_config)

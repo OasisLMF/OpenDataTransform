@@ -9,6 +9,7 @@ a = Analysis(['converter/__main__.py'],
              binaries=[],
              datas=[
                 ("converter/data/mappings/", "./mappings"),
+                ("converter/data/forms/", "./forms"),
              ],
              hiddenimports=[],
              hookspath=[],

@@ -1,20 +1,18 @@
-from PySide6.QtGui import QFont
 from __feature__ import true_property  # noqa
-from PySide6.QtWidgets import QListWidget, QListWidgetItem
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QFont
+from PySide6.QtWidgets import QListWidget, QListWidgetItem
+
+from converter.ui.fields.base import BaseFieldMixin
 
 
-class MultiSelect(QListWidget):
+class MultiSelect(BaseFieldMixin, QListWidget):
     def __init__(self, tab, config_path, options):
-        super().__init__()
-        self.selectionMode = self.MultiSelection
-
-        self.tab = tab
-        self.main_window = tab.main_window
-        self.config_path = config_path
         self.options = options
         self.selected = []
 
+        super().__init__(tab, config_path, defer_initial_ui_update=True)
+        self.selectionMode = self.MultiSelection
         # add options
         for opt in options:
             if isinstance(opt, str):
@@ -32,23 +30,24 @@ class MultiSelect(QListWidget):
                 for group_opt in opt["entries"]:
                     self.addItem(QListWidgetItem(group_opt))
 
-        # set the initial selections
-        self.on_config_loaded(tab.main_window.config)
-        self.itemSelectionChanged.connect(self.on_selection_changed)
+        self.on_config_changed(self.main_window.config)
 
-        self.main_window.config_changed.connect(self.on_config_loaded)
+    def update_ui_from_config(self, config):
+        selected = config.get_template_resolved_value(self.config_path, [])
+        if selected != [item.text() for item in self.selectedItems()]:
+            self.clearSelection()
+            for idx in range(self.count):
+                try:
+                    item = self.item(idx)
+                    item.setSelected(item.text() in selected)
+                except ValueError:
+                    pass
 
-    def on_config_loaded(self, new_config):
-        self.clearSelection()
-        selected = new_config.get(self.config_path, [])
-        for selection in selected:
-            try:
-                idx = self.options.index(selection)
-                self.item(idx).setSelected(True)
-            except ValueError:
-                pass
+    @property
+    def change_signal(self):
+        return self.itemSelectionChanged
 
-    def on_selection_changed(self):
+    def on_change(self):
         self.main_window.set_working_value(
             self.config_path,
             [item.text() for item in self.selectedItems()],

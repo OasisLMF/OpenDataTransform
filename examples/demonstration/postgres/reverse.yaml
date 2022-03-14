@@ -1,24 +1,26 @@
-mapping:
-  options:
-    input_format: B
-    output_format: A
-extractor:
-  path: converter.connector.PostgresConnector
-  options:
-    host: localhost
-    port: 5432
-    database: postgres
-    user: postgres
-    password: password
-    select_statement: select_rev.sql
-    insert_statement: insert_rev.sql
-loader:
-  path: converter.connector.PostgresConnector
-  options:
-    host: localhost
-    port: 5432
-    database: postgres
-    user: postgres
-    password: password
-    select_statement: select_rev.sql
-    insert_statement: insert_rev.sql
+transformations:
+  acc:
+    input_format:
+      name: A
+      version: "1"
+    output_format:
+      name: B
+      version: "1"
+    extractor:
+      path: converter.connector.PostgresConnector
+      options:
+        host: localhost
+        port: 5432
+        database: postgres
+        user: postgres
+        password: password
+        sql_statement: select_rev.sql
+    loader:
+      path: converter.connector.PostgresConnector
+      options:
+        host: localhost
+        port: 5432
+        database: postgres
+        user: postgres
+        password: password
+        sql_statement: insert_rev.sql
