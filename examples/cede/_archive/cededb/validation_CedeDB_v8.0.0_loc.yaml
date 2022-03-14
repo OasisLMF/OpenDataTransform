@@ -1,0 +1,9 @@
+entries:
+  Total:
+    fields:
+      - ReplacementValueA
+      - ReplacementValueC
+      - ReplacementValueD
+    operator: sum
+  NumRows:
+    operator: count

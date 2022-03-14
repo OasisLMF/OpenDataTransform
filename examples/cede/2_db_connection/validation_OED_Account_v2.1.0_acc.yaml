@@ -1,0 +1,9 @@
+entries:
+  Total:
+    fields:
+      - LayerAttachment
+      - LayerLimit
+      - LayerParticipation
+    operator: sum
+  NumRows:
+    operator: count

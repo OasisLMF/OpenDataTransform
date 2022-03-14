@@ -1,0 +1,9 @@
+entries:
+  Total:
+    fields:
+      - AttachmentPoint
+      - OccTotalLimit
+      - OccParticipation
+    operator: sum
+  NumRows:
+    operator: count

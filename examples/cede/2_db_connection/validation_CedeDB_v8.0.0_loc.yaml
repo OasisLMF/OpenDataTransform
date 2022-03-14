@@ -1,0 +1,15 @@
+entries:
+  TotalReplacementValue:
+    fields:
+      - ReplacementValueA
+      - ReplacementValueC
+      - ReplacementValueD
+    operator: sum
+  TIVByOccupancy:
+    fields:
+      - ReplacementValueA
+    operator: sum
+    group_by:
+      - AIROccupancyCode
+  NumRows:
+    operator: count

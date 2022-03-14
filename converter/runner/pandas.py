@@ -444,7 +444,7 @@ class PandasRunner(BaseRunner):
         validator.run(
             transformed,
             mapping.output_format.name,
-            mapping.input_format.version,
+            mapping.output_format.version,
             mapping.file_type,
         )
 

@@ -1,0 +1,54 @@
+# MAPPING VERSION: CEDEDB_OED_Test
+# CREATOR: Ben Hayes
+# MODEL VERSIONS: OED 1.2.1 | AIR CEDE (database) v8.0
+# MAP FILETYPE: SQL Server DB to Flat File
+# LICENSE: BSD 3 clause license
+# SOURCE: https://github.com/OasisLMF/OpenDataTransform/
+# COMMENTS: Simple example to demonstrate Sql Server DB to Flat File
+
+file_type: loc
+input_format:
+  name: CedeDB
+  version: 8.0.0
+output_format:
+  name: OED
+  version: 2.1.0
+forward:
+  types:
+    ExposureSetName:
+      type: string
+    ContractID:
+      type: string
+    LocationID:
+      type: string
+    CountryCode:
+      type: string
+    PerilSet:
+      type: string
+    ReplacementValueA:
+      type: float
+    ReplacementValueC:
+      type: float
+    ReplacementValueD:
+      type: float
+    CurrencyCode:
+      type: string
+  transform:
+    PortNumber:
+      - transformation: ExposureSetName
+    AccNumber:
+      - transformation: ContractID
+    LocNumber:
+      - transformation: LocationID
+    CountryCode:
+      - transformation: CountryCode
+    LocPerilsCovered:
+      - transformation: PerilSet
+    BuildingTIV:
+      - transformation: ReplacementValueA
+    ContentsTIV:
+      - transformation: ReplacementValueC
+    BITIV:
+      - transformation: ReplacementValueD
+    LocCurrency:
+      - transformation: CurrencyCode

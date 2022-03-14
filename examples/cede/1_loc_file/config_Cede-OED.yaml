@@ -1,0 +1,19 @@
+transformations:
+  loc:
+    input_format:
+      name: Cede_Location
+      version: 8.0.0
+    output_format:
+      name: OED_Location
+      version: 1.2.1
+    runner:
+      path: converter.runner.pandas.PandasRunner
+    extractor:
+      options:
+        path: air_loc_row_wise_example.csv
+        quoting: minimal
+      path: converter.connector.csv.CsvConnector
+    loader:
+      options:
+        path: oed_loc_row_wise_example.csv
+        quoting: minimal
