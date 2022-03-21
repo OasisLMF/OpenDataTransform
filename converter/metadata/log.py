@@ -32,6 +32,7 @@ def log_metadata(config: TransformationConfig, mapping: BaseMapping):
                         for edge in mapping.path_edges
                     ],
                     "data_of_conversion": datetime.now().isoformat(),
+                    **config.root_config.get("metadata", {}),
                     **config.get("metadata", {}),
                 }
             ]
