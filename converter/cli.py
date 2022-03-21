@@ -2,8 +2,8 @@ import logging
 import os
 import sys
 from datetime import datetime
-from logging.config import dictConfig as loggingDictConfig
 from importlib import reload
+from logging.config import dictConfig as loggingDictConfig
 
 import click
 import yaml

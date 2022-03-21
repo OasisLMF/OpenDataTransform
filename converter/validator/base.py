@@ -42,6 +42,7 @@ class ValidationResult(TypedDict):
 class ValidationLogEntry(TypedDict):
     file_type: str
     format: str
+    validation_file: Optional[str]
     validations: List[ValidationResult]
 
 
@@ -131,6 +132,7 @@ class BaseValidator(Generic[DataType, GroupedDataType]):
         result: ValidationLogEntry = {
             "file_type": file_type,
             "format": fmt,
+            "validation_file": config.path if config else None,
             "validations": [],
         }
         if config:

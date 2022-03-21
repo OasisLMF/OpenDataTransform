@@ -58,7 +58,9 @@ class Controller:
             for c in transformation_configs:
                 self._run_transformation(c)
 
-        get_logger().info(f"Transformation finished in {datetime.now() - start_time}")
+        get_logger().info(
+            f"Transformation finished in {datetime.now() - start_time}"
+        )
 
     def _run_transformation(self, config: TransformationConfig):
         mapping_class: Type[BaseMapping] = self._load_from_module(

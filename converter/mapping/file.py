@@ -6,7 +6,7 @@ from functools import reduce
 from itertools import chain, product
 from typing import Any, Dict, Iterable, List, Reversible, Set, TypedDict, Union
 
-from ..data import get_data_path
+from ..data import get_data_path, hide_system_data_path
 from ..errors import ConverterError
 from ..files.yaml import read_yaml
 from ..transformers import run
@@ -248,7 +248,7 @@ class FileMappingSpec(MappingSpec):
                 null_values=reverse_null_values,
             ),
             metadata={
-                "path": path,
+                "path": hide_system_data_path(path),
             },
         )
 
