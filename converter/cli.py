@@ -3,6 +3,7 @@ import os
 import sys
 from datetime import datetime
 from logging.config import dictConfig as loggingDictConfig
+from importlib import reload
 
 import click
 import yaml
@@ -65,6 +66,9 @@ def init_logging(verbosity, no_color, config):
     :param no_color: Don't add the color to the output
     :param config: The path to the config file
     """
+    logging.shutdown()
+    reload(logging)
+
     config_dir = os.path.abspath(os.path.dirname(config))
     time_string = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     log_dir = os.path.join(config_dir, "runs", time_string)

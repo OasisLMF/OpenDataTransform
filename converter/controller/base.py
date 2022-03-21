@@ -1,5 +1,7 @@
 import importlib
+import logging
 import threading
+from datetime import datetime
 from typing import Any, Type
 
 from ..config import Config
@@ -7,6 +9,10 @@ from ..config.config import TransformationConfig
 from ..connector.base import BaseConnector
 from ..mapping.base import BaseMapping
 from ..runner.base import BaseRunner
+
+
+def get_logger():
+    return logging.getLogger(__name__)
 
 
 class Controller:
@@ -29,6 +35,9 @@ class Controller:
         Generates the converter components from the config and runs the
         transformation
         """
+        start_time = datetime.now()
+        get_logger().info("Starting transformation")
+
         transformation_configs = self.config.get_transformation_configs()
         if self.config.get("parallel", True):
             threads = list(
@@ -48,6 +57,8 @@ class Controller:
         else:
             for c in transformation_configs:
                 self._run_transformation(c)
+
+        get_logger().info(f"Transformation finished in {datetime.now() - start_time}")
 
     def _run_transformation(self, config: TransformationConfig):
         mapping_class: Type[BaseMapping] = self._load_from_module(
