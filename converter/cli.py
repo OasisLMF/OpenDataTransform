@@ -192,8 +192,26 @@ def cli(ctx, config, verbose, no_color, option):
     if ctx.invoked_subcommand is None:
         app = QApplication(sys.argv)
 
+        if not ctx.obj["config"].path:
+            # if there is no config path add blank template, acc, loc and ri
+            # entries so that all tabs are open
+            ctx.obj["config"] = Config(
+                config_path=config,
+                argv={k: yaml.load(v, yaml.SafeLoader) for k, v in options.items()},
+                env=os.environ,
+                overrides={
+                    Config.TEMPLATE_TRANSFORMATION_PATH: {},
+                    Config.TRANSFORMATIONS_PATH: {
+                        Config.ACC_TRANSFORMATION_LABEL: {},
+                        Config.LOC_TRANSFORMATION_LABEL: {},
+                        Config.RI_TRANSFORMATION_LABEL: {},
+                    }
+                }
+            )
+
         widget = MainWindow(
-            ctx.obj["config"], lambda p: init_logging(verbose, no_color, p)
+            ctx.obj["config"],
+            lambda p: init_logging(verbose, no_color, p),
         )
         widget.show()
 

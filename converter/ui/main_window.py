@@ -128,7 +128,6 @@ class MainWindow(QMainWindow):
     def reset_changes(self, file_path):
         self._loaded_config = Config(
             config_path=file_path,
-            overrides=self._loaded_config.overrides,
             env=self._loaded_config.env,
             argv=self._loaded_config.argv,
         )
@@ -191,7 +190,7 @@ class MainWindow(QMainWindow):
 
     def create_tab(self, config_path):
         label = {
-            self.config.TEMPLATE_TRANSFORMATION_PATH: "Template",
+            self.config.TEMPLATE_TRANSFORMATION_PATH: "Config Template",
             self.config.ACC_TRANSFORMATION_PATH: "Account",
             self.config.LOC_TRANSFORMATION_PATH: "Location",
             self.config.RI_TRANSFORMATION_PATH: "Reinsurance",
