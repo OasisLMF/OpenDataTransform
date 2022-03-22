@@ -194,6 +194,7 @@ def type_converter(to_type, nullable, null_values):
             if nullable and (
                 value in null_values
                 or (isinstance(value, float) and math.isnan(value))
+                or value is None
             ):
                 return None
             return to_type(value)
@@ -429,7 +430,7 @@ class PandasRunner(BaseRunner):
             ),
         )
         validator.run(
-            df,
+            self.coerce_row_types(df, transformations[0].types),
             mapping.input_format.name,
             mapping.input_format.version,
             mapping.file_type,

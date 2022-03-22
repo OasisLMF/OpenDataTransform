@@ -37,7 +37,7 @@ class Converters(TypedDict):
 
 def build_converter(t) -> Callable[[Any, bool, List], Any]:
     def _converter(value, nullable, null_values):
-        if nullable and value in null_values:
+        if nullable and (value in null_values or value is None):
             return None
         return t(value)
 

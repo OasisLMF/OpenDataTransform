@@ -14,6 +14,10 @@ from converter.controller import Controller
 from converter.ui.main_window import MainWindow
 
 
+def get_logger():
+    return logging.getLogger(__name__)
+
+
 class ColorFormatter(logging.Formatter):
     """
     Changes the color of the log message based on the log level. Errors are
@@ -197,7 +201,10 @@ def cli(ctx, config, verbose, no_color, option):
             # entries so that all tabs are open
             ctx.obj["config"] = Config(
                 config_path=config,
-                argv={k: yaml.load(v, yaml.SafeLoader) for k, v in options.items()},
+                argv={
+                    k: yaml.load(v, yaml.SafeLoader)
+                    for k, v in options.items()
+                },
                 env=os.environ,
                 overrides={
                     Config.TEMPLATE_TRANSFORMATION_PATH: {},
@@ -205,8 +212,8 @@ def cli(ctx, config, verbose, no_color, option):
                         Config.ACC_TRANSFORMATION_LABEL: {},
                         Config.LOC_TRANSFORMATION_LABEL: {},
                         Config.RI_TRANSFORMATION_LABEL: {},
-                    }
-                }
+                    },
+                },
             )
 
         widget = MainWindow(
@@ -234,10 +241,10 @@ def run(ctx):
     Runs the data conversion
     """
     try:
-        logging.debug(f"Running with config:\n{ctx.obj['config'].to_yaml()}")
+        get_logger().debug(
+            f"Running with config:\n{ctx.obj['config'].to_yaml()}"
+        )
         Controller(ctx.obj["config"]).run()
     except Exception as e:
-        logging.exception(e)
+        get_logger().exception(e)
         sys.exit(1)
-    else:
-        logging.info("Transformation Complete")

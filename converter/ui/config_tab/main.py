@@ -104,9 +104,10 @@ class ConfigTab(QWidget):
         # Add a spacer to push all the fields up when fields are hidden
         self.layout.addStretch()
 
-        self.main_window.running_changed.connect(
-            lambda b: self.setEnabled(not b)
-        )
+        self.main_window.running_changed.connect(self.on_running_changed)
+
+    def on_running_changed(self, b):
+        self.setEnabled(b)
 
     def toggle_all_fields(self):
         self.show_all_fields = not self.show_all_fields
