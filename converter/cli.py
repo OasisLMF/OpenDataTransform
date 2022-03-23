@@ -73,7 +73,7 @@ def init_logging(verbosity, no_color, config):
     logging.shutdown()
     reload(logging)
 
-    config_dir = os.path.abspath(os.path.dirname(config))
+    config_dir = os.path.abspath(os.path.dirname(config or "config.yml"))
     time_string = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     log_dir = os.path.join(config_dir, "runs", time_string)
     os.makedirs(log_dir, exist_ok=True)
