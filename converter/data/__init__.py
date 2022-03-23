@@ -1,6 +1,6 @@
 import os
-import re
 import sys
+from pathlib import Path
 
 
 def get_data_root():
@@ -37,6 +37,14 @@ def hide_system_data_path(path):
 
     :return: The processed path
     """
-    replacer = re.compile(f"^{os.path.abspath(get_data_root())}/")
+    data_root_path = Path(get_data_root())
+    path = Path(path)
 
-    return replacer.sub("<system data path>/", os.path.abspath(path))
+    if data_root_path in path.parents:
+        return str(
+            Path("<system data path>").joinpath(
+                str(path.relative_to(data_root_path))
+            )
+        )
+
+    return str(path)
