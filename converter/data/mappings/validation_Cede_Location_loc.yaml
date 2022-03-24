@@ -1,0 +1,14 @@
+entries:
+  Total:
+    fields:
+      - BuildingValue
+      - ContentsValue
+    operator: sum
+  TotalByPeril:
+    fields:
+      - BuildingValue
+    operator: sum
+    group_by:
+      - LocPerils
+  NumRows:
+    operator: count

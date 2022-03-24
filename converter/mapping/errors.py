@@ -24,5 +24,5 @@ class NoConversionPathError(ConverterError):
         super().__init__(
             f"No conversion path from {input_format.name} "
             f"v{input_format.version} to {output_format.name} "
-            f"v{input_format.version}."
+            f"v{output_format.version}."
         )
