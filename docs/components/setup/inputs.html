@@ -204,9 +204,12 @@ One configuration file is required for each transformation: one per account, loc
 <a class="reference external" href="https://github.com/OasisLMF/OEDtransform/tree/master/examples/cede_test">Example here</a> and shown below:</p>
 <a class="reference internal image-reference" href="../../_images/example_config.png"><img alt="An example config file" src="../../_images/example_config.png" style="width: 600px;" /></a>
 <p>The fields <cite>mapping: input_format</cite> and <cite>mapping: output_format</cite> are used to identify which mapping is used in the transformation. The field value must match the value given for <cite>input_format</cite> and <cite>output_format</cite> in the mapping files (it does not reference the filename of the mapping file. In this example, the file is set up to transform data from AIR to OED format.</p>
-<p>Mapping files do not need to reside in the same folder as the config file. The code will look for the mapping in the same folder as the config file, but also in the local <cite>OpenDataTransform/converter/data/mappings</cite> folder - The files in this folder are published mapping files, for community use. If your local folder containing config files and input data files but does not contain mapping files, the code will search these files for a mapping containing the matching input_format and output_format contained in your config file.</p>
-<p>The fields <cite>extractor: path</cite> and <cite>loader: path</cite> refer tot he source file, and destination file, respectively. The fields can accept a full file path, but if the source and destination files refer to locations in the same folder as the config file, only the filename is needed (as shown).</p>
+<p>The full path to the mapping file is not required in the config file, and mapping files do not need to reside in the same folder as the config file.</p>
+<p>The code will look for the mapping in the same folder as the config file, but also in the local folder <cite>../converter/data/mappings</cite> folder - the published files in this folder are for community use and will be installed if the full package is installed and are packaged and downloaded with the .exe. If your local folder containing config files and input data files but does not contain mapping files, the code will search these files for a mapping containing the matching input_format and output_format contained in your config file.</p>
+<p>The fields <cite>extractor: path</cite> and <cite>loader: path</cite> refer to the source file and destination file, respectively. The fields can accept a full file path, but if the source and destination files refer to locations in the same folder as the config file, only the filename is needed (as shown).</p>
 <p>A config file can be used in command line execution, or loaded into the user interface. Alternatively the information can be prepared in the user interface and saved to a text file.</p>
+<p>Each runner takes the input data from the extractor, applying each transformation and passing the transformed data onto the loader. A selection of runners is built into the framework: * <a class="reference external" href="https://pandas.pydata.org/">Pandas</a>, <a class="reference external" href="https://dask.org/">Dask</a>, and <a class="reference external" href="https://modin.readthedocs.io/en/stable/">Modin</a>. Each handles datasets in different ways and have shown variable performance depending on the size of dataset being transformed (in terms of number of rows _and_ columns). Relative performance will differ according to the specific dataset. Briefly, Pandas will process data on a single core, while Modin and Dask use parallel processing on multiple cores of a local machine. For small datasets, Pandas provides faster transformation but for larger datasets Modin and Dask are likely faster.</p>
+<p>When using the Pandas runner, the config requires a value for ‘quoting’. This refers to which types of value Pandas wraps in quotes (“”) when reading and writing csv files. Options are: minimal (the default), all, non-numeric, or none. All will wrap all values in quotes, none will wrap no values. Minimal will wrap any value that contains commas, and non-numeric will wraps all text data but not numeric values. An example of this is shown <a class="reference external" href="https://thepythonguru.com/python-how-to-read-and-write-csv-files/">here</a>.</p>
 </div>
 <div class="section" id="input-data">
 <h2>Input data<a class="headerlink" href="#input-data" title="Permalink to this headline">¶</a></h2>
@@ -223,6 +226,16 @@ One configuration file is required for each transformation: one per account, loc
 <a class="reference internal image-reference" href="../../_images/example_mapping_overview.png"><img alt="An example mapping file" src="../../_images/example_mapping_overview.png" style="width: 600px;" /></a>
 <p><strong>Mapping file templates</strong> are available in the GitHub project <a class="reference external" href="https://github.com/OasisLMF/OpenDataTransform/tree/master/converter/data/mappings">default mappings folder</a>. These are published mapping files, for community use; they can be copied and edited to create your own versions.</p>
 <p>By copying and editing these, a user can tailor the mapping for a specific case (a portfolio or user may require a specific match-up of occupancy code in the source and destination formats, which is not used in the default file), or to accommodate a model version update. We encourage you to share new mappings via this GitHub repo (with update headers to describe the new version and your changes).</p>
+<p>Mapping file naming should follow this convention <cite>mapping_&lt;filetype&gt;_&lt;origin&gt;-&lt;target&gt;_&lt;date yymmdd&gt;_&lt;tag&gt;.yaml</cite>, where:</p>
+<ul class="simple">
+<li><p>&lt;filetype&gt; refers to account/contract, location, or reinsurance</p></li>
+<li><p>&lt;origin&gt; refers to the origin data format of the forward transformation</p></li>
+<li><p>&lt;target&gt; refers to the destination data format of the forward transformation</p></li>
+<li><p>&lt;date&gt; is the date the mapping was completed or published (yymmdd)</p></li>
+<li><p>&lt;tag&gt; describes the organisation who published the mapping file, and if relevant the specific client/portfolio it is specifically used for.</p></li>
+</ul>
+<p>For example, <cite>mapping_loc_Cede-OED_220124_Oasis.yaml</cite> would be a template file developed by Oasis to convert location details from CEDE to OED and <cite>mapping_acc_Cede-OED_220124_Oasis.yaml</cite> would be the accompanying account mapping file.</p>
+<p>For more information on the structure of a mapping file and the operations that can be used, please see these pages:</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="mapping-files.html">More information on Mapping File Structure</a></li>
@@ -233,10 +246,16 @@ One configuration file is required for each transformation: one per account, loc
 <div class="section" id="data-validation-definition">
 <h2>Data validation definition<a class="headerlink" href="#data-validation-definition" title="Permalink to this headline">¶</a></h2>
 <p>One validation definition file is required for each input file. These .yaml files describe the data validation fields and values that will be checked before and after the transformation.
-Validation can be defined to report (for example) sum, max, min or average values by user-defined groupings - e.g., sum of building TIV per occupancy and peril.</p>
+Validation can be defined to report (for example) sum, max, min or average values by user-defined groupings - e.g., sum of building TIV per occupancy and peril. All field references contained within the file must be the fields relevant to that format.</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://github.com/OasisLMF/OpenDataTransform/tree/master/examples/demonstration/validation">Example of validation without grouping</a></p></li>
 <li><p><a class="reference external" href="https://github.com/OasisLMF/OpenDataTransform/tree/master/examples/demonstration/validation-groups">Example of validation with grouping</a></p></li>
+</ul>
+<p>Validation file naming should follow this convention <cite>validation_&lt;format&gt;_&lt;file_full&gt;_&lt;file_short&gt;.yaml</cite>, where:</p>
+<ul class="simple">
+<li><p>&lt;format&gt; refers to the data format to be validated, e.g.,  <cite>validation_CEDE_Location_loc.yaml</cite></p></li>
+<li><p>&lt;file_full&gt; refers to ‘Account’, ‘Location’ or ‘Reinsurance’</p></li>
+<li><p>&lt;file_short&gt; refers to ‘acc’, ‘loc’ or ‘reins’</p></li>
 </ul>
 </div>
 <div class="section" id="portfolio-metadata">

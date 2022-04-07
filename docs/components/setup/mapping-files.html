@@ -264,8 +264,9 @@ handled by the conversion.</p>
 <h2><cite>forward</cite>/<cite>reverse</cite><a class="headerlink" href="#forward-reverse" title="Permalink to this headline">¶</a></h2>
 <p>The forward and reverse sections describe how the converter should handle converting
 data in both directions. These are optional but should be provided by the bases or
-in the mapping file for the converter to have any effect. Each section has a set of
-properties:</p>
+in the mapping file for the converter to have any effect.</p>
+<p>The order of &lt;target&gt; fields in the mapping file will dictate the order of fields in the output csv file. The mapping file can use any order of &lt;target&gt; fields but if the data is to be ingested in a model which requires a specific order of fields, this order should be replicated in the mapping file.</p>
+<p>Each section has a set of properties:</p>
 <ul>
 <li><p><strong>null_values</strong>: A list of values to be considered as null when processing input
 types. If no type is specified for the input field this will be ignored. If a
@@ -278,11 +279,16 @@ is a mapping of input field name to a set of properties, these are <strong>type<
 should be one of <code class="code docutils literal notranslate"><span class="pre">'int'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'float'</span></code> or <code class="code docutils literal notranslate"><span class="pre">'string'</span></code>, <strong>nullable</strong>
 which is a boolean flag that states whether a value should be checked against the
 <code class="code docutils literal notranslate"><span class="pre">null_values</span></code> and <strong>null_values</strong> which overrides the <code class="code docutils literal notranslate"><span class="pre">null_values</span></code>
-in the parent section.</p>
+in the parent section.
+Field types are specified to ensure all rows are read as the same data type. In
+some cases, a portfolio might contain postcodes that are numeric only, and some
+that contain non-numeric characters. If the data type is not specified, the type
+will be assumed to be that contained in the first row, and may not read later rows
+correctly.</p>
 <p>If <code class="code docutils literal notranslate"><span class="pre">types</span></code> are present in any of the bases they are all merged together
 preferring the later parents and this mapping file.</p>
 </li>
-<li><p><strong>transform</strong>: Mappings that map the output field name to a list of possible
+<li><p><strong>transform</strong>: Mappings that map the output (&lt;target&gt;) field name to a list of possible
 transformations. For each field there is a required <code class="code docutils literal notranslate"><span class="pre">transformation</span></code>
 property and an optional <code class="code docutils literal notranslate"><span class="pre">when</span></code> parameter both of which are written in the
 <span class="xref std std-ref">transformer language</span>. The <code class="code docutils literal notranslate"><span class="pre">transformation</span></code>

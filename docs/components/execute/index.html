@@ -109,7 +109,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../setup/inputs.html">Inputs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../setup/outputs.html">Outputs</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Executing a data transformation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#running-odtf-via-user-interface">Running ODTF via User Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-odtf-via-user-interface">Running ODTF via User Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../setup/inputs.html">Inputs</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#running-odtf-via-command-line">Running ODTF via Command Line</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../developer/config/index.html">Configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../developer/config/index.html#debugging">Debugging</a></li>
@@ -197,16 +200,28 @@
 <p>In addition to this written user guide, a <a class="reference external" href="https://vimeo.com/user14948183/review/676071546/cb29739687">video tutorial</a> on how to use the ODTF is also available.</p>
 <div class="section" id="running-odtf-via-user-interface">
 <h2>Running ODTF via User Interface<a class="headerlink" href="#running-odtf-via-user-interface" title="Permalink to this headline">¶</a></h2>
-<p>The user interface is accessed by running a <a class="reference external" href="https://github.com/OasisLMF/OpenDataTransform/tree/develop/apps">Windows-compatible executable file</a>.</p>
-<p>A user can load a configuration .yaml file, which will populate the fields in the UI.</p>
-<p>Alternatively, you can configure the transformation entirely in the UI. These settings can be saved to a text config file for reference.</p>
-<p>Enter on the <cite>Location</cite>, <cite>Account</cite>, and <cite>Reinsurance</cite> tabs:
-* Mapping: the source and destination mapping
-* Extractor: source data path or database connection
-* Loader: destination data path or database connection
-* Runner: pandas is used as the default</p>
-<p>Enter portfolio metadata on the <cite>Metadata</cite> tab, and execute the transformation on the <cite>Run</cite> tab.</p>
-<p>Template config, mapping and validation files are not provided in the executable package, and should be downloaded from GitHub and saved on your local machine.</p>
+<p>The user interface is accessed by running a Windows-compatible executable file (.exe) which should be downloaded from <a class="reference external" href="https://github.com/OasisLMF/OpenDataTransform/tree/develop/apps">the project GitHub pages</a>.</p>
+<ol class="arabic simple">
+<li><p>Download the file, unzip it, and run the file from its unzipped location. A terminal window will open while the UI window opens. The terminal windows remains open while the UI is running, and will display processing messages, including any errors.</p></li>
+<li><p>Load a configuration .yaml file, which will populate the fields in the UI. Alternatively, you can configure the transformation entirely in the UI. These settings can be saved to a text config file for reference.</p></li>
+</ol>
+<p>To do this, enter on the <cite>Location</cite>, <cite>Account</cite>, and <cite>Reinsurance</cite> tabs:</p>
+<ul class="simple">
+<li><p>Mapping: the source and destination mapping</p></li>
+<li><p>Extractor: source data path or database connection</p></li>
+<li><p>Loader: destination data path or database connection</p></li>
+<li><p>Runner: pandas is used as the default</p></li>
+</ul>
+<p>For further details on these inputs, please see section on config file inputs:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../setup/inputs.html">Inputs</a></li>
+</ul>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Enter portfolio metadata on the <cite>Metadata</cite> tab. This information is optional, but will help to record the transformations being performed. It will be particularly useful in IDF/CRC testing procedures, to track what portfolio types and levels of complexity have been tested and how the framework performs for them.</p></li>
+<li><p>Execute the transformation on the <cite>Run</cite> tab. In the run tab you will see the log messages being written, with the duration of transformation given, when it is completed. This screen will also show the data values written according to the fields and groupings given in the validation input file.</p></li>
+</ol>
 <a class="reference internal image-reference" href="../../_images/UI_Jan2022.png"><img alt="The ODTF user interface" src="../../_images/UI_Jan2022.png" style="width: 600px;" /></a>
 </div>
 <div class="section" id="running-odtf-via-command-line">

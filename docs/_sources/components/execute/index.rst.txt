@@ -15,21 +15,32 @@ In addition to this written user guide, a `video tutorial <https://vimeo.com/use
 Running ODTF via User Interface
 ---------------------------------
 
-The user interface is accessed by running a `Windows-compatible executable file <https://github.com/OasisLMF/OpenDataTransform/tree/develop/apps>`_.
+The user interface is accessed by running a Windows-compatible executable file (.exe) which should be downloaded from `the project GitHub pages <https://github.com/OasisLMF/OpenDataTransform/tree/develop/apps>`_.
 
-A user can load a configuration .yaml file, which will populate the fields in the UI. 
+1. Download the file, unzip it, and run the file from its unzipped location. A terminal window will open while the UI window opens. The terminal windows remains open while the UI is running, and will display processing messages, including any errors. 
 
-Alternatively, you can configure the transformation entirely in the UI. These settings can be saved to a text config file for reference.
+2. Load a configuration .yaml file, which will populate the fields in the UI. Alternatively, you can configure the transformation entirely in the UI. These settings can be saved to a text config file for reference.
 
-Enter on the `Location`, `Account`, and `Reinsurance` tabs:
+To do this, enter on the `Location`, `Account`, and `Reinsurance` tabs:
+
 * Mapping: the source and destination mapping
 * Extractor: source data path or database connection 
 * Loader: destination data path or database connection 
 * Runner: pandas is used as the default
 
-Enter portfolio metadata on the `Metadata` tab, and execute the transformation on the `Run` tab.
+For further details on these inputs, please see section on config file inputs:
 
-Template config, mapping and validation files are not provided in the executable package, and should be downloaded from GitHub and saved on your local machine.
+.. toctree::
+   :maxdepth: 1
+
+   ../setup/inputs.rst
+  
+
+3. Enter portfolio metadata on the `Metadata` tab. This information is optional, but will help to record the transformations being performed. It will be particularly useful in IDF/CRC testing procedures, to track what portfolio types and levels of complexity have been tested and how the framework performs for them.
+
+4. Execute the transformation on the `Run` tab. In the run tab you will see the log messages being written, with the duration of transformation given, when it is completed. This screen will also show the data values written according to the fields and groupings given in the validation input file.
+
+
 
 .. image:: ../../docs_img/UI_Jan2022.png
   :width: 600
