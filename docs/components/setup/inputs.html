@@ -1,0 +1,295 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Inputs &mdash; Open Data Transformation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/c" type="text/css" />
+  <link rel="stylesheet" href="../../_static/u" type="text/css" />
+  <link rel="stylesheet" href="../../_static/s" type="text/css" />
+  <link rel="stylesheet" href="../../_static/t" type="text/css" />
+  <link rel="stylesheet" href="../../_static/o" type="text/css" />
+  <link rel="stylesheet" href="../../_static/m" type="text/css" />
+  <link rel="stylesheet" href="../../_static/." type="text/css" />
+  <link rel="stylesheet" href="../../_static/c" type="text/css" />
+  <link rel="stylesheet" href="../../_static/s" type="text/css" />
+  <link rel="stylesheet" href="../../_static/s" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/idf_square.ico"/>
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="More information on Mapping File Structure" href="mapping-files.html" />
+    <link rel="prev" title="Framework Structure" href="structure.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Open Data Transformation
+          
+
+          
+            
+            <img src="../../_static/IDF_Original.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="structure.html">Framework Structure</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Inputs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#configuration-file">Configuration File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#input-data">Input data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mapping-files">Mapping files</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="mapping-files.html">More information on Mapping File Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="transformer-language.html">More information on Transformer Language</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#data-validation-definition">Data validation definition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#portfolio-metadata">Portfolio metadata</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="outputs.html">Outputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../execute/index.html">Executing a data transformation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../knownissues/index.html">Known Issues and feedback</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../releaseNotes/index.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing/index.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer/index.html">Further Developer information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../package/index.html">API Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Open Data Transformation</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Inputs</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../_sources/components/setup/inputs.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="inputs">
+<h1>Inputs<a class="headerlink" href="#inputs" title="Permalink to this headline">¶</a></h1>
+<p>This section describes the input files you will need to run a transformation.</p>
+<div class="section" id="configuration-file">
+<h2>Configuration File<a class="headerlink" href="#configuration-file" title="Permalink to this headline">¶</a></h2>
+<p>The config file defines the filepath and filename for input files, output files, mapping files and data validation files.</p>
+<p>It defines the choice of loader, extractor and runner.
+The config file is written in .yaml format.
+One configuration file is required for each transformation: one per account, location, and reinsurance file.
+<a class="reference external" href="https://github.com/OasisLMF/OEDtransform/tree/master/examples/cede_test">Example here</a> and shown below:</p>
+<a class="reference internal image-reference" href="../../_images/example_config.png"><img alt="An example config file" src="../../_images/example_config.png" style="width: 600px;" /></a>
+<p>The fields <cite>mapping: input_format</cite> and <cite>mapping: output_format</cite> are used to identify which mapping is used in the transformation. The field value must match the value given for <cite>input_format</cite> and <cite>output_format</cite> in the mapping files (it does not reference the filename of the mapping file. In this example, the file is set up to transform data from AIR to OED format.</p>
+<p>Mapping files do not need to reside in the same folder as the config file. The code will look for the mapping in the same folder as the config file, but also in the local <cite>OpenDataTransform/converter/data/mappings</cite> folder - The files in this folder are published mapping files, for community use. If your local folder containing config files and input data files but does not contain mapping files, the code will search these files for a mapping containing the matching input_format and output_format contained in your config file.</p>
+<p>The fields <cite>extractor: path</cite> and <cite>loader: path</cite> refer tot he source file, and destination file, respectively. The fields can accept a full file path, but if the source and destination files refer to locations in the same folder as the config file, only the filename is needed (as shown).</p>
+<p>A config file can be used in command line execution, or loaded into the user interface. Alternatively the information can be prepared in the user interface and saved to a text file.</p>
+</div>
+<div class="section" id="input-data">
+<h2>Input data<a class="headerlink" href="#input-data" title="Permalink to this headline">¶</a></h2>
+<p>Flat file input (.csv) or SQL database describing account, location, and reinsurance data.</p>
+<p>An example input location file with accompanying config and mapping file is available <a class="reference external" href="https://github.com/OasisLMF/OpenDataTransform/blob/master/examples/cede/archive/cede_test_v2/">here</a>.</p>
+</div>
+<div class="section" id="mapping-files">
+<h2>Mapping files<a class="headerlink" href="#mapping-files" title="Permalink to this headline">¶</a></h2>
+<p>A mapping file describes the conversion between two data formats. They are written as a .yaml text file.</p>
+<p>A mapping file can be used to define a forward transformation (e.g., Model A to B) and a reverse transformation (Model B to A).</p>
+<p>Multiple mapping files can be used together to define a mapping between a source and destination format that do not appear in the same mapping file. I.e., A mapping file for model A to B and and a mapping file for Model B to C, can be used to transform data directly from A to C.</p>
+<p>The mapping file header describes the mapping version, the source and destination formats (and their versions), and information about when and who created the mapping.</p>
+<p>The mapping file defines the source field data types and the transformations to be performed. Transformations can copy one field into another, substitute field values using a <em>replace</em> function, or include conditional transformation using a <em>where</em> clause, as in the example below.</p>
+<a class="reference internal image-reference" href="../../_images/example_mapping_overview.png"><img alt="An example mapping file" src="../../_images/example_mapping_overview.png" style="width: 600px;" /></a>
+<p><strong>Mapping file templates</strong> are available in the GitHub project <a class="reference external" href="https://github.com/OasisLMF/OpenDataTransform/tree/master/converter/data/mappings">default mappings folder</a>. These are published mapping files, for community use; they can be copied and edited to create your own versions.</p>
+<p>By copying and editing these, a user can tailor the mapping for a specific case (a portfolio or user may require a specific match-up of occupancy code in the source and destination formats, which is not used in the default file), or to accommodate a model version update. We encourage you to share new mappings via this GitHub repo (with update headers to describe the new version and your changes).</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="mapping-files.html">More information on Mapping File Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transformer-language.html">More information on Transformer Language</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="data-validation-definition">
+<h2>Data validation definition<a class="headerlink" href="#data-validation-definition" title="Permalink to this headline">¶</a></h2>
+<p>One validation definition file is required for each input file. These .yaml files describe the data validation fields and values that will be checked before and after the transformation.
+Validation can be defined to report (for example) sum, max, min or average values by user-defined groupings - e.g., sum of building TIV per occupancy and peril.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/OasisLMF/OpenDataTransform/tree/master/examples/demonstration/validation">Example of validation without grouping</a></p></li>
+<li><p><a class="reference external" href="https://github.com/OasisLMF/OpenDataTransform/tree/master/examples/demonstration/validation-groups">Example of validation with grouping</a></p></li>
+</ul>
+</div>
+<div class="section" id="portfolio-metadata">
+<h2>Portfolio metadata<a class="headerlink" href="#portfolio-metadata" title="Permalink to this headline">¶</a></h2>
+<p>Portfolio metadata is optional information that provides a high-level context about the portfolio being transformed. The metadata includes, for example, the portfolio as-at date, geographic coverage, perils included, and summary of conditions. This is useful for recording the types of portfolio that have been transformed, and has value in understanding what types of data testing has been conducted for, and the success of transformation for different portolio types.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="mapping-files.html" class="btn btn-neutral float-right" title="More information on Mapping File Structure" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="structure.html" class="btn btn-neutral float-left" title="Framework Structure" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,353 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>More information on Mapping File Structure &mdash; Open Data Transformation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/c" type="text/css" />
+  <link rel="stylesheet" href="../../_static/u" type="text/css" />
+  <link rel="stylesheet" href="../../_static/s" type="text/css" />
+  <link rel="stylesheet" href="../../_static/t" type="text/css" />
+  <link rel="stylesheet" href="../../_static/o" type="text/css" />
+  <link rel="stylesheet" href="../../_static/m" type="text/css" />
+  <link rel="stylesheet" href="../../_static/." type="text/css" />
+  <link rel="stylesheet" href="../../_static/c" type="text/css" />
+  <link rel="stylesheet" href="../../_static/s" type="text/css" />
+  <link rel="stylesheet" href="../../_static/s" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/idf_square.ico"/>
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="More information on Transformer Language" href="transformer-language.html" />
+    <link rel="prev" title="Inputs" href="inputs.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Open Data Transformation
+          
+
+          
+            
+            <img src="../../_static/IDF_Original.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="structure.html">Framework Structure</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="inputs.html">Inputs</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="inputs.html#configuration-file">Configuration File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inputs.html#input-data">Input data</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="inputs.html#mapping-files">Mapping files</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">More information on Mapping File Structure</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#bases"><cite>bases</cite></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#input-format-output-format"><cite>input_format</cite>/<cite>output_format</cite></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#forward-reverse"><cite>forward</cite>/<cite>reverse</cite></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="transformer-language.html">More information on Transformer Language</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="inputs.html#data-validation-definition">Data validation definition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inputs.html#portfolio-metadata">Portfolio metadata</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="outputs.html">Outputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../execute/index.html">Executing a data transformation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../knownissues/index.html">Known Issues and feedback</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../releaseNotes/index.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing/index.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer/index.html">Further Developer information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../package/index.html">API Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Open Data Transformation</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="inputs.html">Inputs</a> &raquo;</li>
+        
+      <li>More information on Mapping File Structure</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../_sources/components/setup/mapping-files.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="more-information-on-mapping-file-structure">
+<h1>More information on Mapping File Structure<a class="headerlink" href="#more-information-on-mapping-file-structure" title="Permalink to this headline">¶</a></h1>
+<p>Mapping files take the following form:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bases</span><span class="p">:</span>
+  <span class="o">-</span> <span class="o">...</span>
+<span class="n">input_format</span><span class="p">:</span> <span class="o">...</span>
+<span class="n">output_format</span><span class="p">:</span> <span class="o">...</span>
+<span class="n">forward</span><span class="p">:</span>
+  <span class="n">types</span><span class="p">:</span>
+    <span class="o">&lt;</span><span class="nb">input</span><span class="o">&gt;</span><span class="p">:</span>
+      <span class="nb">type</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">int</span><span class="o">|</span><span class="nb">float</span><span class="o">|</span><span class="n">string</span><span class="o">&gt;</span>
+      <span class="n">nullable</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">true</span><span class="o">|</span><span class="n">false</span><span class="o">&gt;</span>
+      <span class="n">null_values</span><span class="p">:</span>
+        <span class="o">-</span> <span class="o">...</span>
+    <span class="o">...</span>
+  <span class="n">null_values</span><span class="p">:</span>
+    <span class="o">-</span> <span class="o">...</span>
+  <span class="n">transform</span><span class="p">:</span>
+    <span class="o">&lt;</span><span class="n">target</span><span class="o">&gt;</span><span class="p">:</span>
+      <span class="o">-</span> <span class="n">transformation</span><span class="p">:</span> <span class="o">...</span>
+        <span class="n">when</span><span class="p">:</span> <span class="o">...</span>
+      <span class="o">-</span> <span class="o">...</span>
+    <span class="o">...</span>
+<span class="n">reverse</span><span class="p">:</span>
+  <span class="n">types</span><span class="p">:</span>
+    <span class="o">&lt;</span><span class="nb">input</span><span class="o">&gt;</span><span class="p">:</span>
+      <span class="nb">type</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">int</span><span class="o">|</span><span class="nb">float</span><span class="o">|</span><span class="n">string</span><span class="o">&gt;</span>
+      <span class="n">nullable</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">true</span><span class="o">|</span><span class="n">false</span><span class="o">&gt;</span>
+      <span class="n">null_values</span><span class="p">:</span>
+        <span class="o">-</span> <span class="o">...</span>
+    <span class="o">...</span>
+  <span class="n">null_values</span><span class="p">:</span>
+    <span class="o">-</span> <span class="o">...</span>
+  <span class="n">transform</span><span class="p">:</span> <span class="o">...</span>
+    <span class="o">&lt;</span><span class="n">target</span><span class="o">&gt;</span><span class="p">:</span>
+      <span class="o">-</span> <span class="n">transformation</span><span class="p">:</span> <span class="o">...</span>
+        <span class="n">when</span><span class="p">:</span> <span class="o">...</span>
+      <span class="o">-</span> <span class="o">...</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>Each of the fields in the mapping file is described below.</p>
+<div class="section" id="bases">
+<h2><cite>bases</cite><a class="headerlink" href="#bases" title="Permalink to this headline">¶</a></h2>
+<p>This is an optional field that allows for existing mappings to be extended in the
+case that there are similarities between the 2 formats.</p>
+<p>If it is present each of the bases are merged taking fields from the later files
+if present. The merging of each field is described in further detail below.</p>
+<p>The value of bases (if present) should be a list of strings that are either names
+of existing mappings in the standard mapping library or in one of the provided
+mapping directories. If there is any ambiguity in which mapping file to use the
+file provided in the last provided mapping directory will be used with custom
+mapping paths being used over the standard library.</p>
+</div>
+<div class="section" id="input-format-output-format">
+<h2><cite>input_format</cite>/<cite>output_format</cite><a class="headerlink" href="#input-format-output-format" title="Permalink to this headline">¶</a></h2>
+<p>These fields are required if no <code class="code docutils literal notranslate"><span class="pre">bases</span></code> are set or if no bases provide a value.
+The input and output format are strings that tell the system which formats are
+handled by the conversion.</p>
+<p>The <cite>input_format</cite> and <cite>output_format</cite> fields must be referenced in the config file, for that config file to recognise and use the mapping.</p>
+</div>
+<div class="section" id="forward-reverse">
+<h2><cite>forward</cite>/<cite>reverse</cite><a class="headerlink" href="#forward-reverse" title="Permalink to this headline">¶</a></h2>
+<p>The forward and reverse sections describe how the converter should handle converting
+data in both directions. These are optional but should be provided by the bases or
+in the mapping file for the converter to have any effect. Each section has a set of
+properties:</p>
+<ul>
+<li><p><strong>null_values</strong>: A list of values to be considered as null when processing input
+types. If no type is specified for the input field this will be ignored. If a
+<code class="code docutils literal notranslate"><span class="pre">null_types</span></code> is set for a specific field that will be used over this.</p>
+<p>If <code class="code docutils literal notranslate"><span class="pre">null_types</span></code> is set on any bases, they are all merged with the ones
+specified here.</p>
+</li>
+<li><p><strong>types</strong>: Describes the types of values for each column in the input data. This
+is a mapping of input field name to a set of properties, these are <strong>type</strong> which
+should be one of <code class="code docutils literal notranslate"><span class="pre">'int'</span></code>, <code class="code docutils literal notranslate"><span class="pre">'float'</span></code> or <code class="code docutils literal notranslate"><span class="pre">'string'</span></code>, <strong>nullable</strong>
+which is a boolean flag that states whether a value should be checked against the
+<code class="code docutils literal notranslate"><span class="pre">null_values</span></code> and <strong>null_values</strong> which overrides the <code class="code docutils literal notranslate"><span class="pre">null_values</span></code>
+in the parent section.</p>
+<p>If <code class="code docutils literal notranslate"><span class="pre">types</span></code> are present in any of the bases they are all merged together
+preferring the later parents and this mapping file.</p>
+</li>
+<li><p><strong>transform</strong>: Mappings that map the output field name to a list of possible
+transformations. For each field there is a required <code class="code docutils literal notranslate"><span class="pre">transformation</span></code>
+property and an optional <code class="code docutils literal notranslate"><span class="pre">when</span></code> parameter both of which are written in the
+<span class="xref std std-ref">transformer language</span>. The <code class="code docutils literal notranslate"><span class="pre">transformation</span></code>
+property describes the result of the transformation which will be stored in the
+<code class="code docutils literal notranslate"><span class="pre">&lt;target&gt;</span></code> property in the output. If provided the <cite>when</cite> property describes
+when the particular transformer should be applied, if it is not provided this is
+assumed to be always. If multiple transforms should be applied because all of
+their <code class="code docutils literal notranslate"><span class="pre">when</span></code> properties resolve to <code class="code docutils literal notranslate"><span class="pre">True</span></code> then the first transform
+that appears for the target will be applied.</p>
+<p>If <code class="code docutils literal notranslate"><span class="pre">transform</span></code> are present in any of the bases they are all merged together
+preferring the later parents and this mapping file.</p>
+<p>To add a default fallback value add a transformation to the end of the transform
+list that has a <code class="code docutils literal notranslate"><span class="pre">transformation</span></code> and no <code class="code docutils literal notranslate"><span class="pre">when</span></code> clause. This will
+always resolve and only after all other transformations have been skipped due to
+their <code class="code docutils literal notranslate"><span class="pre">when</span></code> clause failing.</p>
+</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="transformer-language.html" class="btn btn-neutral float-right" title="More information on Transformer Language" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="inputs.html" class="btn btn-neutral float-left" title="Inputs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
