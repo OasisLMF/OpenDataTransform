@@ -1,0 +1,37 @@
+transformations:
+  loc:
+    input_format:
+      name: Cede_Location
+      version: 8.0.0
+    output_format:
+      name: OED_Location
+      version: 1.2.1
+    runner:
+      path: converter.runner.pandas.PandasRunner
+    extractor:
+      options:
+        path: Cede_Location_1.csv
+        quoting: minimal
+      path: converter.connector.csv.CsvConnector
+    loader:
+      options:
+        path: oed_location_1.csv
+        quoting: minimal
+  acc:
+    input_format:
+      name: Cede_Contract
+      version: 8.0.0
+    output_format:
+      name: OED_Account
+      version: 1.2.1
+    runner:
+      path: converter.runner.pandas.PandasRunner
+    extractor:
+      options:
+        path: Cede_Account_1.csv
+        quoting: minimal
+      path: converter.connector.csv.CsvConnector
+    loader:
+      options:
+        path: oed_account_1.csv
+        quoting: minimal

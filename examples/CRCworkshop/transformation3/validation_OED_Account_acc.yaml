@@ -1,0 +1,14 @@
+entries:
+  Total:
+    fields:
+      - PolDed6All
+      - LayerLimit
+    operator: sum
+  TotalByPeril:
+    fields:
+      - PolDed6All
+    operator: sum
+    group_by:
+      - AccPerils
+  NumRows:
+    operator: count
