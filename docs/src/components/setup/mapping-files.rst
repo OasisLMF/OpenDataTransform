@@ -73,8 +73,11 @@ The `input_format` and `output_format` fields must be referenced in the config f
 
 The forward and reverse sections describe how the converter should handle converting
 data in both directions. These are optional but should be provided by the bases or
-in the mapping file for the converter to have any effect. Each section has a set of
-properties:
+in the mapping file for the converter to have any effect. 
+
+The order of <target> fields in the mapping file will dictate the order of fields in the output csv file. The mapping file can use any order of <target> fields but if the data is to be ingested in a model which requires a specific order of fields, this order should be replicated in the mapping file. 
+
+Each section has a set of properties:
 
 * **null_values**: A list of values to be considered as null when processing input
   types. If no type is specified for the input field this will be ignored. If a
@@ -89,11 +92,16 @@ properties:
   which is a boolean flag that states whether a value should be checked against the
   :code:`null_values` and **null_values** which overrides the :code:`null_values`
   in the parent section.
+  Field types are specified to ensure all rows are read as the same data type. In 
+  some cases, a portfolio might contain postcodes that are numeric only, and some 
+  that contain non-numeric characters. If the data type is not specified, the type 
+  will be assumed to be that contained in the first row, and may not read later rows
+  correctly.
 
   If :code:`types` are present in any of the bases they are all merged together
   preferring the later parents and this mapping file.
 
-* **transform**: Mappings that map the output field name to a list of possible
+* **transform**: Mappings that map the output (<target>) field name to a list of possible
   transformations. For each field there is a required :code:`transformation`
   property and an optional :code:`when` parameter both of which are written in the
   :ref:`transformer language <transformerlanguage>`. The :code:`transformation`
