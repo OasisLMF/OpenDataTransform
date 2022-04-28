@@ -5,7 +5,7 @@ from converter.ui.fields.checkbox import Checkbox
 from converter.ui.fields.file import FileField
 from converter.ui.fields.label import Label
 from converter.ui.fields.select import Select
-from converter.ui.fields.string import StringField
+from converter.ui.fields.string import StringField, PasswordField
 
 
 class DynamicClassFormBlock(QGroupBox):
@@ -102,6 +102,8 @@ class DynamicClassFormBlock(QGroupBox):
             )
         elif schema["type"] == "string" and schema.get("subtype") == "path":
             field = FileField(self.tab, config_path)
+        elif schema["type"] == "password":
+            field = PasswordField(self.tab, config_path)
         else:
             field = StringField(self.tab, config_path)
 

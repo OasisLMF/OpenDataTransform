@@ -63,7 +63,7 @@ class BaseDBConnector(BaseConnector):
                 "title": "User",
             },
             "password": {
-                "type": "string",
+                "type": "password",
                 "description": (
                     "The password to use when connecting to the database. "
                     "Not used with SQLite."
