@@ -110,6 +110,9 @@ class MainWindow(QMainWindow):
             # setup the config tabs
             self.initialise_config_tabs(self.config)
 
+            # clear log panel in run tab
+            self.run_tab.log_panel.clear()
+
     def _handle_file_save(self, overwrite=False):
         if not overwrite or not self._loaded_config.path:
             file_path = QFileDialog.getSaveFileName(
@@ -134,6 +137,9 @@ class MainWindow(QMainWindow):
         self._working_config = Config()
         self._default_working_config = Config()
         self.config_changed.emit(self.config)
+
+        # set the title of the window to be the config file name
+        self.setWindowTitle(os.path.basename(file_path))
 
     @property
     def config_has_changes(self):
