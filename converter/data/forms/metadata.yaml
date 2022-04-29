@@ -11,6 +11,8 @@ notes:
     title: Notes
     type: string
     sub_type: text_area
+separator:
+  type: line
 perils:
     title: Perils
     type: string
