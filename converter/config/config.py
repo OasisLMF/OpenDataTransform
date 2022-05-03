@@ -6,6 +6,7 @@ from typing import Any, Dict, Iterable, List, Tuple, TypeVar, Union
 
 import yaml
 
+from converter.config.errors import ConfigurationError
 from converter.files.yaml import read_yaml
 
 
@@ -226,6 +227,16 @@ class Config:
             ),
             "_",
         )
+
+    @classmethod
+    def validate(cls, config_path: str):
+        """
+        Basic validation check of the config file.
+        """
+        config = read_yaml(config_path)
+        # If transformations key not in yaml file flag as invalid.
+        if 'transformations' not in config:
+            raise ConfigurationError("Invalid config file - transformation key required")
 
     @classmethod
     def merge_config_sources(

@@ -13,6 +13,7 @@ from PySide6.QtWidgets import (
 )
 
 from converter.config import Config
+from converter.config.errors import ConfigurationError
 from converter.ui.config_tab.add_tab_button import AddTabButton
 from converter.ui.config_tab.main import ConfigTab
 from converter.ui.metadata_tab.main import MetadataTab
@@ -102,6 +103,22 @@ class MainWindow(QMainWindow):
         )[0]
 
         if file_path:
+            # validate the config file loaded
+            try:
+                Config.validate(file_path)
+            except ConfigurationError:
+                msg = QMessageBox(
+                    QMessageBox.Warning,
+                    "Invalid File",
+                    (
+                        "Sorry this file is invalid. Please check formatting and try again."
+                    ),
+                )
+
+                msg.exec_()
+                return
+
+
             self.reset_changes(file_path)
 
             # update the new log location
