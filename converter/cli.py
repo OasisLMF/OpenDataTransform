@@ -110,6 +110,13 @@ def init_logging(verbosity, no_color, config):
                     "level": logging.DEBUG,
                     "mode": "w",
                 },
+                "runner-error-log": {
+                    "class": "logging.FileHandler",
+                    "formatter": "file",
+                    "filename": os.path.join(log_dir, "runner-error.log"),
+                    "level": logging.DEBUG,
+                    "mode": "w",
+                },
                 "validation-log-yaml": {
                     "class": "logging.FileHandler",
                     "formatter": "yaml",
@@ -126,6 +133,11 @@ def init_logging(verbosity, no_color, config):
                 },
             },
             "loggers": {
+                "converter.runner": {
+                    "level": logging.WARNING,
+                    "handlers": ["runner-error-log"],
+                    "propagate": True,
+                },
                 "converter.validator": {
                     "level": logging.INFO,
                     "handlers": ["validation-log-yaml"],
