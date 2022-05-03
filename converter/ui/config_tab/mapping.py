@@ -32,13 +32,15 @@ class MappingCombo(BaseFieldMixin, QComboBox):
         )
 
     def update_ui_from_config(self, config):
+        options = MappingGroupBox.get_mapping_formats(config)
+        self.refresh_options(options)
+
         try:
             selection = config.get_template_resolved_value(self.config_path)
             selected_index = self.options.index(
                 MappingFormat(**selection) if selection else None
             )
-            if selected_index != self.currentIndex:
-                self.setCurrentIndex(selected_index)
+            self.setCurrentIndex(selected_index)
         except (ValueError, KeyError):
             self.setCurrentIndex(0)
 
@@ -63,43 +65,32 @@ class MappingGroupBox(QGroupBox):
         self.tab = tab
         self.main_window = tab.main_window
         self.root_config_path = root_config_path
-        self.input_combo = None
-        self.output_combo = None
 
         self.layout = QFormLayout()
 
-        self.setup_mapping_fields(self.tab.main_window.config)
-        self.main_window.config_changed.connect(self.setup_mapping_fields)
+        config = self.tab.main_window.config
+        self.formats = self.get_mapping_formats(config)
+
+        self.input_label = Label(
+            "From:", self.tab, f"{root_config_path}.input_format"
+        )
+        self.input_combo = MappingCombo(
+            self.tab, f"{root_config_path}.input_format", self.formats
+        )
+        self.layout.addRow(self.input_label, self.input_combo)
+
+        self.output_label = Label(
+            "To:", self.tab, f"{root_config_path}.output_format"
+        )
+        self.output_combo = MappingCombo(
+            self.tab, f"{root_config_path}.output_format", self.formats
+        )
+        self.layout.addRow(self.output_label, self.output_combo)
+
+        self.setLayout(self.layout)
 
     @classmethod
     def get_mapping_formats(cls, config):
         return [None] + list(
             FileMapping(config, "", raise_errors=False).mapping_graph.nodes
         )
-
-    def setup_mapping_fields(self, config):
-        self.formats = self.get_mapping_formats(config)
-
-        if self.input_combo:
-            self.layout.removeRow(self.input_combo)
-
-        if self.output_combo:
-            self.layout.removeRow(self.output_combo)
-
-        self.input_label = Label(
-            "From:", self.tab, f"{self.root_config_path}.input_format"
-        )
-        self.input_combo = MappingCombo(
-            self.tab, f"{self.root_config_path}.input_format", self.formats
-        )
-        self.layout.addRow(self.input_label, self.input_combo)
-
-        self.output_label = Label(
-            "To:", self.tab, f"{self.root_config_path}.output_format"
-        )
-        self.output_combo = MappingCombo(
-            self.tab, f"{self.root_config_path}.output_format", self.formats
-        )
-        self.layout.addRow(self.output_label, self.output_combo)
-
-        self.setLayout(self.layout)
