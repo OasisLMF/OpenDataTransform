@@ -60,6 +60,11 @@ class ClickEchoHandler(logging.Handler):
         )
 
 
+class LogTypeCoercionErrorFilter(logging.Filter):
+    def filter(self, record):
+        return record.funcName == 'log_type_coercion_error'
+
+
 def init_logging(verbosity, no_color, config):
     """
     Sets up the logging config for the console and files
@@ -97,7 +102,11 @@ def init_logging(verbosity, no_color, config):
                 "file": {"format": "%(asctime)s %(levelname)-7s: %(message)s"},
                 "yaml": {"format": "%(message)s"},
             },
-            "filters": {"info_only": {"class": "converter.cli.InfoFilter"}},
+            "filters": {
+                "coercion_errors_only": {
+                    "()": LogTypeCoercionErrorFilter
+                }
+            },
             "handlers": {
                 "console": {
                     "class": "converter.cli.ClickEchoHandler",
@@ -113,6 +122,9 @@ def init_logging(verbosity, no_color, config):
                 },
                 "runner-error-log": {
                     "class": "logging.FileHandler",
+                    "filters": [
+                        "coercion_errors_only"
+                    ],
                     "formatter": "file",
                     "filename": os.path.join(log_dir, "runner-error.log"),
                     "level": logging.DEBUG,
