@@ -23,26 +23,16 @@ a = Analysis(['converter/__main__.py'],
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 
-if sys.platform == 'darwin':
-    exe = EXE(pyz,
-              a.scripts,
-              a.binaries,
-              a.zipfiles,
-              a.datas,
-              [],
-              name='converter',
-              debug=False,
-              bootloader_ignore_signals=False,
-              strip=False,
-              upx=True,
-              upx_exclude=[],
-              runtime_tmpdir=None,
-              console=True,
-              disable_windowed_traceback=False,
-              target_arch=None,
-              codesign_identity=None,
-              entitlements_file=None )
-else:
+exe_args = [
+    pyz,
+    a.scripts,
+    a.binaries,
+    a.zipfiles,
+    a.datas,
+    []
+]
+
+if sys.platform != 'darwin':
     splash = Splash('splashfile.png',
                     binaries=a.binaries,
                     datas=a.datas,
@@ -50,23 +40,18 @@ else:
                     text_size=12,
                     minify_script=True)
 
-    exe = EXE(pyz,
-              a.scripts,
-              a.binaries,
-              a.zipfiles,
-              a.datas,
-              splash,
-              splash.binaries,
-              [],
-              name='converter',
-              debug=False,
-              bootloader_ignore_signals=False,
-              strip=False,
-              upx=True,
-              upx_exclude=[],
-              runtime_tmpdir=None,
-              console=True,
-              disable_windowed_traceback=False,
-              target_arch=None,
-              codesign_identity=None,
-              entitlements_file=None )
+    exe_args[-1:-1] = [splash, splash.binaries]
+
+exe = EXE(*exe_args,
+          name='converter',
+          debug=False,
+          bootloader_ignore_signals=False,
+          strip=False,
+          upx=True,
+          upx_exclude=[],
+          runtime_tmpdir=None,
+          console=True,
+          disable_windowed_traceback=False,
+          target_arch=None,
+          codesign_identity=None,
+          entitlements_file=None)
