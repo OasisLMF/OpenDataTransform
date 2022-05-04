@@ -118,7 +118,6 @@ class MainWindow(QMainWindow):
                 msg.exec_()
                 return
 
-
             self.reset_changes(file_path)
 
             # update the new log location
