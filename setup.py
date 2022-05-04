@@ -36,13 +36,10 @@ class BuildExeCommand(cmd.Command):
 
     def run(self):
         import PyInstaller.building.build_main
-        import sys
-
-        spec_file = "mac_exe.spec" if sys.platform == 'darwin' else "exe.spec"
 
         PyInstaller.building.build_main.main(
             None,
-            os.path.join(os.path.dirname(__file__), spec_file),
+            os.path.join(os.path.dirname(__file__), "exe.spec"),
             noconfirm=True,
             distpath=os.path.join(os.path.dirname(__file__), "dist-exe"),
             workpath=os.path.dirname(__file__),
