@@ -107,7 +107,7 @@ class ConfigTab(QWidget):
         self.main_window.running_changed.connect(self.on_running_changed)
 
     def on_running_changed(self, b):
-        self.setEnabled(b)
+        self.setEnabled(not b)
 
     def toggle_all_fields(self):
         self.show_all_fields = not self.show_all_fields

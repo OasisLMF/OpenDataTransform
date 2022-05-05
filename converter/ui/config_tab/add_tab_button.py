@@ -61,8 +61,8 @@ class AddMenu(QMenu):
         self.main_window.set_working_value(config_path, default_conf or {})
 
     def setup_available_actions(self):
-        if not self.config.has_template:
-            self.addAction(self.add_template_action)
+        # if not self.config.has_template:
+        #     self.addAction(self.add_template_action)
 
         if not self.config.has_acc:
             self.addAction(self.add_acc_action)

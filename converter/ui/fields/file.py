@@ -28,7 +28,6 @@ class FileField(BaseFieldMixin, QHBoxLayout):
         file_path = QFileDialog.getSaveFileName(
             self.tab,
             caption="Select a file...",
-            dir=config_dir,
             options=QFileDialog.DontConfirmOverwrite,
         )[0]
 

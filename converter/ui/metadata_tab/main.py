@@ -1,6 +1,6 @@
 import yaml
 from __feature__ import true_property  # noqa
-from PySide6.QtWidgets import QGroupBox, QLabel, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QGroupBox, QLabel, QVBoxLayout, QWidget, QFrame
 
 from converter.data import get_data_path
 from converter.ui.fields.date import DateField
@@ -39,6 +39,15 @@ class MetadataTab(QWidget):
             self.create_calendar(conf_path, spec)
         elif spec["type"] == "string":
             self.create_string_field(conf_path, spec)
+        elif spec["type"] == "line":
+            self.create_line()
+
+    def create_line(self):
+        line = QFrame()
+        line.frameShape = QFrame.HLine
+        line.frameShadow = QFrame.Sunken
+        self.layout.addWidget(line)
+        self.layout.addSpacing(10)
 
     def create_multiselect(self, conf_path, spec):
         group = QGroupBox(spec["title"])

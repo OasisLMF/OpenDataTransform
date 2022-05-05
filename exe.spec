@@ -1,5 +1,5 @@
 # -*- mode: python ; coding: utf-8 -*-
-
+import sys
 
 block_cipher = None
 
@@ -23,12 +23,26 @@ a = Analysis(['converter/__main__.py'],
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 
-exe = EXE(pyz,
-          a.scripts,
-          a.binaries,
-          a.zipfiles,
-          a.datas,  
-          [],
+exe_args = [
+    pyz,
+    a.scripts,
+    a.binaries,
+    a.zipfiles,
+    a.datas,
+    []
+]
+
+if sys.platform != 'darwin':
+    splash = Splash('splashfile.png',
+                    binaries=a.binaries,
+                    datas=a.datas,
+                    text_pos=None,
+                    text_size=12,
+                    minify_script=True)
+
+    exe_args[-1:-1] = [splash, splash.binaries]
+
+exe = EXE(*exe_args,
           name='converter',
           debug=False,
           bootloader_ignore_signals=False,
@@ -40,4 +54,4 @@ exe = EXE(pyz,
           disable_windowed_traceback=False,
           target_arch=None,
           codesign_identity=None,
-          entitlements_file=None )
+          entitlements_file=None)

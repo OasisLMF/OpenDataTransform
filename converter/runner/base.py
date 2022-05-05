@@ -26,6 +26,10 @@ from converter.transformers.transform import run
 from converter.types.notset import NotSet, NotSetType
 
 
+def get_logger():
+    return logging.getLogger(__name__)
+
+
 RowType = Any
 
 
@@ -68,7 +72,7 @@ class _BaseRunner:
         :param to_type: The type the coercion was attempting
         :param reason: The error message
         """
-        logging.warning(
+        get_logger().warning(
             f"Cannot coerce {column} ({value}) to {to_type}. "
             f"Reason: {reason}. Row: {json.dumps(row)}."
         )
@@ -204,7 +208,7 @@ class _BaseRunner:
 
         :return: The transformed row
         """
-        logging.info(
+        get_logger().info(
             f"Running transformation set {transformations.input_format} -> "
             f"{transformations.output_format}."
         )

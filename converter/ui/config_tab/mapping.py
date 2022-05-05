@@ -32,13 +32,15 @@ class MappingCombo(BaseFieldMixin, QComboBox):
         )
 
     def update_ui_from_config(self, config):
+        options = MappingGroupBox.get_mapping_formats(config)
+        self.refresh_options(options)
+
         try:
             selection = config.get_template_resolved_value(self.config_path)
             selected_index = self.options.index(
                 MappingFormat(**selection) if selection else None
             )
-            if selected_index != self.currentIndex:
-                self.setCurrentIndex(selected_index)
+            self.setCurrentIndex(selected_index)
         except (ValueError, KeyError):
             self.setCurrentIndex(0)
 

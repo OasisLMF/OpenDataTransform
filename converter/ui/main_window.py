@@ -13,6 +13,7 @@ from PySide6.QtWidgets import (
 )
 
 from converter.config import Config
+from converter.config.errors import ConfigurationError
 from converter.ui.config_tab.add_tab_button import AddTabButton
 from converter.ui.config_tab.main import ConfigTab
 from converter.ui.metadata_tab.main import MetadataTab
@@ -102,6 +103,21 @@ class MainWindow(QMainWindow):
         )[0]
 
         if file_path:
+            # validate the config file loaded
+            try:
+                Config.validate(file_path)
+            except ConfigurationError:
+                msg = QMessageBox(
+                    QMessageBox.Warning,
+                    "Invalid File",
+                    (
+                        "Sorry this file is invalid. Please check formatting and try again."
+                    ),
+                )
+
+                msg.exec_()
+                return
+
             self.reset_changes(file_path)
 
             # update the new log location
@@ -109,6 +125,9 @@ class MainWindow(QMainWindow):
 
             # setup the config tabs
             self.initialise_config_tabs(self.config)
+
+            # clear log panel in run tab
+            self.run_tab.log_panel.clear()
 
     def _handle_file_save(self, overwrite=False):
         if not overwrite or not self._loaded_config.path:
@@ -134,6 +153,9 @@ class MainWindow(QMainWindow):
         self._working_config = Config()
         self._default_working_config = Config()
         self.config_changed.emit(self.config)
+
+        # set the title of the window to be the config file name
+        self.setWindowTitle(os.path.basename(file_path))
 
     @property
     def config_has_changes(self):
@@ -177,7 +199,7 @@ class MainWindow(QMainWindow):
         self.initialise_config_tab(config, config.RI_TRANSFORMATION_PATH)
         self.initialise_config_tab(config, config.LOC_TRANSFORMATION_PATH)
         self.initialise_config_tab(config, config.ACC_TRANSFORMATION_PATH)
-        self.initialise_config_tab(config, config.TEMPLATE_TRANSFORMATION_PATH)
+        # self.initialise_config_tab(config, config.TEMPLATE_TRANSFORMATION_PATH)
 
     def initialise_config_tab(self, config, root_config_path):
         in_config = root_config_path in config

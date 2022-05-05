@@ -1,4 +1,5 @@
 import logging
+import importlib
 import os
 import sys
 from datetime import datetime
@@ -59,6 +60,11 @@ class ClickEchoHandler(logging.Handler):
         )
 
 
+class LogTypeCoercionErrorFilter(logging.Filter):
+    def filter(self, record):
+        return record.funcName == 'log_type_coercion_error'
+
+
 def init_logging(verbosity, no_color, config):
     """
     Sets up the logging config for the console and files
@@ -96,7 +102,11 @@ def init_logging(verbosity, no_color, config):
                 "file": {"format": "%(asctime)s %(levelname)-7s: %(message)s"},
                 "yaml": {"format": "%(message)s"},
             },
-            "filters": {"info_only": {"class": "converter.cli.InfoFilter"}},
+            "filters": {
+                "coercion_errors_only": {
+                    "()": LogTypeCoercionErrorFilter
+                }
+            },
             "handlers": {
                 "console": {
                     "class": "converter.cli.ClickEchoHandler",
@@ -107,6 +117,16 @@ def init_logging(verbosity, no_color, config):
                     "class": "logging.FileHandler",
                     "formatter": "file",
                     "filename": os.path.join(log_dir, "converter.log"),
+                    "level": logging.DEBUG,
+                    "mode": "w",
+                },
+                "runner-error-log": {
+                    "class": "logging.FileHandler",
+                    "filters": [
+                        "coercion_errors_only"
+                    ],
+                    "formatter": "file",
+                    "filename": os.path.join(log_dir, "runner-error.log"),
                     "level": logging.DEBUG,
                     "mode": "w",
                 },
@@ -126,6 +146,11 @@ def init_logging(verbosity, no_color, config):
                 },
             },
             "loggers": {
+                "converter.runner": {
+                    "level": logging.WARNING,
+                    "handlers": ["runner-error-log"],
+                    "propagate": True,
+                },
                 "converter.validator": {
                     "level": logging.INFO,
                     "handlers": ["validation-log-yaml"],
@@ -220,6 +245,11 @@ def cli(ctx, config, verbose, no_color, option):
             ctx.obj["config"],
             lambda p: init_logging(verbose, no_color, p),
         )
+
+        if '_PYIBoot_SPLASH' in os.environ and importlib.util.find_spec("pyi_splash"):
+            import pyi_splash
+            pyi_splash.close()
+
         widget.show()
 
         sys.exit(app.exec_())
