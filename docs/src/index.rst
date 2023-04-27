@@ -5,12 +5,13 @@ The Open Data Transformation Framework provides an open-source, free, and model-
 
 It is maintained through an industry collaboration coordinated by The Insurance Development Forum (IDF) `Risk Modelling Steering Group (RMSG) <https://www.insdevforum.org/working-groups/rmsg/>`_. Technical development has been led by OASIS in partnership with model vendors and users. The project is managed under the IDF RMSG Interoperability Technical Working Group (ITWG) whose members, represent over 30 organisations, have collaborated in the vision and design of this framework. 
 
-A steering committee comprising industry experts is responsible for the direction of the project and considers feedback made via the GitHub issues or RMSG and ITWG forums. The steering committee is chaired by IDF RMSG and has industry representation from AIR, AON, Chubb, the Catastrophe Resiliency Council, Guy Carpenter, RenaissanceRe, SCOR, and Oasis.
+A steering committee comprising industry experts is responsible for the direction of the project and considers feedback made via the GitHub issues or RMSG and ITWG forums. The steering committee is chaired by IDF RMSG and the `Catastrophe Resiliency Council <https://www.catastropheresiliency.org/>`_ with industry representation from AIR, AON, Chubb, Guy Carpenter, RenaissanceRe, SCOR, and Oasis.
 
 There is currently an exposure data transformation available to convert data from AIR CEDE to OED and vice versa. An exposure data transformation is under development to convert data between OED and GED4ALL (and open exposure data format used in the development sector), providing easier cross-sector sharing of exposure data for catastrophe (disaster risk) analysis.
 
 There is potential to apply the framework to the transformation of results data, via the ORD (Open Results Data) Standard and to extend its capacity to non-property lines of business.
 
+For a summary and demo of the framework, please watch `this webinar <https://vimeo.com/user14948183/review/676071546/cb29739687>`_.
 
 
 
