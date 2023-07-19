@@ -48,6 +48,14 @@ class DaskRunner(PandasRunner):
                 return
 
     def get_dataframe(self, extractor):
+        extracted = extractor.extract()
+
+        # the extractor may return a pandas dataframe,
+        # in this case return this rather than creating a
+        # new dataframe object
+        if isinstance(extracted, dd.DataFrame):
+            return extracted
+
         return dd.from_delayed(
             [read_pandas_chunk(c) for c in self.chunk(extractor.extract())],
         )

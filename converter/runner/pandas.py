@@ -285,7 +285,15 @@ class PandasRunner(BaseRunner):
 
         :return: The created dataframe
         """
-        return pd.DataFrame(extractor.extract(), dtype="object")
+        extracted = extractor.extract()
+
+        # the extractor may return a pandas dataframe,
+        # in this case return this rather than creating a
+        # new dataframe object
+        if isinstance(extracted, pd.DataFrame):
+            return extracted
+
+        return pd.DataFrame(extracted, dtype="object")
 
     def combine_column(
         self,

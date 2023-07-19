@@ -27,9 +27,17 @@ class ModinRunner(PandasRunner):
         os.environ.setdefault("MODIN_ENGINE", self.engine)
         import modin.pandas as pd  # must be imported after modin engine is set
 
+        extracted = extractor.extract()
+
+        # the extractor may return a pandas dataframe,
+        # in this case return this rather than creating a
+        # new dataframe object
+        if isinstance(extracted, pd.DataFrame):
+            return extracted
+
         self.dataframe_type = pd.DataFrame
         self.series_type = pd.Series
-        return pd.read_csv(BufferedCsvReader(extractor.extract()))
+        return pd.read_csv(BufferedCsvReader(extracted))
 
     def combine_column(self, *args, **kwargs):
         combined = super().combine_column(*args, **kwargs)

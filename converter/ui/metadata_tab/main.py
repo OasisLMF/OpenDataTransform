@@ -1,6 +1,6 @@
 import yaml
 from __feature__ import true_property  # noqa
-from PySide6.QtWidgets import QGroupBox, QLabel, QVBoxLayout, QWidget, QFrame
+from PySide6.QtWidgets import QFrame, QGroupBox, QLabel, QVBoxLayout, QWidget
 
 from converter.data import get_data_path
 from converter.ui.fields.date import DateField

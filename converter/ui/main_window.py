@@ -111,7 +111,8 @@ class MainWindow(QMainWindow):
                     QMessageBox.Warning,
                     "Invalid File",
                     (
-                        "Sorry this file is invalid. Please check formatting and try again."
+                        "Sorry this file is invalid. "
+                        "Please check formatting and try again."
                     ),
                 )
 
@@ -199,7 +200,9 @@ class MainWindow(QMainWindow):
         self.initialise_config_tab(config, config.RI_TRANSFORMATION_PATH)
         self.initialise_config_tab(config, config.LOC_TRANSFORMATION_PATH)
         self.initialise_config_tab(config, config.ACC_TRANSFORMATION_PATH)
-        # self.initialise_config_tab(config, config.TEMPLATE_TRANSFORMATION_PATH)
+        # self.initialise_config_tab(
+        #     config, config.TEMPLATE_TRANSFORMATION_PATH
+        # )
 
     def initialise_config_tab(self, config, root_config_path):
         in_config = root_config_path in config

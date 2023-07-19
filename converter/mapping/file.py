@@ -409,6 +409,7 @@ class FileMapping(BaseMapping):
         search_paths: List[str] = None,
         standard_search_path: str = get_data_path("mappings"),
         search_working_dir=True,
+        file_override: str = None,
         **options,
     ):
         """
@@ -417,6 +418,8 @@ class FileMapping(BaseMapping):
             prepended to this list.
         :param standard_search_path: The path to the standard library of
             mappings
+        :param file_override: Specifies a specific file to use for the
+            transformation rather interrogating teh mapping graph
         :param options: Ignored options
         """
         if config.path:
@@ -439,6 +442,7 @@ class FileMapping(BaseMapping):
             *(os.path.abspath(p) for p in (search_paths or [])),
             os.path.abspath(standard_search_path),
         ]
+        self.file_override = file_override
 
         if search_working_dir:
             self.search_paths.insert(0, os.path.abspath("."))
@@ -449,12 +453,17 @@ class FileMapping(BaseMapping):
 
         :return: The raw mapping configs keyed by their absolute paths.
         """
-        candidate_paths = chain(
-            *(
-                self._get_candidate_paths_from_search_path(p)
-                for p in self.search_paths
+        if self.file_override:
+            # for simplicity, if a file is specified we will still use
+            # the normal graph mechanism but with only 1 candidate path
+            candidate_paths: Iterable[str] = [self.file_override]
+        else:
+            candidate_paths = chain(
+                *(
+                    self._get_candidate_paths_from_search_path(p)
+                    for p in self.search_paths
+                )
             )
-        )
 
         path_wth_config = ((p, self._load_yaml(p)) for p in candidate_paths)
 

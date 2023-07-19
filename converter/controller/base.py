@@ -78,7 +78,8 @@ class Controller:
 
             extractor_class: Type[BaseConnector] = self._load_from_module(
                 config.get(
-                    "extractor.path", fallback="converter.connector.CsvConnector"
+                    "extractor.path",
+                    fallback="converter.connector.CsvConnector",
                 )
             )
             extractor: BaseConnector = extractor_class(
@@ -95,7 +96,9 @@ class Controller:
             )
 
             runner_class: Type[BaseRunner] = self._load_from_module(
-                config.get("runner.path", fallback="converter.runner.PandasRunner")
+                config.get(
+                    "runner.path", fallback="converter.runner.PandasRunner"
+                )
             )
             runner: BaseRunner = runner_class(
                 config, **config.get("runner.options", fallback={})
@@ -104,6 +107,10 @@ class Controller:
             runner.run(extractor, mapping, loader)
         except Exception as e:
             exc_type, exc_obj, exc_tb = sys.exc_info()
-            get_logger().error(
-                f"{repr(e)}, line {exc_tb.tb_lineno} in {exc_tb.tb_frame.f_code.co_filename}"
-            )
+            if exc_tb:
+                get_logger().error(
+                    f"{repr(e)}, line {exc_tb.tb_lineno} in "
+                    f"{exc_tb.tb_frame.f_code.co_filename}"
+                )
+            else:
+                get_logger().error(repr(e))

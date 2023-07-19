@@ -5,7 +5,7 @@ from converter.ui.fields.checkbox import Checkbox
 from converter.ui.fields.file import FileField
 from converter.ui.fields.label import Label
 from converter.ui.fields.select import Select
-from converter.ui.fields.string import StringField, PasswordField
+from converter.ui.fields.string import PasswordField, StringField
 
 
 class DynamicClassFormBlock(QGroupBox):

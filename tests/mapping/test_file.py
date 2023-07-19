@@ -1264,3 +1264,64 @@ def test_null_values_are_set_on_forward___forward_values_are_loaded_into_col():
                 null_values={0, None, "NULL"},
             ),
         }
+
+
+def test_file_override_is_specified___only_override_file_is_loaded():
+    with TemporaryDirectory() as search_d, TemporaryDirectory() as override_d:
+        write_yaml(
+            os.path.join(search_d, "A-B.yml"),
+            {
+                "file_type": "ACC",
+                "input_format": {"name": "A", "version": "1"},
+                "output_format": {"name": "B", "version": "1"},
+                "forward": {
+                    "transform": {"b": [{"transformation": "a"}]},
+                    "types": {"a": {"type": "int"}},
+                    "null_values": [0, "Null", "'NULL'"],
+                },
+            },
+        )
+
+        override = os.path.join(override_d, "C-D.yml")
+        write_yaml(
+            override,
+            {
+                "file_type": "ACC",
+                "input_format": {"name": "C", "version": "1"},
+                "output_format": {"name": "D", "version": "1"},
+                "forward": {
+                    "transform": {"d": [{"transformation": "c"}]},
+                    "types": {"c": {"type": "int"}},
+                    "null_values": [0, "Null", "'NULL'"],
+                },
+            },
+        )
+
+        specs = list(
+            FileMapping(
+                fake_transformation_config(
+                    conf={
+                        "transformations": {
+                            "ACC": {
+                                "input_format": {
+                                    "name": "C",
+                                    "version": "1",
+                                },
+                                "output_format": {
+                                    "name": "D",
+                                    "version": "1",
+                                },
+                            }
+                        }
+                    }
+                ),
+                file_type="ACC",
+                standard_search_path=search_d,
+                search_working_dir=False,
+                file_override=override,
+            ).mapping_specs
+        )
+
+        assert len(specs) == 1
+        assert specs[0].input_format == MappingFormat(name="C", version="1")
+        assert specs[0].output_format == MappingFormat(name="D", version="1")

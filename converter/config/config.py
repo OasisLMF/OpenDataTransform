@@ -235,8 +235,10 @@ class Config:
         """
         config = read_yaml(config_path)
         # If transformations key not in yaml file flag as invalid.
-        if 'transformations' not in config:
-            raise ConfigurationError("Invalid config file - transformation key required")
+        if "transformations" not in config:
+            raise ConfigurationError(
+                "Invalid config file - transformation key required"
+            )
 
     @classmethod
     def merge_config_sources(

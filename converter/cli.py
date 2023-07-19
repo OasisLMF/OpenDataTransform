@@ -1,5 +1,5 @@
-import logging
 import importlib
+import logging
 import os
 import sys
 from datetime import datetime
@@ -246,8 +246,11 @@ def cli(ctx, config, verbose, no_color, option):
             lambda p: init_logging(verbose, no_color, p),
         )
 
-        if '_PYIBoot_SPLASH' in os.environ and importlib.util.find_spec("pyi_splash"):
+        if "_PYIBoot_SPLASH" in os.environ and importlib.util.find_spec(
+            "pyi_splash"
+        ):
             import pyi_splash
+
             pyi_splash.close()
 
         widget.show()

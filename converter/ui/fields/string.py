@@ -20,9 +20,11 @@ class StringField(BaseFieldMixin, QLineEdit):
 
 class PasswordField(StringField):
     def __init__(
-            self, tab, config_path, *args, defer_initial_ui_update=False, **kwargs
+        self, tab, config_path, *args, defer_initial_ui_update=False, **kwargs
     ):
-        super().__init__(tab, config_path, *args, defer_initial_ui_update=False, **kwargs)
+        super().__init__(
+            tab, config_path, *args, defer_initial_ui_update=False, **kwargs
+        )
         self.echoMode = QLineEdit.Password
 
 
