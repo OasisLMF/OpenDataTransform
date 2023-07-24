@@ -3,6 +3,7 @@ from typing import Any, Dict, Iterable
 
 from converter.connector.base import BaseConnector
 from converter.types.notset import NotSetType
+from converter.utils.iter import ensure_row_iterable
 
 
 class CsvConnector(BaseConnector):
@@ -76,7 +77,7 @@ class CsvConnector(BaseConnector):
 
     def load(self, data: Iterable[Dict[str, Any]]):
         try:
-            data = iter(data)
+            data = iter(ensure_row_iterable(data))
             first_row = next(data)
         except StopIteration:
             return

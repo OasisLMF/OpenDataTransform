@@ -5,6 +5,7 @@ from converter.connector import BaseConnector
 from converter.mapping import BaseMapping
 from converter.runner.base import BaseAsyncRunner
 from converter.types.notset import NotSet, NotSetType
+from converter.utils.iter import ensure_row_iterable
 
 
 class EagerRunner(BaseAsyncRunner):
@@ -24,7 +25,7 @@ class EagerRunner(BaseAsyncRunner):
         """
         transformations = mapping.get_transformations()
 
-        async for row in extractor.aextract():
+        async for row in ensure_row_iterable(extractor.aextract()):
             transformed = reduce(
                 self.apply_transformation_set, transformations, row
             )
