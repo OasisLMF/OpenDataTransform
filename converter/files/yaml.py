@@ -1,6 +1,12 @@
+import urllib.parse
 from typing import Dict, List, Union
 
+import requests
 import yaml
+
+
+def is_url(p):
+    return urllib.parse.urlparse(p).scheme not in ["", "file"]
 
 
 def write_yaml(path: str, content: Union[Dict, List]):
@@ -22,5 +28,9 @@ def read_yaml(path):
 
     :return: The loaded data
     """
-    with open(path, encoding="utf8") as f:
-        return yaml.load(f, yaml.SafeLoader)
+    if is_url(path):
+        res = requests.get(path)
+        return yaml.load(res.text, yaml.SafeLoader)
+    else:
+        with open(path, encoding="utf8") as f:
+            return yaml.load(f, yaml.SafeLoader)

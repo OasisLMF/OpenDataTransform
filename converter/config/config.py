@@ -1,5 +1,6 @@
 import os
 import re
+import urllib.parse
 from functools import reduce
 from itertools import chain
 from typing import Any, Dict, Iterable, List, Tuple, TypeVar, Union
@@ -407,6 +408,11 @@ class Config:
             `p` is returned without modification
         """
         if p is not None:
+            if urllib.parse.urlparse(p).scheme != "":
+                # if the path is a fully qualified url we dont need to
+                # do anything here
+                return p
+
             return os.path.abspath(
                 os.path.join(os.path.dirname(self.path or "."), p)
             )

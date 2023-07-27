@@ -3,6 +3,7 @@ from typing import Any, Dict, Iterable
 
 from converter.connector.base import BaseConnector
 from converter.types.notset import NotSetType
+from converter.utils.files import open_file
 from converter.utils.iter import ensure_row_iterable
 
 
@@ -82,7 +83,7 @@ class CsvConnector(BaseConnector):
         except StopIteration:
             return
 
-        with open(self.file_path, "w", newline="") as f:
+        with open_file(self.file_path, "w", newline="") as f:
             writer = csv.DictWriter(
                 f, fieldnames=list(first_row.keys()), quoting=self.quoting
             )
@@ -94,5 +95,5 @@ class CsvConnector(BaseConnector):
             writer.writerows(map(self._data_serializer, data))
 
     def extract(self) -> Iterable[Dict[str, Any]]:
-        with open(self.file_path, "r") as f:
+        with open_file(self.file_path, "r", newline="") as f:
             yield from csv.DictReader(f, quoting=self.quoting)

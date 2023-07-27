@@ -2,6 +2,7 @@ import importlib
 import logging
 import sys
 import threading
+import traceback
 from datetime import datetime
 from typing import Any, Type
 
@@ -109,8 +110,9 @@ class Controller:
             exc_type, exc_obj, exc_tb = sys.exc_info()
             if exc_tb:
                 get_logger().error(
-                    f"{repr(e)}, line {exc_tb.tb_lineno} in "
-                    f"{exc_tb.tb_frame.f_code.co_filename}"
+                    f"{repr(e)}, line {exc_tb.tb_lineno} in " +
+                    f"{exc_tb.tb_frame.f_code.co_filename}\n" +
+                    "".join(traceback.format_exception(e))
                 )
             else:
                 get_logger().error(repr(e))

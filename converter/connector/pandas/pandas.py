@@ -6,6 +6,7 @@ import pandas as pd
 
 from converter.config.errors import ConfigurationError
 from converter.connector import BaseConnector
+from converter.utils.files import parse_url_options
 
 
 class PandasFileTypes(Enum):
@@ -35,10 +36,12 @@ class PandasConnector(BaseConnector):
         super().__init__(config, **options)
 
     def load_csv(self, data: pd.DataFrame):
-        data.to_csv(self.file_path)
+        _, path, opts = parse_url_options(self.file_path)
+        data.to_csv(path, **opts)
 
     def load_parquet(self, data: pd.DataFrame):
-        data.to_parquet(self.file_path)
+        _, path, opts = parse_url_options(self.file_path)
+        data.to_parquet(path, **opts)
 
     def load(self, data: pd.DataFrame):
         if self.file_type == PandasFileTypes.csv:
@@ -47,10 +50,12 @@ class PandasConnector(BaseConnector):
             return self.load_parquet(data)
 
     def extract_csv(self):
-        return pd.read_csv(self.file_path)
+        _, path, opts = parse_url_options(self.file_path)
+        return pd.read_csv(path, **opts)
 
     def extract_parquet(self):
-        return pd.read_parquet(self.file_path)
+        _, path, opts = parse_url_options(self.file_path)
+        return pd.read_parquet(path, **opts)
 
     def extract(self) -> Iterable[Dict[str, Any]]:
         if self.file_type == PandasFileTypes.csv:

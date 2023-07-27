@@ -6,3 +6,5 @@ networkx
 click
 jsonschema
 pyside6
+s3fs
+fsspec

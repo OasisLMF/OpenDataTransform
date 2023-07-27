@@ -1,5 +1,4 @@
 -r requirements-package.in
-pip-tools
 ipdb
 coverage
 coverage[toml]

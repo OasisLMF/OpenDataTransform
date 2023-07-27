@@ -1,17 +1,22 @@
 import dask.dataframe as dd
 
 from converter.connector.pandas.pandas import PandasConnector
+from converter.utils.files import open_file, parse_url_options
 
 
 class DaskConnector(PandasConnector):
     def load_csv(self, data: dd.DataFrame):
-        data.to_csv(self.file_path)
+        _, path, opts = parse_url_options(self.file_path)
+        data.to_csv(path, **opts)
 
     def load_parquet(self, data: dd.DataFrame):
-        data.to_parquet(self.file_path)
+        _, path, opts = parse_url_options(self.file_path)
+        data.to_parquet(path, **opts)
 
     def extract_csv(self):
-        return dd.read_csv(self.file_path)
+        _, path, opts = parse_url_options(self.file_path)
+        return dd.read_csv(path, **opts)
 
     def extract_parquet(self):
-        return dd.read_parquet(self.file_path)
+        _, path, opts = parse_url_options(self.file_path)
+        return dd.read_parquet(path, **opts)
