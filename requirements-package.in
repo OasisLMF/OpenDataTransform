@@ -8,3 +8,4 @@ jsonschema
 pyside6
 s3fs
 fsspec
+adlfs
