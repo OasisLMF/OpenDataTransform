@@ -1,8 +1,9 @@
 import urllib.parse
 from typing import Dict, List, Union
 
-import requests
 import yaml
+
+from converter.utils.files import open_file
 
 
 def is_url(p):
@@ -16,7 +17,7 @@ def write_yaml(path: str, content: Union[Dict, List]):
     :param path: The path to write the data to
     :param content: The data to write
     """
-    with open(path, "w") as f:
+    with open_file(path, "w", encoding="utf8") as f:
         yaml.safe_dump(content, f)
 
 
@@ -28,9 +29,5 @@ def read_yaml(path):
 
     :return: The loaded data
     """
-    if is_url(path):
-        res = requests.get(path)
-        return yaml.load(res.text, yaml.SafeLoader)
-    else:
-        with open(path, encoding="utf8") as f:
-            return yaml.load(f, yaml.SafeLoader)
+    with open_file(path, "r", encoding="utf8") as f:
+        return yaml.load(f, yaml.SafeLoader)
