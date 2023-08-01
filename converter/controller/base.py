@@ -22,10 +22,13 @@ class Controller:
     Class controlling the transformation flow
 
     :param config: The resolved normalised config
+    :param raise_errors: If true, errors during the conversion process
+        will be raises, if not they will only be logged
     """
 
-    def __init__(self, config: Config):
+    def __init__(self, config: Config, raise_errors=False):
         self.config = config
+        self.raise_errors = raise_errors
 
     def _load_from_module(self, path: str) -> Any:
         module_path, cls = path.rsplit(".", 1)
@@ -116,3 +119,6 @@ class Controller:
                 )
             else:
                 get_logger().error(repr(e))
+
+            if self.raise_errors:
+                raise
