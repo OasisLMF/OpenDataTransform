@@ -3,7 +3,7 @@ from typing import Dict, List, Union
 
 import yaml
 
-from converter.utils.files import open_file
+from converter.files.io import open_file
 
 
 def is_url(p):

@@ -457,4 +457,4 @@ class PandasRunner(BaseRunner):
             mapping.file_type,
         )
 
-        return (r.to_dict() for idx, r in transformed.iterrows())
+        return transformed

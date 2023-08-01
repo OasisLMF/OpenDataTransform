@@ -6,7 +6,7 @@ import pandas as pd
 
 from converter.config.errors import ConfigurationError
 from converter.connector import BaseConnector
-from converter.utils.files import parse_url_options
+from converter.files.io import parse_url_options
 
 
 class PandasFileTypes(Enum):
@@ -23,9 +23,9 @@ class PandasConnector(BaseConnector):
         else:
             ext = Path(self.file_path).suffix
             self.file_type = {
-                "csv": PandasFileTypes.csv,
-                "parquet": PandasFileTypes.parquet,
-                "pq": PandasFileTypes.parquet,
+                ".csv": PandasFileTypes.csv,
+                ".parquet": PandasFileTypes.parquet,
+                ".pq": PandasFileTypes.parquet,
             }.get(ext)
 
             if not self.file_type:

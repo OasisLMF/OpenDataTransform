@@ -8,6 +8,7 @@ import fsspec
 def split_s3_url(parts):
     query = parse.parse_qs(parts.query)
     params = {
+        "acl": query.get("acl", [None])[0],
         "anon": "key" not in query and "token" not in query,
         "key": query.get("key", [None])[0],
         "secret": query.get("secret", [None])[0],
@@ -29,15 +30,18 @@ def split_s3_url(parts):
 
 
 def split_azure_url(parts):
-    connection_string = None
+    connection_string = ""
 
     query = parse.parse_qs(parts.query)
-    if "endpoint" in query:
-        connection_string = f"BlobEndpoint={ query.get('endpoint', [None])[0]};"
-    if "account" in query:
-        connection_string += f"AccountName={ query.get('account', [None])[0] };"
-    if "key" in query:
-        connection_string += f"AccountKey={ query.get('key', [None])[0] };"
+    if "connection_string" in query:
+        connection_string = parts.get("connection_string")[0]
+    else:
+        if "endpoint" in query:
+            connection_string += f"BlobEndpoint={ query.get('endpoint', [None])[0]};"
+        if "account" in query:
+            connection_string += f"AccountName={ query.get('account', [None])[0] };"
+        if "key" in query:
+            connection_string += f"AccountKey={ query.get('key', [None])[0] };"
 
 
     params = {

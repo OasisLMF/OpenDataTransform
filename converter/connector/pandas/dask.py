@@ -1,7 +1,7 @@
 import dask.dataframe as dd
 
 from converter.connector.pandas.pandas import PandasConnector
-from converter.utils.files import open_file, parse_url_options
+from converter.files.io import parse_url_options
 
 
 class DaskConnector(PandasConnector):
