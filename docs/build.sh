@@ -23,8 +23,6 @@ set -e
     cd $DIR_BASE
     make html SPHINXBUILD="python ${DIR_ENV}/bin/sphinx-build"
 
-    printf "\n == building docs == \n"
-
     # Create TAR
     # if [[ ! -d "$DIR_BASE/output/" ]]; then 
     #     mkdir $DIR_BASE/output/
