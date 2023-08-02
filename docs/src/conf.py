@@ -11,7 +11,8 @@
 #
 import os
 import sys
-
+import datetime
+from sphinx.ext import autodoc
 
 sys.path.insert(0, os.path.abspath(".."))
 
@@ -30,10 +31,20 @@ html_short_title = "Open Data Transformation"
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ["autoapi.extension"]
+extensions = [
+    'autoapi.extension',
+    'sphinx.ext.autodoc',
+    'sphinx.ext.autosummary',
+    'sphinx.ext.intersphinx',
+    'sphinx.ext.coverage',
+    'sphinx.ext.viewcode'
+]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
+
+# The name of the Pygments (syntax highlighting) style to use.
+pygments_style = 'friendly'
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -43,7 +54,8 @@ templates_path = ["_templates"]
 #
 # html_theme = "sphinx-material"
 # html_theme = "alabaster"
-html_theme = "sphinx_rtd_theme"
+# html_theme = "sphinx_rtd_theme"
+html_theme = 'furo'
 
 
 html_show_copyright = False
@@ -54,7 +66,25 @@ html_show_copyright = False
 html_static_path = ["_static"]
 html_favicon = "idf_square.ico"
 html_logo = "IDF_Original.jpg"
-html_css_files = "custom.css"
+# html_css_files = "custom.css"
+
+html_css_files = [
+    'https://fonts.googleapis.com/css?family=Raleway',
+]
+
+# Theme options are theme-specific and customize the look and feel of a theme
+# further.  For a list of options available for each theme, see the
+# documentation.
+#
+html_theme_options = {
+    "light_css_variables": {
+        "color-brand-primary": " #862633",
+        "color-brand-content": "#d22630",
+        "font-stack": "Raleway, sans-serif",
+        "font-stack--monospace": "Courier, monospace",
+    }
+}
+
 
 
 autoapi_type = "python"
