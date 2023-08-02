@@ -46,9 +46,9 @@ and back again. In the mapping files the concept of 'forward' is moving from the
 :code:`input_format` to the :code:`output_format` and 'reverse' is transforming from
 the :code:`output_format` to the :code:`input_format`.
 
-`An example CEDE-OED account mapping file <https://github.com/OasisLMF/OEDtransform/blob/master/examples/cede_test_v3/AIR-OED-ACC_v3.yml>`_.
+`An example CEDE-OED account mapping file <https://github.com/OasisLMF/OpenDataTransform/blob/gh-pages-1/examples/cede_test_v3/AIR-OED-ACC_v3.yml>`_.
 
-`An example CEDE-OED location mapping file <https://github.com/OasisLMF/OEDtransform/blob/master/examples/cede_test_v3/AIR-OED-LOC_v3.yml>`_.
+`An example CEDE-OED location mapping file <https://github.com/OasisLMF/OpenDataTransform/blob/gh-pages-1/examples/cede_test_v3/AIR-OED-LOC_v3.yml>`_.
 
 
 Each of the fields in the mapping file is described below.
