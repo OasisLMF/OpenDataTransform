@@ -436,6 +436,7 @@ class PandasRunner(BaseRunner):
             search_paths=(
                 [os.path.dirname(self.config.path)] if self.config.path else []
             ),
+            config=self.config,
         )
         validator.run(
             self.coerce_row_types(df, transformations[0].types),

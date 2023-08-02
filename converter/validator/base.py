@@ -14,8 +14,9 @@ from typing import (
 
 import yaml
 
+from converter.config.config import TransformationConfig
 from converter.data import get_data_path
-
+from converter.files.yaml import read_yaml
 
 DataType = TypeVar("DataType")
 GroupedDataType = TypeVar("GroupedDataType")
@@ -70,9 +71,7 @@ class ValidatorConfig:
             self.raw_config = raw_config
         else:
             self.path = path
-
-            with open(self.path) as f:
-                self.raw_config = yaml.load(f, yaml.Loader)
+            self.raw_config = read_yaml(self.path)
 
         self.entries = [
             ValidatorConfigEntry(k, v)
@@ -89,7 +88,9 @@ class BaseValidator(Generic[DataType, GroupedDataType]):
         search_paths: List[str] = None,
         standard_search_path: str = get_data_path("validators"),
         search_working_dir=True,
+        config: TransformationConfig = None,
     ):
+        self.config = config
         self.search_paths = [
             *(search_paths or []),
             *([os.getcwd()] if search_working_dir else []),
@@ -99,30 +100,34 @@ class BaseValidator(Generic[DataType, GroupedDataType]):
     def load_config(
         self, fmt, version, file_type
     ) -> Union[None, ValidatorConfig]:
-        # Build the candidate paths with and without the version preferring
-        # with the version if its available
-        candidate_paths = [
-            os.path.join(p, f"validation_{fmt}_v{version}_{file_type}.yaml")
-            for p in self.search_paths
-        ] + [
-            os.path.join(p, f"validation_{fmt}_{file_type}.yaml")
-            for p in self.search_paths
-        ]
+        if self.config and self.config.get(f'mapping.validation.{fmt}', None):
+            # if there is a validation entry in the config use that for the validation config
+            config_path = self.config.get(f'mapping.validation.{fmt}')
+        else:
+            # Build the candidate paths with and without the version preferring
+            # with the version if its available
+            candidate_paths = [
+                os.path.join(p, f"validation_{fmt}_v{version}_{file_type}.yaml")
+                for p in self.search_paths
+            ] + [
+                os.path.join(p, f"validation_{fmt}_{file_type}.yaml")
+                for p in self.search_paths
+            ]
 
-        # find the first validation config path that matches the format
-        config_path = reduce(
-            lambda found, current: found
-            or (current if os.path.exists(current) else None),
-            candidate_paths,
-            None,
-        )
-
-        if not config_path:
-            get_logger().warning(
-                f"Could not find validator config for {fmt}. "
-                f"Tried paths {', '.join(candidate_paths)}"
+            # find the first validation config path that matches the format
+            config_path = reduce(
+                lambda found, current: found
+                or (current if os.path.exists(current) else None),
+                candidate_paths,
+                None,
             )
-            return None
+
+            if not config_path:
+                get_logger().warning(
+                    f"Could not find validator config for {fmt}. "
+                    f"Tried paths {', '.join(candidate_paths)}"
+                )
+                return None
 
         return ValidatorConfig(config_path)
 

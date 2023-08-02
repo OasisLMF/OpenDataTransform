@@ -30,6 +30,8 @@ The configuration and file has the following schema::
             output_format: <str>
             <str>: <any>
             ...
+        validation:
+            <str>: <str>
     loader:
         path: <str>
         options:
