@@ -57,12 +57,17 @@ class _BaseRunner:
     name = "Base Runner"
     options_schema = {"type": "object", "properties": {}}
 
-    def __init__(self, config: TransformationConfig, **options):
+    def __init__(self, config: TransformationConfig, logger=None, redact_logs=False, **options):
         self.config = config
         self._options = options
+        self.logger = logger
+        self.redact_logs = redact_logs
+
+    def get_logger(self):
+        return self.logger or self.get_logger()
 
     @classmethod
-    def log_type_coercion_error(cls, row, column, value, to_type, reason):
+    def log_type_coercion_error(cls, row, column, value, to_type, reason, logger=None):
         """
         Logs a failure of a row type coercion
 
@@ -71,8 +76,10 @@ class _BaseRunner:
         :param value: The value of the failing column
         :param to_type: The type the coercion was attempting
         :param reason: The error message
+        :param logger: A python logger object. If supplied, it will override
+            the standard logger.
         """
-        get_logger().warning(
+        (logger or get_logger()).warning(
             f"Cannot coerce {column} ({value}) to {to_type}. "
             f"Reason: {reason}. Row: {json.dumps(row)}."
         )
@@ -100,7 +107,7 @@ class _BaseRunner:
                     ](value, conversion.nullable, conversion.null_values)
                 except Exception as e:
                     self.log_type_coercion_error(
-                        row, column, row[column], conversion.type, e
+                        row, column, row[column], conversion.type, e, logger=self.logger
                     )
                     return None
 
@@ -208,7 +215,7 @@ class _BaseRunner:
 
         :return: The transformed row
         """
-        get_logger().info(
+        self.get_logger().info(
             f"Running transformation set {transformations.input_format} -> "
             f"{transformations.output_format}."
         )
@@ -253,8 +260,9 @@ class BaseRunner(_BaseRunner):
         :param extractor: The data connection to extract data from
         :param mapping: Mapping object describing the transformations to apply
         :param loader: The data connection to load data to
+        :param redact_logs:
         """
-        log_metadata(self.config, mapping)
+        log_metadata(self.config, mapping, logger=self.logger)
         loader.load(self.transform(extractor, mapping))
 
     def transform(
@@ -292,7 +300,7 @@ class BaseAsyncRunner(_BaseRunner):
         mapping: BaseMapping,
         loader: BaseConnector,
     ):
-        log_metadata(self.config, mapping)
+        log_metadata(self.config, mapping, logger=self.logger)
         asyncio.run(loader.aload(self.transform(extractor, mapping)))
 
     async def transform(

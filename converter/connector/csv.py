@@ -58,8 +58,8 @@ class CsvConnector(BaseConnector):
         "required": ["path"],
     }
 
-    def __init__(self, config, **options):
-        super().__init__(config, **options)
+    def __init__(self, config, redact_logs=False, **options):
+        super().__init__(config, redact_logs=redact_logs, **options)
 
         self.file_path = config.absolute_path(options["path"])
         self.write_header = options.get("write_header", True)

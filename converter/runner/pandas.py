@@ -229,6 +229,9 @@ class PandasRunner(BaseRunner):
     dataframe_type = pd.DataFrame
     series_type = pd.Series
 
+    def get_logger(self):
+        return self.logger or get_logger()
+
     def coerce_row_types(self, row, conversions: ColumnConversions):
         coerced_row = NotSet
 
@@ -256,6 +259,7 @@ class PandasRunner(BaseRunner):
                         error.value,
                         conversion.type,
                         error.reason,
+                        logger=self.logger,
                     )
 
                 coerced_column = coerced_column[~bad_rows]
@@ -409,7 +413,7 @@ class PandasRunner(BaseRunner):
         else:
             # if the filter series is normal value that resolves to false
             # return no rows, this should never happen so raise a warning.
-            get_logger().warning(
+            self.get_logger().warning(
                 f"A transformer when clause resolves to false in all cases "
                 f"({entry.when})."
             )
@@ -437,6 +441,8 @@ class PandasRunner(BaseRunner):
                 [os.path.dirname(self.config.path)] if self.config.path else []
             ),
             config=self.config,
+            redact_logs=self.redact_logs,
+            logger=self.logger
         )
         validator.run(
             self.coerce_row_types(df, transformations[0].types),

@@ -117,6 +117,7 @@ class FileMappingSpec(MappingSpec):
             str, Union["FileMappingSpec", RawMappingConfig]
         ],
         search_paths: List[str],
+        redact_logs=False,
     ):
         """
         :param path: Absolute path to the mapping file.
@@ -127,6 +128,9 @@ class FileMappingSpec(MappingSpec):
             aren't read here but the search paths are used to find parents
             in `all_found_configs`). Parents in the former search paths will
             be used in preference to the later.
+        :param redact_logs: Flag whether logs should be redacted, in this case
+            paths are removed from metadata to prevent potential leaking of
+            storage keys
         """
         self.path = path
         self.raw_config = config
@@ -248,8 +252,13 @@ class FileMappingSpec(MappingSpec):
                 null_values=reverse_null_values,
             ),
             metadata={
-                "path": hide_system_data_path(path),
+                "path": (
+                    hide_system_data_path(path)
+                    if not redact_logs else
+                    "***"
+                ),
             },
+            redact_logs=redact_logs
         )
 
         all_found_configs[self.path] = self
@@ -447,6 +456,9 @@ class FileMapping(BaseMapping):
         if search_working_dir:
             self.search_paths.insert(0, os.path.abspath("."))
 
+    def get_logger(self):
+        return self.logger or get_logger()
+
     def _load_raw_configs(self) -> Dict[str, RawMappingConfig]:
         """
         Loads all the mappings in the search paths
@@ -565,10 +577,10 @@ class FileMapping(BaseMapping):
         for k, v in self.raw_configs.items():
             try:
                 yield k, FileMappingSpec(
-                    k, v, self.raw_configs, self.search_paths
+                    k, v, self.raw_configs, self.search_paths, redact_logs=self.redact_logs,
                 )
             except InvalidMappingFile as e:
-                get_logger().warning(str(e))
+                self.get_logger().warning(str(e))
 
     @property
     def mapping_specs(self) -> Reversible[FileMappingSpec]:

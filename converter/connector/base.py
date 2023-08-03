@@ -18,9 +18,10 @@ class BaseConnector:
     name = "Base Connector"
     options_schema = {"type": "object", "properties": {}}
 
-    def __init__(self, config: TransformationConfig, **options):
+    def __init__(self, config: TransformationConfig, redact_logs=False, **options):
         self._options = options
         self.config = config
+        self.redact_logs = redact_logs
 
     def extract(self) -> Iterable[Dict[str, Any]]:
         """

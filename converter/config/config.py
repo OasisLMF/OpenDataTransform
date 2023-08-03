@@ -138,6 +138,7 @@ class Config:
         config_path: str = None,
         overrides: Dict[str, Any] = None,
         env: Dict[str, str] = None,
+        redact_logs=False,
     ):
         self.path = (
             os.path.abspath(config_path)
@@ -155,6 +156,7 @@ class Config:
                 overrides=overrides,
             )
         )
+        self.redact_logs = redact_logs
 
     def __eq__(self, other):
         return self.config in [other, getattr(other, "config", {})]
@@ -543,6 +545,10 @@ class TransformationConfig:
             if `p` is `None`, `None` is returned. If the config path is `None`,
             `p` is returned without modification
         """
+        # if we have a url it's already absolute
+        if urllib.parse.urlparse(p).scheme != "":
+            return p
+
         return self.root_config.absolute_path(p)
 
     def keys(self):

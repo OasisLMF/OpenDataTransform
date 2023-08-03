@@ -24,11 +24,18 @@ class Controller:
     :param config: The resolved normalised config
     :param raise_errors: If true, errors during the conversion process
         will be raises, if not they will only be logged
+    :param logger: A python logger object. If supplied, it will override
+        the standard logger.
     """
 
-    def __init__(self, config: Config, raise_errors=False):
+    def __init__(self, config: Config, raise_errors=False, logger=None, redact_logs=False):
         self.config = config
         self.raise_errors = raise_errors
+        self.logger = logger
+        self.redact_logs = redact_logs
+
+    def get_logger(self):
+        return self.logger or get_logger()
 
     def _load_from_module(self, path: str) -> Any:
         module_path, cls = path.rsplit(".", 1)
@@ -41,7 +48,7 @@ class Controller:
         transformation
         """
         start_time = datetime.now()
-        get_logger().info("Starting transformation")
+        self.get_logger().info("Starting transformation")
 
         transformation_configs = self.config.get_transformation_configs()
         if self.config.get("parallel", True):
@@ -63,7 +70,7 @@ class Controller:
             for c in transformation_configs:
                 self._run_transformation(c)
 
-        get_logger().info(
+        self.get_logger().info(
             f"Transformation finished in {datetime.now() - start_time}"
         )
 
@@ -77,7 +84,12 @@ class Controller:
             mapping: BaseMapping = mapping_class(
                 config,
                 config.file_type,
-                **config.get("mapping.options", fallback={}),
+                **{
+                    **config.get("mapping.options", fallback={}),
+                    # not loaded from config so it cant be overridden by user input
+                    "logger": self.logger,
+                    "redact_logs": self.redact_logs,
+                }
             )
 
             extractor_class: Type[BaseConnector] = self._load_from_module(
@@ -87,7 +99,13 @@ class Controller:
                 )
             )
             extractor: BaseConnector = extractor_class(
-                config, **config.get("extractor.options", fallback={})
+                config,
+                **{
+                    **config.get("extractor.options", fallback={}),
+                    # not loaded from config so it cant be overridden by user input
+                    "logger": self.logger,
+                    "redact_logs": self.redact_logs,
+                }
             )
 
             loader_class: Type[BaseConnector] = self._load_from_module(
@@ -96,7 +114,13 @@ class Controller:
                 )
             )
             loader: BaseConnector = loader_class(
-                config, **config.get("loader.options", fallback={})
+                config,
+                **{
+                    **config.get("loader.options", fallback={}),
+                    # not loaded from config so it cant be overridden by user input
+                    "logger": self.logger,
+                    "redact_logs": self.redact_logs,
+                }
             )
 
             runner_class: Type[BaseRunner] = self._load_from_module(
@@ -105,20 +129,26 @@ class Controller:
                 )
             )
             runner: BaseRunner = runner_class(
-                config, **config.get("runner.options", fallback={})
+                config,
+                **{
+                    **config.get("runner.options", fallback={}),
+                    # not loaded from config so it cant be overridden by user input
+                    "logger": self.logger,
+                    "redact_logs": self.redact_logs,
+                }
             )
 
             runner.run(extractor, mapping, loader)
         except Exception as e:
             exc_type, exc_obj, exc_tb = sys.exc_info()
             if exc_tb:
-                get_logger().error(
+                self.get_logger().error(
                     f"{repr(e)}, line {exc_tb.tb_lineno} in " +
                     f"{exc_tb.tb_frame.f_code.co_filename}\n" +
                     "".join(traceback.format_exception(e))
                 )
             else:
-                get_logger().error(repr(e))
+                self.get_logger().error(repr(e))
 
             if self.raise_errors:
                 raise

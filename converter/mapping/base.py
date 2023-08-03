@@ -84,13 +84,18 @@ class MappingSpec:
         forward: DirectionalMapping = None,
         reverse: DirectionalMapping = None,
         metadata: Dict = None,
+        redact_logs=False,
     ):
+        """
+        :param redact_logs: Flag whether logs should be redacted
+        """
         self.file_type = file_type
         self.input_format = input_format
         self.output_format = output_format
         self.forward = forward
         self.reverse = reverse
         self.metadata = metadata or {}
+        self.redact_logs = redact_logs
 
     @property
     def can_run_forwards(self):
@@ -125,14 +130,20 @@ class BaseMapping:
     :param config: The global config for the system
     :param input: The start of the conversion path
     :param output: The end of the conversion path
+    :param logger: A python logger object. If supplied, it will override
+        the standard logger.
     """
 
     def __init__(
         self,
         config: TransformationConfig,
         file_type: str,
+        logger=None,
+        redact_logs=False,
         **options,
     ):
+        self.redact_logs = redact_logs
+        self.logger = logger
         self._mapping_graph: Optional[Dict[str, nx.DiGraph]] = None
         self._path = None
 
@@ -153,6 +164,9 @@ class BaseMapping:
         }
 
         self.file_type = file_type
+
+    def get_logger(self):
+        return self.logger or get_logger()
 
     @property
     def mapping_specs(self) -> Reversible[MappingSpec]:
@@ -243,7 +257,7 @@ class BaseMapping:
         :return: The mappings along the conversion path.
         """
         path = self.path
-        get_logger().info(
+        self.get_logger().info(
             f"Path found {' -> '.join(f'{n.name} v{n.version}' for n in path)}"
         )
 

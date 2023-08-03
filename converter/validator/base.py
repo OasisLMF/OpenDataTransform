@@ -89,6 +89,8 @@ class BaseValidator(Generic[DataType, GroupedDataType]):
         standard_search_path: str = get_data_path("validators"),
         search_working_dir=True,
         config: TransformationConfig = None,
+        logger=None,
+        redact_logs=False,
     ):
         self.config = config
         self.search_paths = [
@@ -96,6 +98,11 @@ class BaseValidator(Generic[DataType, GroupedDataType]):
             *([os.getcwd()] if search_working_dir else []),
             standard_search_path,
         ]
+        self.logger = logger
+        self.redact_logs = redact_logs
+
+    def get_logger(self):
+        return self.logger or get_logger()
 
     def load_config(
         self, fmt, version, file_type
@@ -123,7 +130,7 @@ class BaseValidator(Generic[DataType, GroupedDataType]):
             )
 
             if not config_path:
-                get_logger().warning(
+                self.get_logger().warning(
                     f"Could not find validator config for {fmt}. "
                     f"Tried paths {', '.join(candidate_paths)}"
                 )
@@ -137,14 +144,14 @@ class BaseValidator(Generic[DataType, GroupedDataType]):
         result: ValidationLogEntry = {
             "file_type": file_type,
             "format": fmt,
-            "validation_file": config.path if config else None,
+            "validation_file": (config.path if config else None) if not self.redact_logs else "***",
             "validations": [],
         }
         if config:
             for entry in config.entries:
                 result["validations"].append(self.run_entry(data, entry))
 
-        get_logger().info(yaml.safe_dump([result]))
+        self.get_logger().info(yaml.safe_dump([result]))
         return result
 
     def group_data(
