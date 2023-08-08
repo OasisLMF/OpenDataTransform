@@ -5,4 +5,8 @@ lark-parser
 networkx
 click
 jsonschema
-pyside6
+pyside6<6.3
+psycopg2
+sqlparse
+sqlparams
+pyodbc
