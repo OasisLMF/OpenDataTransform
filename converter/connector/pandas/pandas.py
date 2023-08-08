@@ -6,7 +6,7 @@ import pandas as pd
 
 from converter.config.errors import ConfigurationError
 from converter.connector import BaseConnector
-from converter.files.io import parse_url_options
+from lot3.filestore.filestore import parse_url_options
 
 
 class PandasFileTypes(Enum):
