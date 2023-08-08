@@ -5,7 +5,11 @@ lark-parser
 networkx
 click
 jsonschema
-pyside6
 s3fs
 fsspec
 adlfs
+pyside6<6.3
+psycopg2
+sqlparse
+sqlparams
+pyodbc

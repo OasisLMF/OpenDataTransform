@@ -42,7 +42,7 @@ python 3.8+
 To install the latest development version run:
 
 ```
-pip install git+https://github.com/OasisLMF/OpenDataTransform.git
+pip install -e git+https://github.com/OasisLMF/OpenDataTransform.git#egg=converter
 ```
 
 
