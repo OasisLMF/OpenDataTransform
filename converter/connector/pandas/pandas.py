@@ -3,10 +3,10 @@ from pathlib import Path
 from typing import Any, Dict, Iterable
 
 import pandas as pd
+from lot3.filestore.filestore import parse_url_options
 
 from converter.config.errors import ConfigurationError
 from converter.connector import BaseConnector
-from lot3.filestore.filestore import parse_url_options
 
 
 class PandasFileTypes(Enum):
@@ -30,7 +30,8 @@ class PandasConnector(BaseConnector):
 
             if not self.file_type:
                 raise ConfigurationError(
-                    f"File type was not recognised from the extension {ext} and 'file_type' options was not provided"
+                    "File type was not recognised from the "
+                    f"extension {ext} and 'file_type' options was not provided"
                 )
 
         super().__init__(config, **options)
@@ -62,3 +63,5 @@ class PandasConnector(BaseConnector):
             return self.extract_csv()
         elif self.file_type == PandasFileTypes.parquet:
             return self.extract_parquet()
+
+        raise ConfigurationError(f"Unsupported file type: {self.file_type}")

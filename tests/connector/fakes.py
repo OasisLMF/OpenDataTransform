@@ -1,4 +1,5 @@
 from converter.connector import BaseConnector
+from converter.utils.iter import ensure_row_iterable
 from tests.config.fakes import fake_transformation_config
 
 
@@ -11,7 +12,7 @@ class FakeConnector(BaseConnector):
         return self.data
 
     def load(self, data):
-        self.data = list(data)
+        self.data = list(ensure_row_iterable(data))
 
     async def aextract(self):
         for row in self.data:

@@ -116,7 +116,9 @@ class StrReplace:
 
         for pattern, repl in zip(patterns, repls):
             if isinstance(result, self.series_type):
-                result = result.astype(str).str.replace(pattern, repl)
+                result = result.astype(str).str.replace(
+                    pattern, repl, regex=True
+                )
             else:
                 result = default_replace(row, result, pattern, repl)
 
@@ -274,7 +276,6 @@ class PandasRunner(BaseRunner):
             # arent included in the final coerced value
             if bad_rows is not None and len(bad_rows):
                 row = row[~bad_rows]
-                coerced_row = coerced_row[~bad_rows]  # type: ignore
 
         return coerced_row
 
@@ -364,9 +365,10 @@ class PandasRunner(BaseRunner):
             else:
                 series.name = name
                 output_row, series = output_row.align(
-                    series, axis=0, fill_value=NotSet
+                    series, axis=0, fill_value=nan
                 )
                 output_row = output_row.assign(**{name: series})
+                output_row = output_row.replace(nan, NotSet)
 
         return output_row
 
@@ -442,7 +444,7 @@ class PandasRunner(BaseRunner):
             ),
             config=self.config,
             redact_logs=self.redact_logs,
-            logger=self.logger
+            logger=self.logger,
         )
         validator.run(
             self.coerce_row_types(df, transformations[0].types),

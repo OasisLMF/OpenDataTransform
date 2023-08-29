@@ -16,6 +16,10 @@ from converter.ui.config_tab.mapping import MappingGroupBox
 from converter.ui.fields.dynamic import DynamicClassFormBlock
 
 
+def _con_sort_key(c: Type[BaseConnector]):
+    return c.name
+
+
 CONNECTOR_CLASSES: List[Type[BaseConnector]] = list(
     sorted(
         [
@@ -24,9 +28,14 @@ CONNECTOR_CLASSES: List[Type[BaseConnector]] = list(
             SQLiteConnector,
             SQLServerConnector,
         ],
-        key=lambda c: c.name,
+        key=_con_sort_key,
     )
 )
+
+
+def _run_sort_key(c: Type[BaseRunner]):
+    return c.name
+
 
 RUNNER_CLASSES: List[Type[BaseRunner]] = list(
     sorted(
@@ -35,7 +44,7 @@ RUNNER_CLASSES: List[Type[BaseRunner]] = list(
             DaskRunner,
             ModinRunner,
         ],
-        key=lambda c: c.name,
+        key=_run_sort_key,
     )
 )
 

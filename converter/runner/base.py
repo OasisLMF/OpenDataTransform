@@ -57,17 +57,25 @@ class _BaseRunner:
     name = "Base Runner"
     options_schema = {"type": "object", "properties": {}}
 
-    def __init__(self, config: TransformationConfig, logger=None, redact_logs=False, **options):
+    def __init__(
+        self,
+        config: TransformationConfig,
+        logger=None,
+        redact_logs=False,
+        **options,
+    ):
         self.config = config
         self._options = options
         self.logger = logger
         self.redact_logs = redact_logs
 
     def get_logger(self):
-        return self.logger or self.get_logger()
+        return self.logger or get_logger()
 
     @classmethod
-    def log_type_coercion_error(cls, row, column, value, to_type, reason, logger=None):
+    def log_type_coercion_error(
+        cls, row, column, value, to_type, reason, logger=None
+    ):
         """
         Logs a failure of a row type coercion
 
@@ -107,7 +115,12 @@ class _BaseRunner:
                     ](value, conversion.nullable, conversion.null_values)
                 except Exception as e:
                     self.log_type_coercion_error(
-                        row, column, row[column], conversion.type, e, logger=self.logger
+                        row,
+                        column,
+                        row[column],
+                        conversion.type,
+                        e,
+                        logger=self.logger,
                     )
                     return None
 

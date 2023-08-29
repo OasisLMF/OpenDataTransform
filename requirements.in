@@ -4,7 +4,7 @@ coverage
 coverage[toml]
 pytest
 pytest-cov
-pytest-flake8
+flake8
 pytest-black
 pytest-isort
 pytest-mypy

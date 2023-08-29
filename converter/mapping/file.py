@@ -253,12 +253,10 @@ class FileMappingSpec(MappingSpec):
             ),
             metadata={
                 "path": (
-                    hide_system_data_path(path)
-                    if not redact_logs else
-                    "***"
+                    hide_system_data_path(path) if not redact_logs else "***"
                 ),
             },
-            redact_logs=redact_logs
+            redact_logs=redact_logs,
         )
 
         all_found_configs[self.path] = self
@@ -577,7 +575,11 @@ class FileMapping(BaseMapping):
         for k, v in self.raw_configs.items():
             try:
                 yield k, FileMappingSpec(
-                    k, v, self.raw_configs, self.search_paths, redact_logs=self.redact_logs,
+                    k,
+                    v,
+                    self.raw_configs,
+                    self.search_paths,
+                    redact_logs=self.redact_logs,
                 )
             except InvalidMappingFile as e:
                 self.get_logger().warning(str(e))

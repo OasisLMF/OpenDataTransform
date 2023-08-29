@@ -2,7 +2,6 @@ import urllib.parse
 from typing import Dict, List, Union
 
 import yaml
-
 from lot3.filestore.filestore import open_file
 
 

@@ -11,7 +11,9 @@ def get_logger():
     return logging.getLogger(__name__)
 
 
-def log_metadata(config: TransformationConfig, mapping: BaseMapping, logger=None):
+def log_metadata(
+    config: TransformationConfig, mapping: BaseMapping, logger=None
+):
     (logger or get_logger()).info(
         yaml.safe_dump(
             [
@@ -31,7 +33,8 @@ def log_metadata(config: TransformationConfig, mapping: BaseMapping, logger=None
                         }
                         for edge in mapping.path_edges
                     ],
-                    # typo fixed below but left original incase someone is using typo version
+                    # typo fixed below but left original incase
+                    # someone is using typo version
                     "data_of_conversion": datetime.now().isoformat(),
                     "date_of_conversion": datetime.now().isoformat(),
                     **config.root_config.get("metadata", {}),

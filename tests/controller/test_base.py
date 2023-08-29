@@ -84,15 +84,27 @@ def test_component_class_paths_are_set___specific_component_classes_are_used():
         extractor_ctor_mock.assert_called_once_with(
             transformer_config,
             first="Some Extractor Param",
+            logger=None,
+            redact_logs=False,
         )
         loader_ctor_mock.assert_called_once_with(
-            transformer_config, first="Some Loader Param"
+            transformer_config,
+            first="Some Loader Param",
+            logger=None,
+            redact_logs=False,
         )
         mapping_ctor_mock.assert_called_once_with(
-            transformer_config, "acc", first="Some Mapping Param"
+            transformer_config,
+            "acc",
+            first="Some Mapping Param",
+            logger=None,
+            redact_logs=False,
         )
         runner_ctor_mock.assert_called_once_with(
-            transformer_config, first="Some Runner Param"
+            transformer_config,
+            first="Some Runner Param",
+            logger=None,
+            redact_logs=False,
         )
         runner.run.assert_called_once_with(extractor, mapping, loader)
 
@@ -145,15 +157,28 @@ def test_component_class_paths_default___default_component_classes_are_used():
 
         transformer_config = config.get_transformation_configs()[0]
         connector_ctor_mock.assert_any_call(
-            transformer_config, first="Some Extractor Param"
+            transformer_config,
+            first="Some Extractor Param",
+            logger=None,
+            redact_logs=False,
         )
         connector_ctor_mock.assert_any_call(
-            transformer_config, first="Some Loader Param"
+            transformer_config,
+            first="Some Loader Param",
+            logger=None,
+            redact_logs=False,
         )
         mapping_ctor_mock.assert_called_once_with(
-            transformer_config, "acc", first="Some Mapping Param"
+            transformer_config,
+            "acc",
+            first="Some Mapping Param",
+            logger=None,
+            redact_logs=False,
         )
         runner_ctor_mock.assert_called_once_with(
-            transformer_config, first="Some Runner Param"
+            transformer_config,
+            first="Some Runner Param",
+            logger=None,
+            redact_logs=False,
         )
         runner.run.assert_called_once_with(extractor, mapping, loader)

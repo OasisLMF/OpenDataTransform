@@ -28,7 +28,13 @@ class Controller:
         the standard logger.
     """
 
-    def __init__(self, config: Config, raise_errors=False, logger=None, redact_logs=False):
+    def __init__(
+        self,
+        config: Config,
+        raise_errors=False,
+        logger=None,
+        redact_logs=False,
+    ):
         self.config = config
         self.raise_errors = raise_errors
         self.logger = logger
@@ -86,10 +92,11 @@ class Controller:
                 config.file_type,
                 **{
                     **config.get("mapping.options", fallback={}),
-                    # not loaded from config so it cant be overridden by user input
+                    # not loaded from config so it cant be
+                    # overridden by user input
                     "logger": self.logger,
                     "redact_logs": self.redact_logs,
-                }
+                },
             )
 
             extractor_class: Type[BaseConnector] = self._load_from_module(
@@ -102,10 +109,11 @@ class Controller:
                 config,
                 **{
                     **config.get("extractor.options", fallback={}),
-                    # not loaded from config so it cant be overridden by user input
+                    # not loaded from config so it cant be
+                    # overridden by user input
                     "logger": self.logger,
                     "redact_logs": self.redact_logs,
-                }
+                },
             )
 
             loader_class: Type[BaseConnector] = self._load_from_module(
@@ -117,10 +125,11 @@ class Controller:
                 config,
                 **{
                     **config.get("loader.options", fallback={}),
-                    # not loaded from config so it cant be overridden by user input
+                    # not loaded from config so it cant be
+                    # overridden by user input
                     "logger": self.logger,
                     "redact_logs": self.redact_logs,
-                }
+                },
             )
 
             runner_class: Type[BaseRunner] = self._load_from_module(
@@ -132,10 +141,11 @@ class Controller:
                 config,
                 **{
                     **config.get("runner.options", fallback={}),
-                    # not loaded from config so it cant be overridden by user input
+                    # not loaded from config so it cant be
+                    # overridden by user input
                     "logger": self.logger,
                     "redact_logs": self.redact_logs,
-                }
+                },
             )
 
             runner.run(extractor, mapping, loader)
@@ -143,9 +153,9 @@ class Controller:
             exc_type, exc_obj, exc_tb = sys.exc_info()
             if exc_tb:
                 self.get_logger().error(
-                    f"{repr(e)}, line {exc_tb.tb_lineno} in " +
-                    f"{exc_tb.tb_frame.f_code.co_filename}\n" +
-                    "".join(traceback.format_exception(e))
+                    f"{repr(e)}, line {exc_tb.tb_lineno} in "
+                    + f"{exc_tb.tb_frame.f_code.co_filename}\n"
+                    + "".join(traceback.format_exception(e))  # type: ignore
                 )
             else:
                 self.get_logger().error(repr(e))

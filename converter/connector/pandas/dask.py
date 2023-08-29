@@ -1,7 +1,7 @@
 import dask.dataframe as dd
+from lot3.filestore.filestore import parse_url_options
 
 from converter.connector.pandas.pandas import PandasConnector
-from lot3.filestore.filestore import parse_url_options
 
 
 class DaskConnector(PandasConnector):

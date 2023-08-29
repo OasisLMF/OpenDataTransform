@@ -1,10 +1,11 @@
 import csv
 from typing import Any, Dict, Iterable
 
+from lot3.filestore.filestore import open_file
+
 from converter.connector.base import BaseConnector
 from converter.types.notset import NotSetType
 from converter.utils.iter import ensure_row_iterable
-from lot3.filestore.filestore import open_file
 
 
 class CsvConnector(BaseConnector):

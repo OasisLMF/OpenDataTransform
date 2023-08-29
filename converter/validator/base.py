@@ -18,6 +18,7 @@ from converter.config.config import TransformationConfig
 from converter.data import get_data_path
 from converter.files.yaml import read_yaml
 
+
 DataType = TypeVar("DataType")
 GroupedDataType = TypeVar("GroupedDataType")
 GroupedDataType_cov = TypeVar("GroupedDataType_cov", covariant=True)
@@ -107,14 +108,17 @@ class BaseValidator(Generic[DataType, GroupedDataType]):
     def load_config(
         self, fmt, version, file_type
     ) -> Union[None, ValidatorConfig]:
-        if self.config and self.config.get(f'mapping.validation.{fmt}', None):
-            # if there is a validation entry in the config use that for the validation config
-            config_path = self.config.get(f'mapping.validation.{fmt}')
+        if self.config and self.config.get(f"mapping.validation.{fmt}", None):
+            # if there is a validation entry in the config use that for
+            # the validation config
+            config_path = self.config.get(f"mapping.validation.{fmt}")
         else:
             # Build the candidate paths with and without the version preferring
             # with the version if its available
             candidate_paths = [
-                os.path.join(p, f"validation_{fmt}_v{version}_{file_type}.yaml")
+                os.path.join(
+                    p, f"validation_{fmt}_v{version}_{file_type}.yaml"
+                )
                 for p in self.search_paths
             ] + [
                 os.path.join(p, f"validation_{fmt}_{file_type}.yaml")
@@ -144,7 +148,9 @@ class BaseValidator(Generic[DataType, GroupedDataType]):
         result: ValidationLogEntry = {
             "file_type": file_type,
             "format": fmt,
-            "validation_file": (config.path if config else None) if not self.redact_logs else "***",
+            "validation_file": (config.path if config else None)
+            if not self.redact_logs
+            else "***",
             "validations": [],
         }
         if config:
