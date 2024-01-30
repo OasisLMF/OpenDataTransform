@@ -1,7 +1,9 @@
 import logging
+import importlib
 import os
 import sys
 from datetime import datetime
+from importlib import reload
 from logging.config import dictConfig as loggingDictConfig
 
 import click
@@ -11,6 +13,10 @@ from PySide6.QtWidgets import QApplication
 from converter.config import Config
 from converter.controller import Controller
 from converter.ui.main_window import MainWindow
+
+
+def get_logger():
+    return logging.getLogger(__name__)
 
 
 class ColorFormatter(logging.Formatter):
@@ -54,6 +60,11 @@ class ClickEchoHandler(logging.Handler):
         )
 
 
+class LogTypeCoercionErrorFilter(logging.Filter):
+    def filter(self, record):
+        return record.funcName == 'log_type_coercion_error'
+
+
 def init_logging(verbosity, no_color, config):
     """
     Sets up the logging config for the console and files
@@ -65,7 +76,10 @@ def init_logging(verbosity, no_color, config):
     :param no_color: Don't add the color to the output
     :param config: The path to the config file
     """
-    config_dir = os.path.abspath(os.path.dirname(config))
+    logging.shutdown()
+    reload(logging)
+
+    config_dir = os.path.abspath(os.path.dirname(config or "config.yml"))
     time_string = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     log_dir = os.path.join(config_dir, "runs", time_string)
     os.makedirs(log_dir, exist_ok=True)
@@ -88,7 +102,11 @@ def init_logging(verbosity, no_color, config):
                 "file": {"format": "%(asctime)s %(levelname)-7s: %(message)s"},
                 "yaml": {"format": "%(message)s"},
             },
-            "filters": {"info_only": {"class": "converter.cli.InfoFilter"}},
+            "filters": {
+                "coercion_errors_only": {
+                    "()": LogTypeCoercionErrorFilter
+                }
+            },
             "handlers": {
                 "console": {
                     "class": "converter.cli.ClickEchoHandler",
@@ -99,6 +117,16 @@ def init_logging(verbosity, no_color, config):
                     "class": "logging.FileHandler",
                     "formatter": "file",
                     "filename": os.path.join(log_dir, "converter.log"),
+                    "level": logging.DEBUG,
+                    "mode": "w",
+                },
+                "runner-error-log": {
+                    "class": "logging.FileHandler",
+                    "filters": [
+                        "coercion_errors_only"
+                    ],
+                    "formatter": "file",
+                    "filename": os.path.join(log_dir, "runner-error.log"),
                     "level": logging.DEBUG,
                     "mode": "w",
                 },
@@ -118,6 +146,11 @@ def init_logging(verbosity, no_color, config):
                 },
             },
             "loggers": {
+                "converter.runner": {
+                    "level": logging.WARNING,
+                    "handlers": ["runner-error-log"],
+                    "propagate": True,
+                },
                 "converter.validator": {
                     "level": logging.INFO,
                     "handlers": ["validation-log-yaml"],
@@ -188,9 +221,35 @@ def cli(ctx, config, verbose, no_color, option):
     if ctx.invoked_subcommand is None:
         app = QApplication(sys.argv)
 
+        if not ctx.obj["config"].path:
+            # if there is no config path add blank template, acc, loc and ri
+            # entries so that all tabs are open
+            ctx.obj["config"] = Config(
+                config_path=config,
+                argv={
+                    k: yaml.load(v, yaml.SafeLoader)
+                    for k, v in options.items()
+                },
+                env=os.environ,
+                overrides={
+                    Config.TEMPLATE_TRANSFORMATION_PATH: {},
+                    Config.TRANSFORMATIONS_PATH: {
+                        Config.ACC_TRANSFORMATION_LABEL: {},
+                        Config.LOC_TRANSFORMATION_LABEL: {},
+                        Config.RI_TRANSFORMATION_LABEL: {},
+                    },
+                },
+            )
+
         widget = MainWindow(
-            ctx.obj["config"], lambda p: init_logging(verbose, no_color, p)
+            ctx.obj["config"],
+            lambda p: init_logging(verbose, no_color, p),
         )
+
+        if '_PYIBoot_SPLASH' in os.environ and importlib.util.find_spec("pyi_splash"):
+            import pyi_splash
+            pyi_splash.close()
+
         widget.show()
 
         sys.exit(app.exec_())
@@ -212,10 +271,10 @@ def run(ctx):
     Runs the data conversion
     """
     try:
-        logging.debug(f"Running with config:\n{ctx.obj['config'].to_yaml()}")
+        get_logger().debug(
+            f"Running with config:\n{ctx.obj['config'].to_yaml()}"
+        )
         Controller(ctx.obj["config"]).run()
     except Exception as e:
-        logging.exception(e)
+        get_logger().exception(e)
         sys.exit(1)
-    else:
-        logging.info("Transformation Complete")

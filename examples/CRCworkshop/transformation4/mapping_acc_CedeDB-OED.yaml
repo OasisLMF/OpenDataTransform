@@ -1,0 +1,73 @@
+# MAPPING VERSION: CEDEDB_OED_Test
+# CREATOR: Ben Hayes
+# MODEL VERSIONS: OED 1.2.1 | AIR CEDE (database) v8.0
+# MAP FILETYPE: SQL Server DB to Flat File
+# LICENSE: BSD 3 clause license
+# SOURCE: https://github.com/OasisLMF/OpenDataTransform/
+# COMMENTS: Simple example to demonstrate Sql Server DB to Flat File
+
+file_type: acc
+input_format:
+  name: CedeDB
+  version: "8.0.0"
+output_format:
+  name: OED_Account
+  version: "2.1.0"
+forward:
+  types:
+    ExposureSetName:
+      type: string
+    ContractID:
+      type: string
+    CurrencyCode:
+      type: string
+    LayerID:
+      type: string
+    PerilSet:
+      type: string
+    AttachmentPoint:
+      type: float
+    OccTotalLimit:
+      type: float
+    OccParticipation:
+      type: float
+  transform:
+    PortNumber:
+      - transformation: ExposureSetName
+    AccNumber:
+      - transformation: ContractID
+    AccCurrency:
+      - transformation: CurrencyCode
+    PolNumber:
+      - transformation: LayerID
+    PolPerilsCovered:
+      - transformation: |
+          replace(
+          PerilSet,
+          'WS', 'ZZ1',
+          'CF', 'WSS',
+          'EQ', 'QEQ',
+          'FF', 'QFF',
+          'HL', 'XHL',
+          'IF', 'OO1',
+          'LQ', 'QLF',
+          'LS', 'QLS',
+          'NC', 'BFR',
+          'PF', 'OO1',
+          'SL', 'QSL',
+          'ST', 'XX1',
+          'SU', 'WSS',
+          'TC', 'WW2',
+          'TD', 'XTD',
+          'TR', 'MM1',
+          'TS', 'QTS',
+          'WF', 'BBF',
+          ', ', ';'
+          )
+    LayerAttachment:
+      - transformation: AttachmentPoint
+    LayerLimit:
+      - transformation: OccTotalLimit
+    LayerParticipation:
+      - transformation: OccParticipation
+    

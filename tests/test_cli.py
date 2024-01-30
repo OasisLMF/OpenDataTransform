@@ -1,4 +1,5 @@
 from unittest import mock
+from unittest.mock import Mock
 
 import yaml
 from click.testing import CliRunner
@@ -92,13 +93,14 @@ def test_run(opts):
 
 def test_run_raises___exception_is_logged():
     expected_exception = Exception("Some Error")
+    mock_logger = Mock()
 
-    with mock.patch("logging.exception") as mock_exception_logger, mock.patch(
-        "converter.cli.Controller", side_effect=expected_exception
-    ):
+    with mock.patch(
+        "converter.cli.get_logger", return_value=mock_logger
+    ), mock.patch("converter.cli.Controller", side_effect=expected_exception):
         runner = CliRunner()
 
         result = runner.invoke(cli, ["run"])
 
-        mock_exception_logger.assert_called_once_with(expected_exception)
+        mock_logger.exception.assert_called_once_with(expected_exception)
         assert result.exit_code == 1

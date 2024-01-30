@@ -1,0 +1,6 @@
+furo
+sphinx
+sphinx-autoapi
+sphinx-autobuild
+sphinxcontrib-httpdomain
+virtualenv

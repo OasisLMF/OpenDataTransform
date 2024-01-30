@@ -6,6 +6,7 @@ from typing import Any, Dict, Iterable, List, Tuple, TypeVar, Union
 
 import yaml
 
+from converter.config.errors import ConfigurationError
 from converter.files.yaml import read_yaml
 
 
@@ -115,9 +116,18 @@ class Config:
 
     TEMPLATE_TRANSFORMATION_PATH = "template_transformation"
     TRANSFORMATIONS_PATH = "transformations"
-    ACC_TRANSFORMATION_PATH = f"{TRANSFORMATIONS_PATH}.acc"
-    LOC_TRANSFORMATION_PATH = f"{TRANSFORMATIONS_PATH}.loc"
-    RI_TRANSFORMATION_PATH = f"{TRANSFORMATIONS_PATH}.ri"
+    ACC_TRANSFORMATION_LABEL = "acc"
+    ACC_TRANSFORMATION_PATH = (
+        f"{TRANSFORMATIONS_PATH}.{ACC_TRANSFORMATION_LABEL}"
+    )
+    LOC_TRANSFORMATION_LABEL = "loc"
+    LOC_TRANSFORMATION_PATH = (
+        f"{TRANSFORMATIONS_PATH}.{LOC_TRANSFORMATION_LABEL}"
+    )
+    RI_TRANSFORMATION_LABEL = "ri"
+    RI_TRANSFORMATION_PATH = (
+        f"{TRANSFORMATIONS_PATH}.{RI_TRANSFORMATION_LABEL}"
+    )
 
     TRANSFORMATION_PATH_SUB = re.compile(r"^transformations\.[^.]+")
 
@@ -217,6 +227,16 @@ class Config:
             ),
             "_",
         )
+
+    @classmethod
+    def validate(cls, config_path: str):
+        """
+        Basic validation check of the config file.
+        """
+        config = read_yaml(config_path)
+        # If transformations key not in yaml file flag as invalid.
+        if 'transformations' not in config:
+            raise ConfigurationError("Invalid config file - transformation key required")
 
     @classmethod
     def merge_config_sources(

@@ -1,0 +1,196 @@
+# MAPPING VERSION: OED-AIR-loc-public-2.0
+# CREATOR: IDF Open Data Transformation steering committee
+# MODEL VERSIONS: OED 1.2.1 | AIR CEDE (flat file) v8
+# MAP FILETYPE: Location
+# LICENSE: BSD 3 clause license
+# SOURCE: https://github.com/OasisLMF/OpenDataTransform/
+# COMMENTS: Mapping to convert AIR CEDE location data to OED location.
+file_type: acc
+input_format:
+  name: Cede_Contract
+  version: "8.0.0"
+output_format:
+  name: OED_Account
+  version: "1.2.1"
+forward:
+  types:
+    AggregateAttachmentPt:
+      type: float
+    AggregateDedAmt:
+      type: float
+    AggregateDedType:
+      type: string
+    AggregateLimit:
+      type: float
+    AggregateLimitType:
+      type: string
+    AttachmentAmt:
+      type: float
+    ContractID:
+      type: string
+    Currency:
+      type: string
+    DedAmt1:
+      type: float
+    DedAmt2:
+      type: float
+    DedAmt3:
+      type: float
+    DedAmt4:
+      type: float
+    DedType:
+      type: string
+    ExpirationDate:
+      type: string
+    Form:
+      type: string
+    InceptionDate:
+      type: string
+    InsuredName:
+      type: string
+    LayerID:
+      type: string
+    LayerPerils:
+      type: string
+    Limit1:
+      type: float
+    Limit2:
+      type: float
+    LimitType:
+      type: string
+    LOB:
+      type: string
+    Perils:
+      type: string
+    Premium:
+      type: float
+    Status:
+      type: string
+    SublimitArea:
+      type: string
+  null_values:
+    - "''"
+  transform:
+    PortNumber:
+    - transformation: '1'
+    AccNumber:
+    - transformation: ContractID
+    AccUserDef1:
+    - transformation: UDF1
+    AccUserDef2:
+    - transformation: UDF2
+    AccUserDef3:
+    - transformation: UDF3
+    AccUserDef4:
+    - transformation: UDF4
+    AccUserDef5:
+    - transformation: UDF5
+    CedantName:
+    - transformation: InsuredName
+    AccInceptionDate:
+    - transformation: InceptionDate
+    AccExpiryDate:
+    - transformation: ExpirationDate
+    AccPerils:
+    - transformation:  |
+          replace(
+            Perils,
+            'PAL','AA1',
+            'PEA','QQ1',
+            'PEF','BBF;QFF',
+            'PES','QEQ',
+            'PFF','QFF',
+            'PFL','ORF',
+            'PLQ','QLF',
+            'PLS','QLS',
+            'PNC','BFR',
+            'PPH','OSF',
+            'PSH','WSS',
+            'PSL','QSL',
+            'PTR','MTR',
+            'PTS','QTS',
+            'PWA','WW1',
+            'PWB','BBF',
+            'PWF','WW2;QFF;BBF',
+            'PWH','WTC',
+            'PWT','XSL;XTD;XHL',
+            'PWW','ZZ1',
+            'PWX','XZ1',
+            '+', ';'
+          )
+    LOB:
+    - transformation: LOB
+    AccCurrency:
+    - transformation: Currency
+    LayerNumber:
+    - transformation: LayerID
+    PolPerilsCovered:
+    - transformation:  |
+          replace(
+            LayerPerils,
+            'PAL','AA1',
+            'PEA','QQ1',
+            'PEF','BBF;QFF',
+            'PES','QEQ',
+            'PFF','QFF',
+            'PFL','ORF',
+            'PLQ','QLF',
+            'PLS','QLS',
+            'PNC','BFR',
+            'PPH','OSF',
+            'PSH','WSS',
+            'PSL','QSL',
+            'PTR','MTR',
+            'PTS','QTS',
+            'PWA','WW1',
+            'PWB','BBF',
+            'PWF','WW2;QFF;BBF',
+            'PWH','WTC',
+            'PWT','XSL;XTD;XHL',
+            'PWW','ZZ1',
+            'PWX','XZ1',
+            '+', ';'
+          )
+    LayerLimit:
+    - transformation: Limit1
+    PolDed6All:
+    - transformation: DedAmt1
+    LayerAttachment:
+    - transformation: AttachmentAmt
+    PolGrossPremium:
+    - transformation: Premium
+    CondPeril:
+    - transformation: |
+          replace(
+            SublimitPerils,
+            'PAL','AA1',
+            'PEA','QQ1',
+            'PEF','BBF;QFF',
+            'PES','QEQ',
+            'PFF','QFF',
+            'PFL','ORF',
+            'PLQ','QLF',
+            'PLS','QLS',
+            'PNC','BFR',
+            'PPH','OSF',
+            'PSH','WSS',
+            'PSL','QSL',
+            'PTR','MTR',
+            'PTS','QTS',
+            'PWA','WW1',
+            'PWB','BBF',
+            'PWF','WW2;QFF;BBF',
+            'PWH','WTC',
+            'PWT','XSL;XTD;XHL',
+            'PWW','ZZ1',
+            'PWX','XZ1',
+            '+', ';'
+            )
+    CondNumber:
+    - transformation: SublimitArea
+    CondLimit6All:
+    - transformation: SublimitLimitA
+    CondMinDed6All:
+    - transformation: SublimitDedAmt1
+    CondMaxDed6All:
+    - transformation: SublimitDedAmt2

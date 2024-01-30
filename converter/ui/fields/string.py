@@ -18,6 +18,14 @@ class StringField(BaseFieldMixin, QLineEdit):
         self.main_window.set_working_value(self.config_path, *v)
 
 
+class PasswordField(StringField):
+    def __init__(
+            self, tab, config_path, *args, defer_initial_ui_update=False, **kwargs
+    ):
+        super().__init__(tab, config_path, *args, defer_initial_ui_update=False, **kwargs)
+        self.echoMode = QLineEdit.Password
+
+
 class TextAreaField(BaseFieldMixin, QPlainTextEdit):
     def update_ui_from_config(self, config):
         new_value = config.get_template_resolved_value(self.config_path, "")

@@ -39,10 +39,16 @@ python 3.8+
 
 ## Setup
 
+To install the database library dependencies in debian based systems run:
+
+```
+sudo apt install libpq-dev ffmpeg libsm6 libxext6 unixodbc-dev -y
+```
+
 To install the latest development version run:
 
 ```
-pip install git+https://github.com/OasisLMF/OpenDataTransform.git
+pip install -e git+https://github.com/OasisLMF/OpenDataTransform.git#egg=converter
 ```
 
 

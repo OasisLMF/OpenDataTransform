@@ -1,0 +1,43 @@
+transformations:
+  loc:
+    input_format:
+      name: CedeDB
+      version: 8.0.0
+    output_format:
+      name: OED_Location
+      version: 2.1.0
+    extractor:
+      path: converter.connector.db.mssql.SQLServerConnector
+      options:
+        host: localhost
+        port: "1433"
+        database: MQA_CEDE
+        user: sa
+        password: workshop2022&
+        sql_statement: select_cede_loc.sql
+    loader:
+      path: converter.connector.csv.CsvConnector
+      options:
+        path: oed_location.csv
+        quoting: minimal
+  acc:
+    input_format:
+      name: CedeDB
+      version: 8.0.0
+    output_format:
+      name: OED_Account
+      version: 2.1.0
+    extractor:
+      path: converter.connector.db.mssql.SQLServerConnector
+      options:
+        host: localhost
+        port: "1433"
+        database: MQA_CEDE
+        user: sa
+        password: workshop2022&
+        sql_statement: select_cede_acc.sql
+    loader:
+      path: converter.connector.csv.CsvConnector
+      options:
+        path: oed_account.csv
+        quoting: minimal

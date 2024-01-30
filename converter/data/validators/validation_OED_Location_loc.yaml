@@ -1,0 +1,14 @@
+entries:
+  Total:
+    fields:
+      - BuildingTIV
+      - ContentsTIV
+    operator: sum
+  TotalByPeril:
+    fields:
+      - BuildingTIV
+    operator: sum
+    group_by:
+      - LocPeril
+  NumRows:
+    operator: count

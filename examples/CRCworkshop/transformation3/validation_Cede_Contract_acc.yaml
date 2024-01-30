@@ -1,0 +1,14 @@
+entries:
+  Total:
+    fields:
+      - DedAmt1
+      - Limit1
+    operator: sum
+  TotalByPeril:
+    fields:
+      - DedAmt1
+    operator: sum
+    group_by:
+      - Perils
+  NumRows:
+    operator: count

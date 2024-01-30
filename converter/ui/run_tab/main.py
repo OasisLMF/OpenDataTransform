@@ -35,6 +35,8 @@ class RunTab(QWidget):
     def run(self):
         self.validation_panel.clear()
         self.log_panel.clear()
+
+        self.main_window.update_log_paths(self.main_window.config.path)
         self.thread.start(
             self.main_window.config,
             self.log_panel,
